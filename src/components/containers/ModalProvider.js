@@ -1,5 +1,25 @@
 import React, {Fragment} from 'react';
 import PropTypes from 'prop-types';
+import { EditorControlsContext } from "../../EditorControls";
+
+
+export const ModelProviderContext = React.createContext({});
+
+class ModalProviderWrapper extends React.Component {
+    constructor(props) {
+        super(props)
+    }
+
+    render() {
+        return <EditorControlsContext.Consumer>
+            {value => (
+                <ModalProvider { ...value}>
+                    {this.props.children}
+                </ModalProvider>
+            )}
+        </EditorControlsContext.Consumer>
+    }
+}
 
 class ModalProvider extends React.Component {
   constructor(props) {
@@ -28,7 +48,7 @@ class ModalProvider extends React.Component {
   }
 
   openModal(component, componentProps) {
-    const {localize: _} = this.context;
+    const {localize: _} = this.props;
     if (!component) {
       throw Error(_('You need to provide a component for the modal to open!'));
     }
@@ -61,7 +81,7 @@ class ModalProvider extends React.Component {
     }, animationDuration);
   }
 
-  getChildContext() {
+  getContext() {
     return {
       openModal: (c, p) => this.openModal(c, p),
       closeModal: () => this.closeModal(),
@@ -73,10 +93,12 @@ class ModalProvider extends React.Component {
   render() {
     const {component: Component, componentProps, isAnimatingOut} = this.state;
     return (
-      <Fragment>
-        {this.props.children}
-        {this.state.open ? <Component isAnimatingOut={isAnimatingOut} {...componentProps} /> : null}
-      </Fragment>
+        <ModelProviderContext.Provider value={this.getContext()}>
+          <Fragment>
+            {this.props.children}
+            {this.state.open ? <Component isAnimatingOut={isAnimatingOut} {...componentProps} /> : null}
+          </Fragment>
+        </ModelProviderContext.Provider>
     );
   }
 }
@@ -84,14 +106,11 @@ class ModalProvider extends React.Component {
 ModalProvider.propTypes = {
   children: PropTypes.node,
 };
-ModalProvider.contextTypes = {
-  localize: PropTypes.func,
-};
-ModalProvider.childContextTypes = {
-  openModal: PropTypes.func,
-  closeModal: PropTypes.func,
-  handleClose: PropTypes.func,
-  isAnimatingOut: PropTypes.bool,
-};
+// ModalProvider.childContextTypes = {
+//   openModal: PropTypes.func,
+//   closeModal: PropTypes.func,
+//   handleClose: PropTypes.func,
+//   isAnimatingOut: PropTypes.bool,
+// };
 
-export default ModalProvider;
+export default ModalProviderWrapper;

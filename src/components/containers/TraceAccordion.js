@@ -8,32 +8,53 @@ import {connectTraceToPlot, plotlyTraceToCustomTrace} from 'lib';
 import {Tab, Tabs, TabList, TabPanel} from 'react-tabs';
 import {traceTypes} from 'lib/traceTypes';
 import {PanelMessage} from './PanelEmpty';
+import {
+    EditorControlsContext
+} from "../../EditorControls";
 
 const TraceFold = connectTraceToPlot(PlotlyFold);
 
+class TraceAccordionWrapper extends Component {
+    constructor(props) {
+        super(props)
+    }
+
+    render() {
+        return <EditorControlsContext.Consumer>
+            {({fullData, data, localize}) => {
+             const newProps = { ...this.props, fullData, data, localize};
+             return (
+                 <TraceAccordion { ...newProps}/>
+             )
+            }
+          }
+        </EditorControlsContext.Consumer>
+    }
+}
+
 class TraceAccordion extends Component {
-  constructor(props, context) {
-    super(props, context);
-    this.setLocals(props, context);
+  constructor(props) {
+    super(props);
+    this.setLocals(props);
   }
 
-  componentWillReceiveProps(nextProps, nextContext) {
-    this.setLocals(nextProps, nextContext);
+  componentWillReceiveProps(nextProps) {
+    this.setLocals(nextProps);
   }
 
-  setLocals(props, context) {
-    const base = props.canGroup ? context.fullData : context.data;
+  setLocals(props) {
+    const base = props.canGroup ? props.fullData : props.data;
     const traceFilterCondition = this.props.traceFilterCondition || (() => true);
 
     this.filteredTracesDataIndexes = [];
     this.filteredTraces = [];
 
-    if (base && base.length && context.fullData.length) {
+    if (base && base.length && props.fullData.length) {
       this.filteredTraces = base.filter((t, i) => {
-        const fullTrace = props.canGroup ? t : context.fullData.filter(tr => tr.index === i)[0];
+        const fullTrace = props.canGroup ? t : props.fullData.filter(tr => tr.index === i)[0];
 
         if (fullTrace) {
-          const trace = context.data[fullTrace.index];
+          const trace = props.data[fullTrace.index];
           if (traceFilterCondition(trace, fullTrace)) {
             this.filteredTracesDataIndexes.push(fullTrace.index);
             return true;
@@ -50,7 +71,7 @@ class TraceAccordion extends Component {
       return null;
     }
 
-    const {localize: _} = this.context;
+    const {localize: _} = this.props;
     const dataArrayPositionsByTraceType = {};
     const fullDataArrayPositionsByTraceType = {};
 
@@ -113,7 +134,7 @@ class TraceAccordion extends Component {
   }
 
   renderTracePanelHelp() {
-    const _ = this.context.localize;
+    const _ = this.props.localize;
     return (
       <PanelMessage heading={_('Trace your data.')}>
         <p>
@@ -131,7 +152,7 @@ class TraceAccordion extends Component {
 
   render() {
     const {canAdd, canGroup} = this.props;
-    const _ = this.context.localize;
+    const _ = this.props.localize;
 
     if (canAdd) {
       const addAction = {
@@ -181,17 +202,20 @@ class TraceAccordion extends Component {
   }
 }
 
-TraceAccordion.contextTypes = {
-  fullData: PropTypes.array,
-  data: PropTypes.array,
-  localize: PropTypes.func,
-};
+// TraceAccordion.contextTypes = {
+//   fullData: PropTypes.array,
+//   data: PropTypes.array,
+//   localize: PropTypes.func,
+// };
 
 TraceAccordion.propTypes = {
   canAdd: PropTypes.bool,
   canGroup: PropTypes.bool,
   children: PropTypes.node,
   traceFilterCondition: PropTypes.func,
+  fullData: PropTypes.array,
+  data: PropTypes.array,
+  localize: PropTypes.func,
 };
 
-export default TraceAccordion;
+export default TraceAccordionWrapper;

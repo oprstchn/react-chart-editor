@@ -17,8 +17,26 @@ import {
   HistogramInfoHorizontal,
   Histogram2d,
 } from '../components/fields/derived';
+import {
+    EditorControlsContext
+} from "../EditorControls";
+import {
+    PanelsWithSidebarContext
+} from "../components/PanelMenuWrapper";
 
-const GraphCreatePanel = (props, {localize: _, setPanel}) => {
+const GraphCreatePanelWrapper = () => (
+    <EditorControlsContext.Consumer>
+        {({localize}) => (
+            <PanelsWithSidebarContext.Consumer>
+                {({setPanel}) => (
+                    <GraphCreatePanel localize={localize} setPanel={setPanel}/>
+                )}
+            </PanelsWithSidebarContext.Consumer>
+        )}
+    </EditorControlsContext.Consumer>
+)
+
+const GraphCreatePanel = ({localize: _, setPanel}) => {
   return (
     <TraceAccordion
       canAdd
@@ -157,8 +175,8 @@ const GraphCreatePanel = (props, {localize: _, setPanel}) => {
   );
 };
 
-export default GraphCreatePanel;
-GraphCreatePanel.contextTypes = {
+export default GraphCreatePanelWrapper;
+GraphCreatePanel.propTypes = {
   localize: PropTypes.func,
   setPanel: PropTypes.func,
 };

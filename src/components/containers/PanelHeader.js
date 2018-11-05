@@ -2,6 +2,30 @@ import Button from 'components/widgets/Button';
 import PropTypes from 'prop-types';
 import React, {Component} from 'react';
 import {PlusIcon, ResizeUpIcon, ResizeDownIcon} from 'plotly-icons';
+import {
+    EditorControlsContext
+} from "../../EditorControls";
+
+class PanelHeaderWrapper extends Component {
+    constructor(props) {
+        super(props);
+    }
+
+    render() {
+        return <EditorControlsContext.Consumer>
+            {({layout, fullContainer, onUpdate, updateContainer, localize}) => {
+                const { children, ...otherProps} = this.props;
+                const newProps = { ...otherProps, layout, fullContainer, onUpdate, updateContainer, localize}
+                return(
+                <PanelHeader { ...newProps}>
+                    {children}
+                </PanelHeader>
+            )}
+            }
+        </EditorControlsContext.Consumer>
+    }
+}
+
 
 class PanelHeader extends Component {
   constructor() {
@@ -84,13 +108,13 @@ class PanelHeader extends Component {
   }
 }
 
-PanelHeader.contextTypes = {
-  layout: PropTypes.object,
-  fullContainer: PropTypes.object,
-  onUpdate: PropTypes.func,
-  updateContainer: PropTypes.func,
-  localize: PropTypes.func,
-};
+// PanelHeader.contextTypes = {
+//   layout: PropTypes.object,
+//   fullContainer: PropTypes.object,
+//   onUpdate: PropTypes.func,
+//   updateContainer: PropTypes.func,
+//   localize: PropTypes.func,
+// };
 
 PanelHeader.propTypes = {
   addAction: PropTypes.object,
@@ -98,6 +122,11 @@ PanelHeader.propTypes = {
   children: PropTypes.node,
   hasOpen: PropTypes.bool,
   toggleFolds: PropTypes.func,
+  layout: PropTypes.object,
+  fullContainer: PropTypes.object,
+  onUpdate: PropTypes.func,
+  updateContainer: PropTypes.func,
+  localize: PropTypes.func,
 };
 
-export default PanelHeader;
+export default PanelHeaderWrapper;

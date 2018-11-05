@@ -16,8 +16,19 @@ import {
   NumericFraction,
 } from '../components';
 import {TRACE_TO_AXIS} from '../lib/constants';
+import {
+    EditorControlsContext
+} from "../EditorControls";
 
-const GraphSubplotsPanel = (props, {localize: _}) => (
+const GraphSubplotsPanelWrapper = () => (
+    <EditorControlsContext.Consumer>
+        {({localize}) => (
+            <GraphSubplotsPanel localize={localize}/>
+        )}
+    </EditorControlsContext.Consumer>
+)
+
+const GraphSubplotsPanel = ({localize: _}) => (
   <SubplotAccordion>
     <PlotlySection name={_('Boundaries')} attr="xaxis.domain[0]">
       <AxisOverlayDropdown label={_('X Overlay')} attr="xaxis.overlaying" />
@@ -228,8 +239,8 @@ const GraphSubplotsPanel = (props, {localize: _}) => (
   </SubplotAccordion>
 );
 
-GraphSubplotsPanel.contextTypes = {
+GraphSubplotsPanel.propTypes = {
   localize: PropTypes.func,
 };
 
-export default GraphSubplotsPanel;
+export default GraphSubplotsPanelWrapper;

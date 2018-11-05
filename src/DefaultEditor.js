@@ -19,10 +19,29 @@ import {
 import {traceHasColorbar} from './default_panels/StyleColorbarsPanel';
 import Logo from './components/widgets/Logo';
 import {TRANSFORMABLE_TRACES} from './lib/constants';
+import {
+    EditorControlsContext
+} from "./EditorControls";
+
+class DefaultEditorWrapper extends Component {
+    constructor(props) {
+        super(props)
+    }
+
+    render() {
+        return <EditorControlsContext.Consumer>
+            {value => (
+                <DefaultEditor { ...value}>
+                    {this.props.children}
+                </DefaultEditor>
+            )}
+        </EditorControlsContext.Consumer>
+    }
+}
 
 class DefaultEditor extends Component {
-  constructor(props, context) {
-    super(props, context);
+  constructor(props) {
+    super(props);
     this.hasTransforms = this.hasTransforms.bind(this);
     this.hasAxes = this.hasAxes.bind(this);
     this.hasMenus = this.hasMenus.bind(this);
@@ -31,15 +50,15 @@ class DefaultEditor extends Component {
   }
 
   hasTransforms() {
-    return this.context.fullData.some(d => TRANSFORMABLE_TRACES.includes(d.type));
+    return this.props.fullData.some(d => TRANSFORMABLE_TRACES.includes(d.type));
   }
 
   hasAxes() {
     return (
-      Object.keys(this.context.fullLayout._subplots).filter(
+      Object.keys(this.props.fullLayout._subplots).filter(
         type =>
           !['cartesian', 'mapbox'].includes(type) &&
-          this.context.fullLayout._subplots[type].length > 0
+          this.props.fullLayout._subplots[type].length > 0
       ).length > 0
     );
   }
@@ -47,7 +66,7 @@ class DefaultEditor extends Component {
   hasMenus() {
     const {
       fullLayout: {updatemenus = []},
-    } = this.context;
+    } = this.props;
 
     return updatemenus.length > 0;
   }
@@ -55,17 +74,17 @@ class DefaultEditor extends Component {
   hasSliders() {
     const {
       layout: {sliders = []},
-    } = this.context;
+    } = this.props;
 
     return sliders.length > 0;
   }
 
   hasColorbars() {
-    return this.context.fullData.some(d => traceHasColorbar({}, d));
+    return this.props.fullData.some(d => traceHasColorbar({}, d));
   }
 
   render() {
-    const _ = this.context.localize;
+    const _ = this.props.localize;
     const logo = this.props.logoSrc && <Logo src={this.props.logoSrc} />;
 
     return (
@@ -95,13 +114,17 @@ class DefaultEditor extends Component {
 DefaultEditor.propTypes = {
   children: PropTypes.node,
   logoSrc: PropTypes.string,
-};
-
-DefaultEditor.contextTypes = {
   localize: PropTypes.func,
   fullData: PropTypes.array,
   fullLayout: PropTypes.object,
   layout: PropTypes.object,
 };
 
-export default DefaultEditor;
+// DefaultEditor.contextTypes = {
+//   localize: PropTypes.func,
+//   fullData: PropTypes.array,
+//   fullLayout: PropTypes.object,
+//   layout: PropTypes.object,
+// };
+
+export default DefaultEditorWrapper;
