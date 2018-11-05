@@ -45,8 +45,15 @@ export class PanelWrapper extends Component {
         super(props);
     }
 
+    getContext() {
+        return {
+            deleteContainer: this.props.deleteAction ? this.props.deleteAction : null,
+        };
+    }
+
     render() {
-        return <EditorControlsContext.Consumer>
+        return <PanelContext.Provider value={this.getContext()}>
+        <EditorControlsContext.Consumer>
             {({localize}) => {
                 const {children, ...otherProps} = this.props;
                 const newProps = {...otherProps, localize};
@@ -56,6 +63,7 @@ export class PanelWrapper extends Component {
             }
             }
         </EditorControlsContext.Consumer>
+        </PanelContext.Provider>
     }
 }
 
@@ -80,11 +88,11 @@ class PanelElement extends Component {
     this.toggleFold = this.toggleFold.bind(this);
   }
 
-  getContext() {
-    return {
-      deleteContainer: this.props.deleteAction ? this.props.deleteAction : null,
-    };
-  }
+  // getContext() {
+  //   return {
+  //     deleteContainer: this.props.deleteAction ? this.props.deleteAction : null,
+  //   };
+  // }
 
   componentDidCatch() {
     this.setState({hasError: true});
@@ -146,7 +154,6 @@ class PanelElement extends Component {
       }
       return child;
     });
-    console.log({newChildren});
 
     return (
       <div className={`panel${this.props.noPadding ? ' panel--no-padding' : ''}`}>
@@ -157,9 +164,7 @@ class PanelElement extends Component {
           hasOpen={individualFoldStates.some(s => s === false)}
         />
             <div className={bem('panel', 'content')}>
-              <PanelContext.Prodiver value={this.getContext()}>
                 {newChildren}
-              </PanelContext.Prodiver>
             </div>
       </div>
     );
