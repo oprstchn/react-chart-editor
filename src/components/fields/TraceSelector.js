@@ -12,9 +12,51 @@ import {TraceTypeSelector, TraceTypeSelectorButton, RadioBlocks} from 'component
 import Field from './Field';
 import {CogIcon} from 'plotly-icons';
 
+import {EditorControlsContext} from '../../EditorControls';
+import {ModalContent} from '../containers/Modal';
+
+class TraceSelectorWrapper extends Component {
+  constructor(props) {
+    super(props);
+  }
+
+  render() {
+    console.log('TraceSelectorWrapper');
+    return (
+      <EditorControlsContext.Consumer>
+        {({
+          advancedTraceTypeSelector,
+          traceTypesConfig,
+          plotSchema,
+          config,
+          localize,
+          glByDefault,
+        }) => (
+          <ModalContent.Consumer>
+            {({openModal}) => {
+              const newProps = {
+                ...this.props,
+                advancedTraceTypeSelector,
+                traceTypesConfig,
+                plotSchema,
+                config,
+                localize,
+                glByDefault,
+                openModal,
+              };
+              console.log({newProps});
+              return <TraceSelector {...newProps} />;
+            }}
+          </ModalContent.Consumer>
+        )}
+      </EditorControlsContext.Consumer>
+    );
+  }
+}
+
 class TraceSelector extends Component {
-  constructor(props, context) {
-    super(props, context);
+  constructor(props) {
+    super(props);
 
     this.updatePlot = this.updatePlot.bind(this);
     this.setGl = this.setGl.bind(this);
@@ -23,7 +65,7 @@ class TraceSelector extends Component {
     this.toggleGlControls = this.toggleGlControls.bind(this);
 
     this.setTraceDefaults(props.container, props.fullContainer, props.updateContainer);
-    this.setLocals(props, context);
+    this.setLocals(props);
 
     this.state = {showGlControls: false};
   }
@@ -36,14 +78,14 @@ class TraceSelector extends Component {
     this.setState({showGlControls: !this.state.showGlControls});
   }
 
-  setLocals(props, context) {
-    const _ = context.localize;
+  setLocals(props) {
+    const _ = props.localize;
     if (props.traceOptions) {
       this.traceOptions = props.traceOptions;
-    } else if (context.traceTypesConfig) {
-      this.traceOptions = context.traceTypesConfig.traces(_);
-    } else if (context.plotSchema) {
-      this.traceOptions = computeTraceOptionsFromSchema(context.plotSchema, _, this.context);
+    } else if (props.traceTypesConfig) {
+      this.traceOptions = props.traceTypesConfig.traces(_);
+    } else if (props.plotSchema) {
+      this.traceOptions = computeTraceOptionsFromSchema(props.plotSchema, _, this.props);
     } else {
       this.traceOptions = [{label: _('Scatter'), value: 'scatter'}];
     }
@@ -55,21 +97,21 @@ class TraceSelector extends Component {
   setTraceDefaults(container, fullContainer, updateContainer, gl) {
     if (container && !container.mode && fullContainer.type === 'scatter') {
       updateContainer({
-        type: 'scatter' + (gl || this.context.glByDefault ? gl : this.glEnabled()),
+        type: 'scatter' + (gl || this.props.glByDefault ? gl : this.glEnabled()),
         mode: fullContainer.mode || 'markers',
       });
     }
   }
 
-  componentWillReceiveProps(nextProps, nextContext) {
+  componentWillReceiveProps(nextProps, nextprops) {
     const {container, fullContainer, updateContainer} = nextProps;
     this.setTraceDefaults(container, fullContainer, updateContainer);
-    this.setLocals(nextProps, nextContext);
+    this.setLocals(nextProps, nextprops);
   }
 
   updatePlot(value) {
     const {updateContainer} = this.props;
-    const {glByDefault} = this.context;
+    const {glByDefault} = this.props;
     if (updateContainer) {
       updateContainer(traceTypeToPlotlyInitFigure(value, this.glEnabled() || glByDefault));
     }
@@ -96,7 +138,7 @@ class TraceSelector extends Component {
       options: this.traceOptions,
       clearable: false,
     });
-    const {localize: _, advancedTraceTypeSelector} = this.context;
+    const {localize: _, advancedTraceTypeSelector} = this.props;
 
     const options = [{label: _('SVG'), value: ''}, {label: _('WebGL'), value: 'gl'}];
 
@@ -114,12 +156,12 @@ class TraceSelector extends Component {
             >
               <TraceTypeSelectorButton
                 {...props}
-                traceTypesConfig={this.context.traceTypesConfig}
+                traceTypesConfig={this.props.traceTypesConfig}
                 handleClick={() =>
-                  this.context.openModal(TraceTypeSelector, {
+                  this.props.openModal(TraceTypeSelector, {
                     ...props,
-                    traceTypesConfig: this.context.traceTypesConfig,
-                    glByDefault: this.context.glByDefault,
+                    traceTypesConfig: this.props.traceTypesConfig,
+                    glByDefault: this.props.glByDefault,
                   })
                 }
               />
@@ -149,7 +191,21 @@ class TraceSelector extends Component {
   }
 }
 
-TraceSelector.contextTypes = {
+// TraceSelector.propsTypes = {
+//   openModal: PropTypes.func,
+//   advancedTraceTypeSelector: PropTypes.bool,
+//   traceTypesConfig: PropTypes.object,
+//   plotSchema: PropTypes.object,
+//   config: PropTypes.object,
+//   localize: PropTypes.func,
+//   glByDefault: PropTypes.bool,
+// };
+
+TraceSelector.propTypes = {
+  container: PropTypes.object.isRequired,
+  fullContainer: PropTypes.object.isRequired,
+  fullValue: PropTypes.any,
+  updateContainer: PropTypes.func,
   openModal: PropTypes.func,
   advancedTraceTypeSelector: PropTypes.bool,
   traceTypesConfig: PropTypes.object,
@@ -159,11 +215,4 @@ TraceSelector.contextTypes = {
   glByDefault: PropTypes.bool,
 };
 
-TraceSelector.propTypes = {
-  container: PropTypes.object.isRequired,
-  fullContainer: PropTypes.object.isRequired,
-  fullValue: PropTypes.any,
-  updateContainer: PropTypes.func,
-};
-
-export default connectToContainer(TraceSelector);
+export default connectToContainer(TraceSelectorWrapper);

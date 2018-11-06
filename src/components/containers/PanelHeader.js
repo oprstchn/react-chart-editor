@@ -42,8 +42,7 @@ class PanelHeader extends Component {
   }
 
   render() {
-    const {localize: _} = this.context;
-    const {children, addAction, allowCollapse, toggleFolds, hasOpen} = this.props;
+    const {children, addAction, allowCollapse, toggleFolds, hasOpen, localize: _} = this.props;
 
     // dropdown is styled with same styles as react-select component - see _dropdown.scss
     const icon = <PlusIcon />;
@@ -77,7 +76,7 @@ class PanelHeader extends Component {
                 onClick={
                   Array.isArray(addAction.handler)
                     ? this.togglePanel
-                    : () => addAction.handler(this.context)
+                    : () => addAction.handler(this.props)
                 }
                 icon={icon}
                 label={addAction.label}
@@ -91,7 +90,7 @@ class PanelHeader extends Component {
                           className="Select-option"
                           key={label}
                           onClick={() => {
-                            handler(this.context);
+                            handler(this.props);
                             this.togglePanel();
                           }}
                         >

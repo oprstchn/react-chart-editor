@@ -176,15 +176,15 @@ function adjustColorscale(colorscale, numberOfNeededColors, colorscaleType, conf
   return getColorscale(colorscale, numberOfNeededColors, null, null, colorscaleType);
 }
 
-function getFullTrace(props, context) {
+function getFullTrace(props) {
   let fullTrace = {};
-  if (context.fullData && context.data) {
+  if (props.fullData && props.data) {
     if (props.fullDataArrayPosition) {
       // fullDataArrayPosition will be supplied in panels that have the canGroup prop
-      fullTrace = context.fullData[props.fullDataArrayPosition[0]];
+      fullTrace = props.fullData[props.fullDataArrayPosition[0]];
     } else {
       // for all other panels, we'll find fullTrace with the data index
-      fullTrace = context.fullData.filter(t => t && props.traceIndexes[0] === t.index)[0];
+      fullTrace = props.fullData.filter(t => t && props.traceIndexes[0] === t.index)[0];
     }
 
     // For transformed traces, we actually want to read in _fullInput because

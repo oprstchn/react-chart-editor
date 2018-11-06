@@ -20,7 +20,53 @@ export const containerConnectedContextTypes = {
   traceIndexes: PropTypes.array,
 };
 
+import {EditorControlsContext} from '../EditorControls';
+
+import {ConnectTraceToPlotContext} from './connectTraceToPlot';
+
 export default function connectToContainer(WrappedComponent, config = {}) {
+  class ContainerConnectedComponentWrapper extends Component {
+    constructor(props) {
+      super(props);
+    }
+
+    render() {
+      return (
+        <EditorControlsContext.Consumer>
+          {({localize, data, fullData, layout, onUpdate, plotly, graphDiv}) => (
+            <ConnectTraceToPlotContext.Consumer>
+              {({
+                container,
+                defaultContainer,
+                fullContainer,
+                getValObject,
+                updateContainer,
+                traceIndexes,
+              }) => {
+                const newProps = {
+                  ...this.props,
+                  localize,
+                  data,
+                  fullData,
+                  layout,
+                  onUpdate,
+                  plotly,
+                  graphDiv,
+                  container,
+                  defaultContainer,
+                  fullContainer,
+                  getValObject,
+                  updateContainer,
+                  traceIndexes,
+                };
+                return <ContainerConnectedComponent {...newProps} />;
+              }}
+            </ConnectTraceToPlotContext.Consumer>
+          )}
+        </EditorControlsContext.Consumer>
+      );
+    }
+  }
   class ContainerConnectedComponent extends Component {
     // Run the inner modifications first and allow more recent modifyPlotProp
     // config function to modify last.
@@ -33,17 +79,51 @@ export default function connectToContainer(WrappedComponent, config = {}) {
       }
     }
 
-    constructor(props, context) {
-      super(props, context);
+    getContextFromProps() {
+      const {
+        localize,
+        data,
+        fullData,
+        layout,
+        onUpdate,
+        plotly,
+        graphDiv,
+        container,
+        defaultContainer,
+        fullContainer,
+        getValObject,
+        updateContainer,
+        traceIndexes,
+      } = this.props;
+      return {
+        localize,
+        data,
+        fullData,
+        layout,
+        onUpdate,
+        plotly,
+        graphDiv,
+        container,
+        defaultContainer,
+        fullContainer,
+        getValObject,
+        updateContainer,
+        traceIndexes,
+      };
+    }
 
-      this.setLocals(props, context);
+    constructor(props) {
+      super(props);
+
+      this.setLocals(props);
     }
 
     componentWillReceiveProps(nextProps, nextContext) {
       this.setLocals(nextProps, nextContext);
     }
 
-    setLocals(props, context) {
+    setLocals(props) {
+      const context = this.getContextFromProps();
       this.plotProps = unpackPlotProps(props, context);
       this.attr = props.attr;
       ContainerConnectedComponent.modifyPlotProps(props, context, this.plotProps);
@@ -57,6 +137,7 @@ export default function connectToContainer(WrappedComponent, config = {}) {
     }
 
     render() {
+      console.log('connectToContainer', getDisplayName(WrappedComponent));
       // Merge plotprops onto props so leaf components only need worry about
       // props. However pass plotProps as a specific prop in case inner component
       // is also wrapped by a component that `unpackPlotProps`. That way inner
@@ -81,5 +162,5 @@ export default function connectToContainer(WrappedComponent, config = {}) {
   const {plotly_editor_traits} = WrappedComponent;
   ContainerConnectedComponent.plotly_editor_traits = plotly_editor_traits;
 
-  return ContainerConnectedComponent;
+  return ContainerConnectedComponentWrapper;
 }

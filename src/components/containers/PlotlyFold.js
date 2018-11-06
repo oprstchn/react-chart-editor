@@ -4,6 +4,7 @@ import React, {Component} from 'react';
 import classnames from 'classnames';
 import {CloseIcon, AngleDownIcon} from 'plotly-icons';
 import {unpackPlotProps, containerConnectedContextTypes, striptags} from 'lib';
+import {PanelContext} from './PlotlyPanel';
 
 export class Fold extends Component {
   constructor() {
@@ -11,11 +12,11 @@ export class Fold extends Component {
     this.foldVisible = true;
   }
 
-  getChildContext() {
-    return {
-      foldInfo: this.props.foldInfo ? this.props.foldInfo : null,
-    };
-  }
+  // getChildContext() {
+  //   return {
+  //     foldInfo: this.props.foldInfo ? this.props.foldInfo : null,
+  //   };
+  // }
 
   render() {
     if (!this.foldVisible && !this.props.messageIfEmpty) {
@@ -118,29 +119,47 @@ Fold.propTypes = {
   icon: PropTypes.oneOfType([PropTypes.node, PropTypes.func]),
   messageIfEmpty: PropTypes.string,
   name: PropTypes.string,
-};
-
-Fold.contextTypes = {
   deleteContainer: PropTypes.func,
 };
 
-Fold.childContextTypes = {
-  foldInfo: PropTypes.object,
-};
+// Fold.contextTypes = {
+//   deleteContainer: PropTypes.func,
+// };
+
+// Fold.childContextTypes = {
+//   foldInfo: PropTypes.object,
+// };
+
+class PlotlyFoldWrapper extends Component {
+  constructor(props) {
+    super(props);
+  }
+
+  render() {
+    return (
+      <PanelContext.Consumer>
+        {({deleteContainer}) => {
+          const newProps = {...this.props, deleteContainer};
+          return <PlotlyFold {...newProps} />;
+        }}
+      </PanelContext.Consumer>
+    );
+  }
+}
 
 class PlotlyFold extends Fold {
-  constructor(props, context) {
-    super(props, context);
+  constructor(props) {
+    super(props);
 
     this.foldVisible = false;
-    this.determineVisibility(props, context);
+    this.determineVisibility(props);
   }
 
-  componentWillReceiveProps(nextProps, nextContext) {
-    this.determineVisibility(nextProps, nextContext);
+  componentWillReceiveProps(nextProps) {
+    this.determineVisibility(nextProps);
   }
 
-  determineVisibility(nextProps, nextContext) {
+  determineVisibility(nextProps) {
     this.foldVisible = false;
 
     React.Children.forEach(nextProps.children, child => {
@@ -150,9 +169,9 @@ class PlotlyFold extends Fold {
 
       if (child.props.attr) {
         // attr components force fold open if they are visible
-        const plotProps = unpackPlotProps(child.props, nextContext);
+        const plotProps = unpackPlotProps(child.props, nextProps);
         if (child.type.modifyPlotProps) {
-          child.type.modifyPlotProps(child.props, nextContext, plotProps);
+          child.type.modifyPlotProps(child.props, nextProps, plotProps);
         }
 
         this.foldVisible = this.foldVisible || plotProps.isVisible;
@@ -172,11 +191,18 @@ PlotlyFold.plotly_editor_traits = {
   foldable: true,
 };
 
-PlotlyFold.contextTypes = Object.assign(
+PlotlyFold.propTypes = Object.assign(
   {
     deleteContainer: PropTypes.func,
   },
   containerConnectedContextTypes
 );
 
-export default PlotlyFold;
+// PlotlyFold.contextTypes = Object.assign(
+//   {
+//     deleteContainer: PropTypes.func,
+//   },
+//   containerConnectedContextTypes
+// );
+
+export default PlotlyFoldWrapper;

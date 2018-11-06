@@ -163,6 +163,7 @@ class App extends Component {
   }
 
   render() {
+    console.log({...this.state});
     return (
       <div className="app">
         <PlotlyEditor
@@ -179,11 +180,11 @@ class App extends Component {
           debug
           advancedTraceTypeSelector
           showFieldTooltips
-          // glByDefault
-          // traceTypesConfig={traceTypesConfig}
-          // makeDefaultTrace={() => ({type: 'scattergl', mode: 'markers'})}
-          // fontOptions={[{label:'Arial', value: 'arial'}]}
-          // chartHelp={chartHelp}
+          glByDefault
+          traceTypesConfig={traceTypesConfig}
+          makeDefaultTrace={() => ({type: 'scattergl', mode: 'markers'})}
+          fontOptions={[{label: 'Arial', value: 'arial'}]}
+          chartHelp={chartHelp}
         >
           <DefaultEditor>
             <Panel group="Dev" name="JSON">

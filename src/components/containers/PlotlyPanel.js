@@ -151,6 +151,7 @@ class PanelElement extends Component {
       return child;
     });
 
+    console.log('PlotlyPanel', {newChildren, ...this.props});
     return (
       <div className={`panel${this.props.noPadding ? ' panel--no-padding' : ''}`}>
         <PanelHeader
