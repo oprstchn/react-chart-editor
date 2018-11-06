@@ -1,24 +1,21 @@
 import React, {Fragment} from 'react';
 import PropTypes from 'prop-types';
-import { EditorControlsContext } from "../../EditorControls";
-
+import {EditorControlsContext} from '../../EditorControls';
 
 export const ModelProviderContext = React.createContext({});
 
 class ModalProviderWrapper extends React.Component {
-    constructor(props) {
-        super(props)
-    }
+  constructor(props) {
+    super(props);
+  }
 
-    render() {
-        return <EditorControlsContext.Consumer>
-            {value => (
-                <ModalProvider { ...value}>
-                    {this.props.children}
-                </ModalProvider>
-            )}
-        </EditorControlsContext.Consumer>
-    }
+  render() {
+    return (
+      <EditorControlsContext.Consumer>
+        {value => <ModalProvider {...value}>{this.props.children}</ModalProvider>}
+      </EditorControlsContext.Consumer>
+    );
+  }
 }
 
 class ModalProvider extends React.Component {
@@ -93,12 +90,14 @@ class ModalProvider extends React.Component {
   render() {
     const {component: Component, componentProps, isAnimatingOut} = this.state;
     return (
-        <ModelProviderContext.Provider value={this.getContext()}>
-          <Fragment>
-            {this.props.children}
-            {this.state.open ? <Component isAnimatingOut={isAnimatingOut} {...componentProps} /> : null}
-          </Fragment>
-        </ModelProviderContext.Provider>
+      <ModelProviderContext.Provider value={this.getContext()}>
+        <Fragment>
+          {this.props.children}
+          {this.state.open ? (
+            <Component isAnimatingOut={isAnimatingOut} {...componentProps} />
+          ) : null}
+        </Fragment>
+      </ModelProviderContext.Provider>
     );
   }
 }

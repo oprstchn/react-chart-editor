@@ -17,24 +17,18 @@ import {
   HistogramInfoHorizontal,
   Histogram2d,
 } from '../components/fields/derived';
-import {
-    EditorControlsContext
-} from "../EditorControls";
-import {
-    PanelsWithSidebarContext
-} from "../components/PanelMenuWrapper";
+import {EditorControlsContext} from '../EditorControls';
+import {PanelsWithSidebarContext} from '../components/PanelMenuWrapper';
 
 const GraphCreatePanelWrapper = () => (
-    <EditorControlsContext.Consumer>
-        {({localize}) => (
-            <PanelsWithSidebarContext.Consumer>
-                {({setPanel}) => (
-                    <GraphCreatePanel localize={localize} setPanel={setPanel}/>
-                )}
-            </PanelsWithSidebarContext.Consumer>
-        )}
-    </EditorControlsContext.Consumer>
-)
+  <EditorControlsContext.Consumer>
+    {({localize}) => (
+      <PanelsWithSidebarContext.Consumer>
+        {({setPanel}) => <GraphCreatePanel localize={localize} setPanel={setPanel} />}
+      </PanelsWithSidebarContext.Consumer>
+    )}
+  </EditorControlsContext.Consumer>
+);
 
 const GraphCreatePanel = ({localize: _, setPanel}) => {
   return (

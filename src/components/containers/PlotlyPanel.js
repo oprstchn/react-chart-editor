@@ -5,21 +5,18 @@ import React, {Component, cloneElement} from 'react';
 import update from 'immutability-helper';
 import {bem} from 'lib';
 import {EmbedIconIcon} from 'plotly-icons';
-import {
-    EditorControlsContext
-} from "../../EditorControls";
+import {EditorControlsContext} from '../../EditorControls';
 
 export const PanelContext = React.createContext({});
 
 class PanelErrorImplWrapper extends Component {
-    render() {
-        return <EditorControlsContext.Consumer>
-            {({localize}) => (
-                <PanelErrorImpl localize={localize} />
-            )}
-        </EditorControlsContext.Consumer>
-
-    }
+  render() {
+    return (
+      <EditorControlsContext.Consumer>
+        {({localize}) => <PanelErrorImpl localize={localize} />}
+      </EditorControlsContext.Consumer>
+    );
+  }
 }
 
 class PanelErrorImpl extends Component {
@@ -41,39 +38,38 @@ PanelErrorImpl.propTypes = {
 const PanelError = PanelErrorImplWrapper;
 
 export class PanelWrapper extends Component {
-    constructor(props) {
-        super(props);
-    }
+  constructor(props) {
+    super(props);
+  }
 
-    getContext() {
-        return {
-            deleteContainer: this.props.deleteAction ? this.props.deleteAction : null,
-        };
-    }
+  getContext() {
+    return {
+      deleteContainer: this.props.deleteAction ? this.props.deleteAction : null,
+    };
+  }
 
-    render() {
-        return <PanelContext.Provider value={this.getContext()}>
+  render() {
+    return (
+      <PanelContext.Provider value={this.getContext()}>
         <EditorControlsContext.Consumer>
-            {({localize}) => {
-                const {children, ...otherProps} = this.props;
-                const newProps = {...otherProps, localize};
-                return <PanelElement {...newProps}>
-                        {children}
-                    </PanelElement>
-            }
-            }
+          {({localize}) => {
+            const {children, ...otherProps} = this.props;
+            const newProps = {...otherProps, localize};
+            return <PanelElement {...newProps}>{children}</PanelElement>;
+          }}
         </EditorControlsContext.Consumer>
-        </PanelContext.Provider>
-    }
+      </PanelContext.Provider>
+    );
+  }
 }
 
 PanelWrapper.propTypes = {
-    children: PropTypes.node,
-    addAction: PropTypes.object,
-    deleteAction: PropTypes.func,
-    noPadding: PropTypes.bool,
-    showExpandCollapse: PropTypes.bool,
-}
+  children: PropTypes.node,
+  addAction: PropTypes.object,
+  deleteAction: PropTypes.func,
+  noPadding: PropTypes.bool,
+  showExpandCollapse: PropTypes.bool,
+};
 
 export const Panel = PanelWrapper;
 
@@ -163,9 +159,7 @@ class PanelElement extends Component {
           toggleFolds={this.toggleFolds}
           hasOpen={individualFoldStates.some(s => s === false)}
         />
-            <div className={bem('panel', 'content')}>
-                {newChildren}
-            </div>
+        <div className={bem('panel', 'content')}>{newChildren}</div>
       </div>
     );
   }
@@ -183,7 +177,6 @@ PanelElement.propTypes = {
 PanelElement.defaultProps = {
   showExpandCollapse: true,
 };
-
 
 // PanelElement.childContextTypes = {
 //   deleteContainer: PropTypes.func,

@@ -19,24 +19,20 @@ import {
 import {traceHasColorbar} from './default_panels/StyleColorbarsPanel';
 import Logo from './components/widgets/Logo';
 import {TRANSFORMABLE_TRACES} from './lib/constants';
-import {
-    EditorControlsContext
-} from "./EditorControls";
+import {EditorControlsContext} from './EditorControls';
 
 class DefaultEditorWrapper extends Component {
-    constructor(props) {
-        super(props)
-    }
+  constructor(props) {
+    super(props);
+  }
 
-    render() {
-        return <EditorControlsContext.Consumer>
-            {value => (
-                <DefaultEditor { ...value}>
-                    {this.props.children}
-                </DefaultEditor>
-            )}
-        </EditorControlsContext.Consumer>
-    }
+  render() {
+    return (
+      <EditorControlsContext.Consumer>
+        {value => <DefaultEditor {...value}>{this.props.children}</DefaultEditor>}
+      </EditorControlsContext.Consumer>
+    );
+  }
 }
 
 class DefaultEditor extends Component {

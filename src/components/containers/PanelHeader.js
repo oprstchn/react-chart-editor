@@ -2,30 +2,32 @@ import Button from 'components/widgets/Button';
 import PropTypes from 'prop-types';
 import React, {Component} from 'react';
 import {PlusIcon, ResizeUpIcon, ResizeDownIcon} from 'plotly-icons';
-import {
-    EditorControlsContext
-} from "../../EditorControls";
+import {EditorControlsContext} from '../../EditorControls';
 
 class PanelHeaderWrapper extends Component {
-    constructor(props) {
-        super(props);
-    }
+  constructor(props) {
+    super(props);
+  }
 
-    render() {
-        return <EditorControlsContext.Consumer>
-            {({layout, fullContainer, onUpdate, updateContainer, localize}) => {
-                const { children, ...otherProps} = this.props;
-                const newProps = { ...otherProps, layout, fullContainer, onUpdate, updateContainer, localize}
-                return(
-                <PanelHeader { ...newProps}>
-                    {children}
-                </PanelHeader>
-            )}
-            }
-        </EditorControlsContext.Consumer>
-    }
+  render() {
+    return (
+      <EditorControlsContext.Consumer>
+        {({layout, fullContainer, onUpdate, updateContainer, localize}) => {
+          const {children, ...otherProps} = this.props;
+          const newProps = {
+            ...otherProps,
+            layout,
+            fullContainer,
+            onUpdate,
+            updateContainer,
+            localize,
+          };
+          return <PanelHeader {...newProps}>{children}</PanelHeader>;
+        }}
+      </EditorControlsContext.Consumer>
+    );
+  }
 }
-
 
 class PanelHeader extends Component {
   constructor() {

@@ -8,28 +8,25 @@ import {connectTraceToPlot, plotlyTraceToCustomTrace} from 'lib';
 import {Tab, Tabs, TabList, TabPanel} from 'react-tabs';
 import {traceTypes} from 'lib/traceTypes';
 import {PanelMessage} from './PanelEmpty';
-import {
-    EditorControlsContext
-} from "../../EditorControls";
+import {EditorControlsContext} from '../../EditorControls';
 
 const TraceFold = connectTraceToPlot(PlotlyFold);
 
 class TraceAccordionWrapper extends Component {
-    constructor(props) {
-        super(props)
-    }
+  constructor(props) {
+    super(props);
+  }
 
-    render() {
-        return <EditorControlsContext.Consumer>
-            {({fullData, data, localize}) => {
-             const newProps = { ...this.props, fullData, data, localize};
-             return (
-                 <TraceAccordion { ...newProps}/>
-             )
-            }
-          }
-        </EditorControlsContext.Consumer>
-    }
+  render() {
+    return (
+      <EditorControlsContext.Consumer>
+        {({fullData, data, localize}) => {
+          const newProps = {...this.props, fullData, data, localize};
+          return <TraceAccordion {...newProps} />;
+        }}
+      </EditorControlsContext.Consumer>
+    );
+  }
 }
 
 class TraceAccordion extends Component {

@@ -3,7 +3,6 @@ import React, {cloneElement, Component} from 'react';
 import SidebarGroup from './sidebar/SidebarGroup';
 import {bem} from 'lib';
 
-
 export const PanelsWithSidebarContext = React.createContext({});
 
 class PanelsWithSidebar extends Component {
@@ -86,20 +85,20 @@ class PanelsWithSidebar extends Component {
     const menuOpts = this.computeMenuOptions(this.props);
 
     return (
-        <PanelsWithSidebarContext.Provider value={this.getContext()}>
-      <div className={bem('editor_controls', 'wrapper')}>
-        <div className={bem('sidebar')}>{menuOpts.map(this.renderSection)}</div>
-        {React.Children.map(
-          this.props.children,
-          (child, i) =>
-            child === null ||
-            this.state.group !== child.props.group ||
-            this.state.panel !== child.props.name
-              ? null
-              : cloneElement(child, {key: i})
-        )}
-      </div>
-        </PanelsWithSidebarContext.Provider>
+      <PanelsWithSidebarContext.Provider value={this.getContext()}>
+        <div className={bem('editor_controls', 'wrapper')}>
+          <div className={bem('sidebar')}>{menuOpts.map(this.renderSection)}</div>
+          {React.Children.map(
+            this.props.children,
+            (child, i) =>
+              child === null ||
+              this.state.group !== child.props.group ||
+              this.state.panel !== child.props.name
+                ? null
+                : cloneElement(child, {key: i})
+          )}
+        </div>
+      </PanelsWithSidebarContext.Provider>
     );
   }
 }

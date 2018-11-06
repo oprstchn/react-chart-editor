@@ -16,17 +16,13 @@ import {
   NumericFraction,
 } from '../components';
 import {TRACE_TO_AXIS} from '../lib/constants';
-import {
-    EditorControlsContext
-} from "../EditorControls";
+import {EditorControlsContext} from '../EditorControls';
 
 const GraphSubplotsPanelWrapper = () => (
-    <EditorControlsContext.Consumer>
-        {({localize}) => (
-            <GraphSubplotsPanel localize={localize}/>
-        )}
-    </EditorControlsContext.Consumer>
-)
+  <EditorControlsContext.Consumer>
+    {({localize}) => <GraphSubplotsPanel localize={localize} />}
+  </EditorControlsContext.Consumer>
+);
 
 const GraphSubplotsPanel = ({localize: _}) => (
   <SubplotAccordion>

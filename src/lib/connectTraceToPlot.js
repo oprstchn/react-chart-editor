@@ -10,27 +10,45 @@ import {
 } from '../lib';
 import {deepCopyPublic, setMultiValuedContainer} from './multiValues';
 import {EDITOR_ACTIONS, SUBPLOT_TO_ATTR} from 'lib/constants';
+import {EditorControlsContext} from '../EditorControls';
+
+export const ConnectTraceToPlotContext = React.createContext({});
 
 export default function connectTraceToPlot(WrappedComponent) {
+  class TraceConnectedComponentWrapper extends Component {
+    constructor(props) {
+      super(props);
+    }
+
+    render() {
+      return (
+        <EditorControlsContext.Consumer>
+          {({fullData, data, plotly, onUpdate}) => {
+            const newProps = {...this.props, fullData, data, plotly, onUpdate};
+            return <TraceConnectedComponent {...newProps} />;
+          }}
+        </EditorControlsContext.Consumer>
+      );
+    }
+  }
   class TraceConnectedComponent extends Component {
-    constructor(props, context) {
-      super(props, context);
+    constructor(props) {
+      super(props);
 
       this.deleteTrace = this.deleteTrace.bind(this);
       this.updateTrace = this.updateTrace.bind(this);
-      this.setLocals(props, context);
+      this.setLocals(props);
     }
 
-    componentWillReceiveProps(nextProps, nextContext) {
-      this.setLocals(nextProps, nextContext);
+    componentWillReceiveProps(nextProps) {
+      this.setLocals(nextProps);
     }
 
-    setLocals(props, context) {
-      const {traceIndexes} = props;
-      const {data, fullData, plotly} = context;
+    setLocals(props) {
+      const {traceIndexes, data, fullData, plotly} = props;
 
       const trace = data[traceIndexes[0]];
-      const fullTrace = getFullTrace(props, context);
+      const fullTrace = getFullTrace(props);
 
       this.childContext = {
         getValObject: attr =>
@@ -72,21 +90,21 @@ export default function connectTraceToPlot(WrappedComponent) {
       }
     }
 
-    getChildContext() {
+    getContext() {
       return this.childContext;
     }
 
     updateTrace(update) {
-      if (this.context.onUpdate) {
+      if (this.props.onUpdate) {
         const splitTraceGroup = this.props.fullDataArrayPosition
-          ? this.props.fullDataArrayPosition.map(p => this.context.fullData[p]._group)
+          ? this.props.fullDataArrayPosition.map(p => this.props.fullData[p]._group)
           : null;
 
         const containsAnSrc = Object.keys(update).filter(a => a.endsWith('src')).length > 0;
 
         if (Array.isArray(update)) {
           update.forEach((u, i) => {
-            this.context.onUpdate({
+            this.props.onUpdate({
               type: EDITOR_ACTIONS.UPDATE_TRACES,
               payload: {
                 update: u,
@@ -97,7 +115,7 @@ export default function connectTraceToPlot(WrappedComponent) {
           });
         } else if (splitTraceGroup && !containsAnSrc) {
           this.props.traceIndexes.forEach((t, i) => {
-            this.context.onUpdate({
+            this.props.onUpdate({
               type: EDITOR_ACTIONS.UPDATE_TRACES,
               payload: {
                 update,
@@ -107,7 +125,7 @@ export default function connectTraceToPlot(WrappedComponent) {
             });
           });
         } else {
-          this.context.onUpdate({
+          this.props.onUpdate({
             type: EDITOR_ACTIONS.UPDATE_TRACES,
             payload: {
               update,
@@ -119,9 +137,9 @@ export default function connectTraceToPlot(WrappedComponent) {
     }
 
     deleteTrace() {
-      const currentTrace = this.context.fullData[this.props.traceIndexes[0]];
-      if (!currentTrace && this.context.onUpdate) {
-        this.context.onUpdate({
+      const currentTrace = this.props.fullData[this.props.traceIndexes[0]];
+      if (!currentTrace && this.props.onUpdate) {
+        this.props.onUpdate({
           type: EDITOR_ACTIONS.DELETE_TRACE,
           payload: {
             traceIndexes: this.props.traceIndexes,
@@ -140,7 +158,7 @@ export default function connectTraceToPlot(WrappedComponent) {
             : currentTrace[SUBPLOT_TO_ATTR[subplotType].data] || SUBPLOT_TO_ATTR[subplotType].data;
 
         const isSubplotUsedAnywhereElse = (subplotType, subplotName) =>
-          this.context.fullData.some(
+          this.props.fullData.some(
             trace =>
               (trace[SUBPLOT_TO_ATTR[subplotType].data] === subplotName ||
                 (((subplotType === 'xaxis' || subplotType === 'yaxis') && subplotName.charAt(1)) ===
@@ -165,8 +183,8 @@ export default function connectTraceToPlot(WrappedComponent) {
         }
       }
 
-      if (this.context.onUpdate) {
-        this.context.onUpdate({
+      if (this.props.onUpdate) {
+        this.props.onUpdate({
           type: EDITOR_ACTIONS.DELETE_TRACE,
           payload: {
             axesToBeGarbageCollected,
@@ -178,7 +196,11 @@ export default function connectTraceToPlot(WrappedComponent) {
     }
 
     render() {
-      return <WrappedComponent name={this.name} icon={this.icon} {...this.props} />;
+      return (
+        <ConnectTraceToPlotContext.Provider value={this.getContext()}>
+          <WrappedComponent name={this.name} icon={this.icon} {...this.props} />
+        </ConnectTraceToPlotContext.Provider>
+      );
     }
   }
 
@@ -187,27 +209,31 @@ export default function connectTraceToPlot(WrappedComponent) {
   TraceConnectedComponent.propTypes = {
     traceIndexes: PropTypes.arrayOf(PropTypes.number).isRequired,
     fullDataArrayPosition: PropTypes.arrayOf(PropTypes.number),
-  };
-
-  TraceConnectedComponent.contextTypes = {
     fullData: PropTypes.array,
     data: PropTypes.array,
     plotly: PropTypes.object,
     onUpdate: PropTypes.func,
   };
 
-  TraceConnectedComponent.childContextTypes = {
-    getValObject: PropTypes.func,
-    updateContainer: PropTypes.func,
-    deleteContainer: PropTypes.func,
-    defaultContainer: PropTypes.object,
-    container: PropTypes.object,
-    fullContainer: PropTypes.object,
-    traceIndexes: PropTypes.array,
-  };
+  // TraceConnectedComponent.contextTypes = {
+  //   fullData: PropTypes.array,
+  //   data: PropTypes.array,
+  //   plotly: PropTypes.object,
+  //   onUpdate: PropTypes.func,
+  // };
+
+  // TraceConnectedComponent.childContextTypes = {
+  //   getValObject: PropTypes.func,
+  //   updateContainer: PropTypes.func,
+  //   deleteContainer: PropTypes.func,
+  //   defaultContainer: PropTypes.object,
+  //   container: PropTypes.object,
+  //   fullContainer: PropTypes.object,
+  //   traceIndexes: PropTypes.array,
+  // };
 
   const {plotly_editor_traits} = WrappedComponent;
   TraceConnectedComponent.plotly_editor_traits = plotly_editor_traits;
 
-  return TraceConnectedComponent;
+  return TraceConnectedComponentWrapper;
 }
