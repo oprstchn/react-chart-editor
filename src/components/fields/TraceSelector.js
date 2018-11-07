@@ -26,7 +26,6 @@ class TraceSelector extends Component {
     this.setLocals(props);
 
     this.state = {showGlControls: false};
-    console.log('TraceSelector', {...this.props});
   }
 
   glEnabled() {

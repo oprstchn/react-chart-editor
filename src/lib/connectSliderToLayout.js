@@ -2,6 +2,8 @@ import React, {Component} from 'react';
 import PropTypes from 'prop-types';
 import {getDisplayName} from '../lib';
 
+export const ConnectSliderToLayoutContext = React.createContext({});
+
 export default function connectSliderToLayout(WrappedComponent) {
   class SliderConnectedComponent extends Component {
     constructor(props, context) {
@@ -24,7 +26,7 @@ export default function connectSliderToLayout(WrappedComponent) {
       this.fullContainer = fullSliders[sliderIndex];
     }
 
-    getChildContext() {
+    getContext() {
       return {
         getValObject: attr =>
           !this.context.getValObject ? null : this.context.getValObject(`sliders[].${attr}`),
@@ -45,7 +47,11 @@ export default function connectSliderToLayout(WrappedComponent) {
     }
 
     render() {
-      return <WrappedComponent {...this.props} />;
+      return (
+        <ConnectSliderToLayoutContext.Provider value={this.getContext()}>
+          <WrappedComponent {...this.props} />
+        </ConnectSliderToLayoutContext.Provider>
+      );
     }
   }
 
@@ -63,12 +69,12 @@ export default function connectSliderToLayout(WrappedComponent) {
     getValObject: PropTypes.func,
   };
 
-  SliderConnectedComponent.childContextTypes = {
-    updateContainer: PropTypes.func,
-    container: PropTypes.object,
-    fullContainer: PropTypes.object,
-    getValObject: PropTypes.func,
-  };
+  // SliderConnectedComponent.childContextTypes = {
+  //   updateContainer: PropTypes.func,
+  //   container: PropTypes.object,
+  //   fullContainer: PropTypes.object,
+  //   getValObject: PropTypes.func,
+  // };
 
   const {plotly_editor_traits} = WrappedComponent;
   SliderConnectedComponent.plotly_editor_traits = plotly_editor_traits;

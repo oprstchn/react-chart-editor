@@ -12,17 +12,22 @@ class UnconnectedAxisCreator extends Component {
   canAddAxis() {
     const currentAxisId = this.props.fullContainer[this.props.attr];
     const currentTraceIndex = this.props.fullContainer.index;
-    return this.context.fullData.some(
+    return this.props.fullData.some(
       d => d.index !== currentTraceIndex && d[this.props.attr] === currentAxisId
     );
   }
 
   addAndUpdateAxis() {
-    const {attr, updateContainer} = this.props;
     const {
+      attr,
+      updateContainer,
       onUpdate,
       fullLayout: {_subplots: subplots},
-    } = this.context;
+    } = this.props;
+    // const {
+    //   onUpdate,
+    //   fullLayout: {_subplots: subplots},
+    // } = this.context;
     const lastAxisNumber = Number(subplots[attr][subplots[attr].length - 1].charAt(1)) || 1;
 
     updateContainer({
@@ -56,7 +61,7 @@ class UnconnectedAxisCreator extends Component {
     // When we select another axis, make sure no unused axes are left
     if (
       currentAxisId !== update &&
-      !this.context.fullData.some(
+      !this.props.fullData.some(
         trace =>
           trace[this.props.attr] === currentAxisId && trace.index !== this.props.fullContainer.index
       )
@@ -64,7 +69,7 @@ class UnconnectedAxisCreator extends Component {
       axesToBeGarbageCollected.push(currentAxisId);
     }
 
-    this.context.onUpdate({
+    this.props.onUpdate({
       type: EDITOR_ACTIONS.UPDATE_TRACES,
       payload: {
         axesToBeGarbageCollected,
@@ -102,14 +107,18 @@ UnconnectedAxisCreator.propTypes = {
   container: PropTypes.object,
   fullContainer: PropTypes.object,
   updateContainer: PropTypes.func,
-};
-
-UnconnectedAxisCreator.contextTypes = {
   fullLayout: PropTypes.object,
   data: PropTypes.array,
   fullData: PropTypes.array,
   onUpdate: PropTypes.func,
 };
+
+// UnconnectedAxisCreator.contextTypes = {
+//   fullLayout: PropTypes.object,
+//   data: PropTypes.array,
+//   fullData: PropTypes.array,
+//   onUpdate: PropTypes.func,
+// };
 
 const AxisCreator = connectToContainer(UnconnectedAxisCreator);
 
@@ -117,13 +126,13 @@ class UnconnectedAxesCreator extends Component {
   render() {
     const axisType = traceTypeToAxisType(this.props.container.type);
     const isFirstTraceOfAxisType =
-      this.context.data.filter(d => traceTypeToAxisType(d.type) === axisType).length === 1;
+      this.props.data.filter(d => traceTypeToAxisType(d.type) === axisType).length === 1;
 
     if (isFirstTraceOfAxisType) {
       return null;
     }
 
-    const {fullLayout, localize: _} = this.context;
+    const {fullLayout, localize: _} = this.props;
     const controls = [];
 
     function getOptions(axisType) {
@@ -162,15 +171,20 @@ class UnconnectedAxesCreator extends Component {
 UnconnectedAxesCreator.propTypes = {
   container: PropTypes.object,
   fullContainer: PropTypes.object,
-};
-
-UnconnectedAxesCreator.contextTypes = {
   data: PropTypes.array,
   fullData: PropTypes.array,
   fullLayout: PropTypes.object,
   localize: PropTypes.func,
   setPanel: PropTypes.func,
 };
+
+// UnconnectedAxesCreator.contextTypes = {
+//   data: PropTypes.array,
+//   fullData: PropTypes.array,
+//   fullLayout: PropTypes.object,
+//   localize: PropTypes.func,
+//   setPanel: PropTypes.func,
+// };
 
 export default connectToContainer(UnconnectedAxesCreator, {
   modifyPlotProps: (props, context, plotProps) => {

@@ -148,7 +148,6 @@ class TraceAccordion extends Component {
   }
 
   render() {
-    console.log('TraceAccordion', {...this.props});
     const {canAdd, canGroup} = this.props;
     const _ = this.props.localize;
 

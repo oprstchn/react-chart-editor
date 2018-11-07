@@ -9,10 +9,35 @@ import {
   getSubplotTitle,
 } from 'lib';
 import {TRACE_TO_AXIS, SUBPLOT_TO_ATTR} from 'lib/constants';
+import {EditorControlsContext} from '../../EditorControls';
 
 const TraceFold = connectTraceToPlot(PlotlyFold);
 const NonCartesianSubplotFold = connectNonCartesianSubplotToLayout(PlotlyFold);
 const CartesianSubplotFold = connectCartesianSubplotToLayout(PlotlyFold);
+
+class SubplotAccordionWrapper extends Component {
+  constructor(props) {
+    super(props);
+  }
+
+  render() {
+    return (
+      <EditorControlsContext.Consumer>
+        {({fullData, data, layout, localize}) => {
+          const {children, ...otherProps} = this.props;
+          const newProps = {
+            ...otherProps,
+            fullData,
+            data,
+            layout,
+            localize,
+          };
+          return <SubplotAccordion {...newProps}>{children}</SubplotAccordion>;
+        }}
+      </EditorControlsContext.Consumer>
+    );
+  }
+}
 
 class SubplotAccordion extends Component {
   render() {
@@ -143,15 +168,19 @@ class SubplotAccordion extends Component {
   }
 }
 
-SubplotAccordion.contextTypes = {
+// SubplotAccordion.contextTypes = {
+//   fullData: PropTypes.array,
+//   data: PropTypes.array,
+//   layout: PropTypes.object,
+//   localize: PropTypes.func,
+// };
+
+SubplotAccordion.propTypes = {
+  children: PropTypes.node,
   fullData: PropTypes.array,
   data: PropTypes.array,
   layout: PropTypes.object,
   localize: PropTypes.func,
 };
 
-SubplotAccordion.propTypes = {
-  children: PropTypes.node,
-};
-
-export default SubplotAccordion;
+export default SubplotAccordionWrapper;

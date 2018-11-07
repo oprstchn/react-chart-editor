@@ -3,6 +3,8 @@ import PropTypes from 'prop-types';
 import {getDisplayName} from '../lib';
 import {EDITOR_ACTIONS} from './constants';
 
+export const ConnectRangeSelectorToAxis = React.createContext({});
+
 export default function connectRangeSelectorToAxis(WrappedComponent) {
   class RangeSelectorConnectedComponent extends Component {
     constructor(props, context) {
@@ -29,7 +31,7 @@ export default function connectRangeSelectorToAxis(WrappedComponent) {
       this.fullContainer = fullRangeselectors[rangeselectorIndex];
     }
 
-    getChildContext() {
+    getContext() {
       return {
         getValObject: attr =>
           !this.context.getValObject
@@ -65,7 +67,11 @@ export default function connectRangeSelectorToAxis(WrappedComponent) {
     }
 
     render() {
-      return <WrappedComponent {...this.props} />;
+      return (
+        <ConnectRangeSelectorToAxis.Provider value={this.getContext()}>
+          <WrappedComponent {...this.props} />
+        </ConnectRangeSelectorToAxis.Provider>
+      );
     }
   }
 
@@ -86,13 +92,13 @@ export default function connectRangeSelectorToAxis(WrappedComponent) {
     getValObject: PropTypes.func,
   };
 
-  RangeSelectorConnectedComponent.childContextTypes = {
-    updateContainer: PropTypes.func,
-    deleteContainer: PropTypes.func,
-    container: PropTypes.object,
-    fullContainer: PropTypes.object,
-    getValObject: PropTypes.func,
-  };
+  // RangeSelectorConnectedComponent.childContextTypes = {
+  //   updateContainer: PropTypes.func,
+  //   deleteContainer: PropTypes.func,
+  //   container: PropTypes.object,
+  //   fullContainer: PropTypes.object,
+  //   getValObject: PropTypes.func,
+  // };
 
   const {plotly_editor_traits} = WrappedComponent;
   RangeSelectorConnectedComponent.plotly_editor_traits = plotly_editor_traits;

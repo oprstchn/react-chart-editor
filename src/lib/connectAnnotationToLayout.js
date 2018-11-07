@@ -3,6 +3,8 @@ import PropTypes from 'prop-types';
 import {getDisplayName} from '../lib';
 import {EDITOR_ACTIONS} from './constants';
 
+export const ConnectAnnotationToLayoutContext = React.createContext({});
+
 export default function connectAnnotationToLayout(WrappedComponent) {
   class AnnotationConnectedComponent extends Component {
     constructor(props, context) {
@@ -27,7 +29,7 @@ export default function connectAnnotationToLayout(WrappedComponent) {
       this.fullContainer = fullAnnotations[annotationIndex];
     }
 
-    getChildContext() {
+    getContext() {
       return {
         getValObject: attr =>
           !this.context.getValObject ? null : this.context.getValObject(`annotations[].${attr}`),
@@ -58,7 +60,11 @@ export default function connectAnnotationToLayout(WrappedComponent) {
     }
 
     render() {
-      return <WrappedComponent {...this.props} />;
+      return (
+        <ConnectAnnotationToLayoutContext.Provider value={this.getContext()}>
+          <WrappedComponent {...this.props} />
+        </ConnectAnnotationToLayoutContext.Provider>
+      );
     }
   }
 
@@ -79,13 +85,13 @@ export default function connectAnnotationToLayout(WrappedComponent) {
     getValObject: PropTypes.func,
   };
 
-  AnnotationConnectedComponent.childContextTypes = {
-    updateContainer: PropTypes.func,
-    deleteContainer: PropTypes.func,
-    container: PropTypes.object,
-    fullContainer: PropTypes.object,
-    getValObject: PropTypes.func,
-  };
+  // AnnotationConnectedComponent.childContextTypes = {
+  //   updateContainer: PropTypes.func,
+  //   deleteContainer: PropTypes.func,
+  //   container: PropTypes.object,
+  //   fullContainer: PropTypes.object,
+  //   getValObject: PropTypes.func,
+  // };
 
   const {plotly_editor_traits} = WrappedComponent;
   AnnotationConnectedComponent.plotly_editor_traits = plotly_editor_traits;

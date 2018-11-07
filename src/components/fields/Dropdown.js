@@ -10,7 +10,6 @@ export class UnconnectedDropdown extends Component {
     if (this.props.multiValued) {
       placeholder = this.props.fullValue;
     }
-    console.log('UnconnectedDropdown', {...this.props});
 
     return (
       <Field {...this.props}>

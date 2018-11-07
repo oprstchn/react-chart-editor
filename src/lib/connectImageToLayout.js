@@ -3,6 +3,8 @@ import PropTypes from 'prop-types';
 import {getDisplayName} from '../lib';
 import {EDITOR_ACTIONS} from './constants';
 
+export const ConnectImageToLayoutContext = React.createContext({});
+
 export default function connectImageToLayout(WrappedComponent) {
   class ImageConnectedComponent extends Component {
     constructor(props, context) {
@@ -27,7 +29,7 @@ export default function connectImageToLayout(WrappedComponent) {
       this.fullContainer = fullImages[imageIndex];
     }
 
-    getChildContext() {
+    getContext() {
       return {
         getValObject: attr =>
           !this.context.getValObject ? null : this.context.getValObject(`images[].${attr}`),
@@ -58,7 +60,11 @@ export default function connectImageToLayout(WrappedComponent) {
     }
 
     render() {
-      return <WrappedComponent {...this.props} />;
+      return (
+        <ConnectImageToLayoutContext.Provider value={this.getContext()}>
+          <WrappedComponent {...this.props} />
+        </ConnectImageToLayoutContext.Provider>
+      );
     }
   }
 
@@ -77,13 +83,13 @@ export default function connectImageToLayout(WrappedComponent) {
     getValObject: PropTypes.func,
   };
 
-  ImageConnectedComponent.childContextTypes = {
-    updateContainer: PropTypes.func,
-    deleteContainer: PropTypes.func,
-    container: PropTypes.object,
-    fullContainer: PropTypes.object,
-    getValObject: PropTypes.func,
-  };
+  // ImageConnectedComponent.childContextTypes = {
+  //   updateContainer: PropTypes.func,
+  //   deleteContainer: PropTypes.func,
+  //   container: PropTypes.object,
+  //   fullContainer: PropTypes.object,
+  //   getValObject: PropTypes.func,
+  // };
 
   const {plotly_editor_traits} = WrappedComponent;
   ImageConnectedComponent.plotly_editor_traits = plotly_editor_traits;

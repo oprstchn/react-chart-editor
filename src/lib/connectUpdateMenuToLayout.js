@@ -2,6 +2,8 @@ import React, {Component} from 'react';
 import PropTypes from 'prop-types';
 import {getDisplayName} from '../lib';
 
+export const ConnectUpdateMenuToLayoutContext = React.createContext({});
+
 export default function connectUpdateMenuToLayout(WrappedComponent) {
   class UpdateMenuConnectedComponent extends Component {
     constructor(props, context) {
@@ -24,7 +26,7 @@ export default function connectUpdateMenuToLayout(WrappedComponent) {
       this.fullContainer = fullUpdateMenus[updateMenuIndex];
     }
 
-    getChildContext() {
+    getContext() {
       return {
         getValObject: attr =>
           !this.context.getValObject ? null : this.context.getValObject(`updatemenus[].${attr}`),
@@ -45,7 +47,11 @@ export default function connectUpdateMenuToLayout(WrappedComponent) {
     }
 
     render() {
-      return <WrappedComponent {...this.props} />;
+      return (
+        <ConnectUpdateMenuToLayoutContext.Provider value={this.getContext()}>
+          <WrappedComponent {...this.props} />
+        </ConnectUpdateMenuToLayoutContext.Provider>
+      );
     }
   }
 
@@ -65,12 +71,12 @@ export default function connectUpdateMenuToLayout(WrappedComponent) {
     getValObject: PropTypes.func,
   };
 
-  UpdateMenuConnectedComponent.childContextTypes = {
-    updateContainer: PropTypes.func,
-    container: PropTypes.object,
-    fullContainer: PropTypes.object,
-    getValObject: PropTypes.func,
-  };
+  // UpdateMenuConnectedComponent.childContextTypes = {
+  //   updateContainer: PropTypes.func,
+  //   container: PropTypes.object,
+  //   fullContainer: PropTypes.object,
+  //   getValObject: PropTypes.func,
+  // };
 
   const {plotly_editor_traits} = WrappedComponent;
   UpdateMenuConnectedComponent.plotly_editor_traits = plotly_editor_traits;

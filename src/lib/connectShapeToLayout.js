@@ -3,6 +3,8 @@ import PropTypes from 'prop-types';
 import {getDisplayName} from '../lib';
 import {EDITOR_ACTIONS} from './constants';
 
+export const ConnectShapeToLayoutContext = React.createContext({});
+
 export default function connectShapeToLayout(WrappedComponent) {
   class ShapeConnectedComponent extends Component {
     constructor(props, context) {
@@ -27,7 +29,7 @@ export default function connectShapeToLayout(WrappedComponent) {
       this.fullContainer = fullShapes[shapeIndex];
     }
 
-    getChildContext() {
+    getContext() {
       return {
         getValObject: attr =>
           !this.context.getValObject ? null : this.context.getValObject(`shapes[].${attr}`),
@@ -58,7 +60,11 @@ export default function connectShapeToLayout(WrappedComponent) {
     }
 
     render() {
-      return <WrappedComponent {...this.props} />;
+      return (
+        <ConnectShapeToLayoutContext.Provider value={this.getContext()}>
+          <WrappedComponent {...this.props} />
+        </ConnectShapeToLayoutContext.Provider>
+      );
     }
   }
 
@@ -77,13 +83,13 @@ export default function connectShapeToLayout(WrappedComponent) {
     getValObject: PropTypes.func,
   };
 
-  ShapeConnectedComponent.childContextTypes = {
-    updateContainer: PropTypes.func,
-    deleteContainer: PropTypes.func,
-    container: PropTypes.object,
-    fullContainer: PropTypes.object,
-    getValObject: PropTypes.func,
-  };
+  // ShapeConnectedComponent.childContextTypes = {
+  //   updateContainer: PropTypes.func,
+  //   deleteContainer: PropTypes.func,
+  //   container: PropTypes.object,
+  //   fullContainer: PropTypes.object,
+  //   getValObject: PropTypes.func,
+  // };
 
   const {plotly_editor_traits} = WrappedComponent;
   ShapeConnectedComponent.plotly_editor_traits = plotly_editor_traits;

@@ -6,17 +6,19 @@ import {CloseIcon, AngleDownIcon} from 'plotly-icons';
 import {unpackPlotProps, containerConnectedContextTypes, striptags} from 'lib';
 import {PanelContext} from './PlotlyPanel';
 
+export const FoldContext = React.createContext({});
+
 export class Fold extends Component {
   constructor() {
     super();
     this.foldVisible = true;
   }
 
-  // getChildContext() {
-  //   return {
-  //     foldInfo: this.props.foldInfo ? this.props.foldInfo : null,
-  //   };
-  // }
+  getContext() {
+    return {
+      foldInfo: this.props.foldInfo ? this.props.foldInfo : null,
+    };
+  }
 
   render() {
     if (!this.foldVisible && !this.props.messageIfEmpty) {
@@ -98,10 +100,12 @@ export class Fold extends Component {
     const classes = className ? ' ' + className : '';
 
     return (
-      <div className={`fold${classes}`}>
-        {foldHeader}
-        {foldContent}
-      </div>
+      <FoldContext.Provider value={this.getContext()}>
+        <div className={`fold${classes}`}>
+          {foldHeader}
+          {foldContent}
+        </div>
+      </FoldContext.Provider>
     );
   }
 }

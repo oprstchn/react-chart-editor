@@ -213,10 +213,13 @@ class TraceTypeSelector extends Component {
   }
 
   render() {
-    const {localize: _} = this.props;
     const {
+      localize: _,
       traceTypesConfig: {categories},
     } = this.props;
+    // const {
+    //   traceTypesConfig: {categories},
+    // } = this.props;
 
     return (
       <Modal title={_('Select Trace Type')}>

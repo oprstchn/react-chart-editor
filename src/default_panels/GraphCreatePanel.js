@@ -31,7 +31,6 @@ const GraphCreatePanelWrapper = () => (
 );
 
 const GraphCreatePanel = ({localize: _, setPanel}) => {
-  console.log({_, setPanel});
   return (
     <TraceAccordion
       canAdd

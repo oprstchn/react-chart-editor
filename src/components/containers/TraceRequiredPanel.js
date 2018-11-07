@@ -3,14 +3,38 @@ import PropTypes from 'prop-types';
 import React, {Component} from 'react';
 import {LayoutPanel} from './derived';
 
-class TraceRequiredPanel extends Component {
-  hasTrace() {
-    return this.context.fullData.filter(trace => trace.visible).length > 0;
+import {EditorControlsContext} from '../../EditorControls';
+import {PanelsWithSidebarContext} from '../PanelMenuWrapper';
+
+class TraceRequiredPanelWrapper extends Component {
+  constructor(props) {
+    super(props);
   }
 
   render() {
-    const {localize: _} = this.context;
-    const {children, ...rest} = this.props;
+    return (
+      <EditorControlsContext.Consumer>
+        {({fullData, localize}) => (
+          <PanelsWithSidebarContext.Consumer>
+            {({setPanel}) => {
+              const {children, ...rest} = this.props;
+              const newProps = {...rest, fullData, localize, setPanel};
+              return <TraceRequiredPanel {...newProps}>{children}</TraceRequiredPanel>;
+            }}
+          </PanelsWithSidebarContext.Consumer>
+        )}
+      </EditorControlsContext.Consumer>
+    );
+  }
+}
+
+class TraceRequiredPanel extends Component {
+  hasTrace() {
+    return this.props.fullData.filter(trace => trace.visible).length > 0;
+  }
+
+  render() {
+    const {localize: _, children, ...rest} = this.props;
 
     if (!this.props.visible) {
       return null;
@@ -22,7 +46,7 @@ class TraceRequiredPanel extends Component {
       <PanelEmpty heading={_("Looks like there aren't any traces defined yet.")}>
         <p>
           {_('Go to the ')}
-          <a onClick={() => this.context.setPanel('Structure', 'Traces')}>{_('Traces')}</a>
+          <a onClick={() => this.props.setPanel('Structure', 'Traces')}>{_('Traces')}</a>
           {_(' panel under Structure to define traces.')}
         </p>
       </PanelEmpty>
@@ -33,16 +57,19 @@ class TraceRequiredPanel extends Component {
 TraceRequiredPanel.propTypes = {
   children: PropTypes.node,
   visible: PropTypes.bool,
+  fullData: PropTypes.array,
+  localize: PropTypes.func,
+  setPanel: PropTypes.func,
 };
 
 TraceRequiredPanel.defaultProps = {
   visible: true,
 };
 
-TraceRequiredPanel.contextTypes = {
-  fullData: PropTypes.array,
-  localize: PropTypes.func,
-  setPanel: PropTypes.func,
-};
+// TraceRequiredPanel.contextTypes = {
+//   fullData: PropTypes.array,
+//   localize: PropTypes.func,
+//   setPanel: PropTypes.func,
+// };
 
-export default TraceRequiredPanel;
+export default TraceRequiredPanelWrapper;

@@ -31,6 +31,8 @@ function computeAxesOptions(axes, props, context) {
   return options.length > 1 ? [{label: _('All'), value: 'allaxes'}].concat(options) : options;
 }
 
+export const ConnectAxesToLayoutContext = React.createContext({});
+
 export default function connectAxesToLayout(WrappedComponent) {
   class AxesConnectedComponent extends Component {
     constructor(props, context) {
@@ -88,7 +90,7 @@ export default function connectAxesToLayout(WrappedComponent) {
       }
     }
 
-    getChildContext() {
+    getContext() {
       return {
         getValObject: attr =>
           !this.context.getValObject
@@ -137,7 +139,11 @@ export default function connectAxesToLayout(WrappedComponent) {
     }
 
     render() {
-      return <WrappedComponent {...this.props} options={this.axesOptions} />;
+      return (
+        <ConnectAxesToLayoutContext.Provider value={this.getContext()}>
+          <WrappedComponent {...this.props} options={this.axesOptions} />
+        </ConnectAxesToLayoutContext.Provider>
+      );
     }
   }
 
@@ -151,16 +157,16 @@ export default function connectAxesToLayout(WrappedComponent) {
     getValObject: PropTypes.func,
   };
 
-  AxesConnectedComponent.childContextTypes = {
-    axesOptions: PropTypes.array,
-    axesTarget: PropTypes.string,
-    axesTargetHandler: PropTypes.func,
-    container: PropTypes.object,
-    defaultContainer: PropTypes.object,
-    fullContainer: PropTypes.object,
-    updateContainer: PropTypes.func,
-    getValObject: PropTypes.func,
-  };
+  // AxesConnectedComponent.childContextTypes = {
+  //   axesOptions: PropTypes.array,
+  //   axesTarget: PropTypes.string,
+  //   axesTargetHandler: PropTypes.func,
+  //   container: PropTypes.object,
+  //   defaultContainer: PropTypes.object,
+  //   fullContainer: PropTypes.object,
+  //   updateContainer: PropTypes.func,
+  //   getValObject: PropTypes.func,
+  // };
 
   const {plotly_editor_traits} = WrappedComponent;
   AxesConnectedComponent.plotly_editor_traits = plotly_editor_traits;

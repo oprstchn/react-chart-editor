@@ -2,6 +2,8 @@ import React, {Component} from 'react';
 import PropTypes from 'prop-types';
 import {getDisplayName, plotlyTraceToCustomTrace, renderTraceIcon, getFullTrace} from '../lib';
 
+export const ConnectNonCartesianSubplotToLayout = React.createContext({});
+
 export default function connectNonCartesianSubplotToLayout(WrappedComponent) {
   class SubplotConnectedComponent extends Component {
     constructor(props, context) {
@@ -31,7 +33,7 @@ export default function connectNonCartesianSubplotToLayout(WrappedComponent) {
       }
     }
 
-    getChildContext() {
+    getContext() {
       return {
         getValObject: attr =>
           !this.context.getValObject
@@ -52,7 +54,11 @@ export default function connectNonCartesianSubplotToLayout(WrappedComponent) {
     }
 
     render() {
-      return <WrappedComponent name={this.name} icon={this.icon} {...this.props} />;
+      return (
+        <ConnectNonCartesianSubplotToLayout.Provider value={this.getContext()}>
+          <WrappedComponent name={this.name} icon={this.icon} {...this.props} />
+        </ConnectNonCartesianSubplotToLayout.Provider>
+      );
     }
   }
 
@@ -72,13 +78,13 @@ export default function connectNonCartesianSubplotToLayout(WrappedComponent) {
     getValObject: PropTypes.func,
   };
 
-  SubplotConnectedComponent.childContextTypes = {
-    updateContainer: PropTypes.func,
-    deleteContainer: PropTypes.func,
-    container: PropTypes.object,
-    fullContainer: PropTypes.object,
-    getValObject: PropTypes.func,
-  };
+  // SubplotConnectedComponent.childContextTypes = {
+  //   updateContainer: PropTypes.func,
+  //   deleteContainer: PropTypes.func,
+  //   container: PropTypes.object,
+  //   fullContainer: PropTypes.object,
+  //   getValObject: PropTypes.func,
+  // };
 
   const {plotly_editor_traits} = WrappedComponent;
   SubplotConnectedComponent.plotly_editor_traits = plotly_editor_traits;

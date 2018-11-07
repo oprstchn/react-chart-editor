@@ -12,12 +12,11 @@ class PanelHeaderWrapper extends Component {
   render() {
     return (
       <EditorControlsContext.Consumer>
-        {({layout, fullContainer, onUpdate, updateContainer, localize}) => {
+        {({layout, onUpdate, updateContainer, localize}) => {
           const {children, ...otherProps} = this.props;
           const newProps = {
             ...otherProps,
             layout,
-            fullContainer,
             onUpdate,
             updateContainer,
             localize,
@@ -124,7 +123,6 @@ PanelHeader.propTypes = {
   hasOpen: PropTypes.bool,
   toggleFolds: PropTypes.func,
   layout: PropTypes.object,
-  fullContainer: PropTypes.object,
   onUpdate: PropTypes.func,
   updateContainer: PropTypes.func,
   localize: PropTypes.func,
