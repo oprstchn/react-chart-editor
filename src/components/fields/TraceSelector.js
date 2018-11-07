@@ -12,48 +12,6 @@ import {TraceTypeSelector, TraceTypeSelectorButton, RadioBlocks} from 'component
 import Field from './Field';
 import {CogIcon} from 'plotly-icons';
 
-import {EditorControlsContext} from '../../EditorControls';
-import {ModalContent} from '../containers/Modal';
-
-class TraceSelectorWrapper extends Component {
-  constructor(props) {
-    super(props);
-  }
-
-  render() {
-    console.log('TraceSelectorWrapper');
-    return (
-      <EditorControlsContext.Consumer>
-        {({
-          advancedTraceTypeSelector,
-          traceTypesConfig,
-          plotSchema,
-          config,
-          localize,
-          glByDefault,
-        }) => (
-          <ModalContent.Consumer>
-            {({openModal}) => {
-              const newProps = {
-                ...this.props,
-                advancedTraceTypeSelector,
-                traceTypesConfig,
-                plotSchema,
-                config,
-                localize,
-                glByDefault,
-                openModal,
-              };
-              console.log({newProps});
-              return <TraceSelector {...newProps} />;
-            }}
-          </ModalContent.Consumer>
-        )}
-      </EditorControlsContext.Consumer>
-    );
-  }
-}
-
 class TraceSelector extends Component {
   constructor(props) {
     super(props);
@@ -68,6 +26,7 @@ class TraceSelector extends Component {
     this.setLocals(props);
 
     this.state = {showGlControls: false};
+    console.log('TraceSelector', {...this.props});
   }
 
   glEnabled() {
@@ -157,11 +116,16 @@ class TraceSelector extends Component {
               <TraceTypeSelectorButton
                 {...props}
                 traceTypesConfig={this.props.traceTypesConfig}
+                localize={this.props.localize}
                 handleClick={() =>
                   this.props.openModal(TraceTypeSelector, {
                     ...props,
                     traceTypesConfig: this.props.traceTypesConfig,
                     glByDefault: this.props.glByDefault,
+                    handleClose: this.props.handleClose,
+                    localize: this.props.localize,
+                    mapBoxAccess: this.props.localize,
+                    chartHelp: this.props.chartHelp,
                   })
                 }
               />
@@ -215,4 +179,4 @@ TraceSelector.propTypes = {
   glByDefault: PropTypes.bool,
 };
 
-export default connectToContainer(TraceSelectorWrapper);
+export default connectToContainer(TraceSelector);

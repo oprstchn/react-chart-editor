@@ -60,9 +60,9 @@ Item.propTypes = {
   actions: PropTypes.func,
   showActions: PropTypes.bool,
 };
-Item.contextTypes = {
-  localize: PropTypes.func,
-};
+// Item.contextTypes = {
+//   localize: PropTypes.func,
+// };
 
 class TraceTypeSelector extends Component {
   constructor(props) {
@@ -90,16 +90,16 @@ class TraceTypeSelector extends Component {
       computedValue.type += 'gl';
     }
     updateContainer(computedValue);
-    this.context.handleClose();
+    this.props.handleClose();
   }
 
   actions({value}) {
-    const {localize: _, chartHelp} = this.context;
+    const {localize: _, chartHelp} = this.props;
 
     const onClick = (e, func) => {
       e.stopPropagation();
       func();
-      this.context.handleClose();
+      this.props.handleClose();
     };
 
     return [
@@ -137,9 +137,11 @@ class TraceTypeSelector extends Component {
   }
 
   renderCategories() {
-    const {fullValue} = this.props;
-    const {mapBoxAccess, localize: _, chartHelp} = this.context;
     const {
+      fullValue,
+      mapBoxAccess,
+      localize: _,
+      chartHelp,
       traceTypesConfig: {traces, categories, complex},
     } = this.props;
 
@@ -186,9 +188,9 @@ class TraceTypeSelector extends Component {
   }
 
   renderSingleBlock() {
-    const {fullValue} = this.props;
-    const {localize: _} = this.context;
     const {
+      fullValue,
+      localize: _,
       traceTypesConfig: {traces, complex},
     } = this.props;
 
@@ -211,7 +213,7 @@ class TraceTypeSelector extends Component {
   }
 
   render() {
-    const {localize: _} = this.context;
+    const {localize: _} = this.props;
     const {
       traceTypesConfig: {categories},
     } = this.props;
@@ -230,13 +232,18 @@ TraceTypeSelector.propTypes = {
   fullContainer: PropTypes.object,
   glByDefault: PropTypes.bool,
   traceTypesConfig: PropTypes.object,
-};
-TraceTypeSelector.contextTypes = {
   handleClose: PropTypes.func,
   localize: PropTypes.func,
   mapBoxAccess: PropTypes.bool,
   chartHelp: PropTypes.object,
 };
+
+// TraceTypeSelector.contextTypes = {
+//   handleClose: PropTypes.func,
+//   localize: PropTypes.func,
+//   mapBoxAccess: PropTypes.bool,
+//   chartHelp: PropTypes.object,
+// };
 
 export class TraceTypeSelectorButton extends Component {
   render() {
@@ -244,9 +251,10 @@ export class TraceTypeSelectorButton extends Component {
       handleClick,
       container,
       traceTypesConfig: {traces},
+      localize: _,
     } = this.props;
 
-    const {localize: _} = this.context;
+    // const {localize: _} = this.context;
 
     const inferredType = plotlyTraceToCustomTrace(container);
     const {label, icon, value} = traces(_).find(type => type.value === inferredType);
@@ -268,9 +276,11 @@ TraceTypeSelectorButton.propTypes = {
   handleClick: PropTypes.func.isRequired,
   container: PropTypes.object,
   traceTypesConfig: PropTypes.object.isRequired,
-};
-TraceTypeSelectorButton.contextTypes = {
   localize: PropTypes.func,
 };
+
+// TraceTypeSelectorButton.contextTypes = {
+//   localize: PropTypes.func,
+// };
 
 export default TraceTypeSelector;

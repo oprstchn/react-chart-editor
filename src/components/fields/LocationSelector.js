@@ -18,7 +18,7 @@ const LocationmodeVisible = connectToContainer(UnconnectedDropdown, {
 
 class UnconnectedLocation extends Component {
   render() {
-    const {localize: _} = this.context;
+    const {localize: _} = this.props;
 
     return (
       <Fragment>
@@ -43,19 +43,21 @@ class UnconnectedLocation extends Component {
 
 UnconnectedLocation.propTypes = {
   attr: PropTypes.string,
+  localize: PropTypes.func,
+  updateContainer: PropTypes.func,
   ...Field.propTypes,
 };
 
-UnconnectedLocation.contextTypes = {
-  localize: PropTypes.func,
-  updateContainer: PropTypes.func,
-};
+// UnconnectedLocation.contextTypes = {
+//   localize: PropTypes.func,
+//   updateContainer: PropTypes.func,
+// };
 
 const Location = connectToContainer(UnconnectedLocation);
 
 class UnconnectedLocationSelector extends Component {
-  constructor(props, context) {
-    super(props, context);
+  constructor(props) {
+    super(props);
 
     this.state = {
       mode: props.container.locations ? 'location' : 'latlon',
@@ -89,7 +91,7 @@ class UnconnectedLocationSelector extends Component {
     const {
       localize: _,
       container: {type: type},
-    } = this.context;
+    } = this.props;
 
     return type === 'scattergeo' ? (
       <Fragment>
@@ -128,13 +130,16 @@ UnconnectedLocationSelector.propTypes = {
   fullValue: PropTypes.any,
   updatePlot: PropTypes.func,
   attr: PropTypes.string,
-  ...Field.propTypes,
-};
-
-UnconnectedLocationSelector.contextTypes = {
   container: PropTypes.object,
   localize: PropTypes.func,
   updateContainer: PropTypes.func,
+  ...Field.propTypes,
 };
+
+// UnconnectedLocationSelector.contextTypes = {
+//     container: PropTypes.object,
+//     localize: PropTypes.func,
+//     updateContainer: PropTypes.func,
+// };
 
 export default connectToContainer(UnconnectedLocationSelector);

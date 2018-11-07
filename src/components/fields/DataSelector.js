@@ -11,25 +11,25 @@ export function attributeIsData(meta = {}) {
 }
 
 export class UnconnectedDataSelector extends Component {
-  constructor(props, context) {
-    super(props, context);
+  constructor(props) {
+    super(props);
 
     this.updatePlot = this.updatePlot.bind(this);
-    this.setLocals(props, context);
+    this.setLocals(props);
   }
 
-  componentWillReceiveProps(nextProps, nextContext) {
-    this.setLocals(nextProps, nextContext);
+  componentWillReceiveProps(nextProps) {
+    this.setLocals(nextProps);
   }
 
-  setLocals(props, context) {
-    this.dataSources = context.dataSources || {};
-    this.dataSourceOptions = context.dataSourceOptions || [];
+  setLocals(props) {
+    this.dataSources = props.dataSources || {};
+    this.dataSourceOptions = props.dataSourceOptions || [];
 
     this.srcAttr = props.attr + 'src';
     this.srcProperty = nestedProperty(props.container, this.srcAttr).get();
-    this.fullValue = this.context.srcConverters
-      ? this.context.srcConverters.toSrc(this.srcProperty, props.container.type)
+    this.fullValue = this.props.srcConverters
+      ? this.props.srcConverters.toSrc(this.srcProperty, props.container.type)
       : this.srcProperty;
 
     this.is2D = false;
@@ -68,7 +68,7 @@ export class UnconnectedDataSelector extends Component {
 
     update[this.props.attr] = maybeTransposeData(data, this.srcAttr, this.props.container.type);
     update[this.srcAttr] = maybeAdjustSrc(value, this.srcAttr, this.props.container.type, {
-      fromSrc: this.context.srcConverters ? this.context.srcConverters.fromSrc : null,
+      fromSrc: this.props.srcConverters ? this.props.srcConverters.fromSrc : null,
     });
 
     this.props.updateContainer(update);
@@ -95,8 +95,8 @@ export class UnconnectedDataSelector extends Component {
           value={this.fullValue}
           onChange={this.updatePlot}
           multi={this.is2D}
-          optionRenderer={this.context.dataSourceOptionRenderer}
-          valueRenderer={this.context.dataSourceValueRenderer}
+          optionRenderer={this.props.dataSourceOptionRenderer}
+          valueRenderer={this.props.dataSourceValueRenderer}
           clearable={true}
           placeholder={this.hasData ? 'Data inlined in figure' : 'Choose data...'}
           disabled={this.dataSourceOptions.length === 0}
@@ -110,10 +110,6 @@ UnconnectedDataSelector.propTypes = {
   fullValue: PropTypes.any,
   updatePlot: PropTypes.func,
   container: PropTypes.object,
-  ...Field.propTypes,
-};
-
-UnconnectedDataSelector.contextTypes = {
   dataSources: PropTypes.object,
   dataSourceOptions: PropTypes.array,
   dataSourceValueRenderer: PropTypes.func,
@@ -122,8 +118,20 @@ UnconnectedDataSelector.contextTypes = {
     toSrc: PropTypes.func.isRequired,
     fromSrc: PropTypes.func.isRequired,
   }),
-  container: PropTypes.object,
+  ...Field.propTypes,
 };
+
+// UnconnectedDataSelector.contextTypes = {
+//   dataSources: PropTypes.object,
+//   dataSourceOptions: PropTypes.array,
+//   dataSourceValueRenderer: PropTypes.func,
+//   dataSourceOptionRenderer: PropTypes.func,
+//   srcConverters: PropTypes.shape({
+//     toSrc: PropTypes.func.isRequired,
+//     fromSrc: PropTypes.func.isRequired,
+//   }),
+//   container: PropTypes.object,
+// };
 
 function modifyPlotProps(props, context, plotProps) {
   if (

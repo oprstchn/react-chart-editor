@@ -2,6 +2,24 @@ import PropTypes from 'prop-types';
 import React, {Component} from 'react';
 import Select from 'react-select';
 import classnames from 'classnames';
+import {EditorControlsContext} from '../../EditorControls';
+
+class DropDownWrapper extends Component {
+  constructor(props) {
+    super(props);
+  }
+
+  render() {
+    return (
+      <EditorControlsContext.Consumer>
+        {({localize}) => {
+          const newProps = {...this.props, localize};
+          return <Dropdown {...newProps} />;
+        }}
+      </EditorControlsContext.Consumer>
+    );
+  }
+}
 
 class Dropdown extends Component {
   constructor(props) {
@@ -39,9 +57,10 @@ class Dropdown extends Component {
       disabled,
       className,
       width,
+      localize: _,
     } = this.props;
 
-    const {localize: _} = this.context;
+    // const {localize: _} = this.context;
 
     const dropdownStyle = {minWidth};
     if (width) {
@@ -109,10 +128,11 @@ Dropdown.propTypes = {
   disabled: PropTypes.bool,
   className: PropTypes.string,
   width: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
-};
-
-Dropdown.contextTypes = {
   localize: PropTypes.func,
 };
 
-export default Dropdown;
+// Dropdown.contextTypes = {
+//   localize: PropTypes.func,
+// };
+
+export default DropDownWrapper;

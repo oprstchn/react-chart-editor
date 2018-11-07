@@ -21,8 +21,8 @@ export const containerConnectedContextTypes = {
 };
 
 import {EditorControlsContext} from '../EditorControls';
-
 import {ConnectTraceToPlotContext} from './connectTraceToPlot';
+import {ModelProviderContext} from '../components/containers/ModalProvider';
 
 export default function connectToContainer(WrappedComponent, config = {}) {
   class ContainerConnectedComponentWrapper extends Component {
@@ -33,35 +33,73 @@ export default function connectToContainer(WrappedComponent, config = {}) {
     render() {
       return (
         <EditorControlsContext.Consumer>
-          {({localize, data, fullData, layout, onUpdate, plotly, graphDiv}) => (
-            <ConnectTraceToPlotContext.Consumer>
-              {({
-                container,
-                defaultContainer,
-                fullContainer,
-                getValObject,
-                updateContainer,
-                traceIndexes,
-              }) => {
-                const newProps = {
-                  ...this.props,
-                  localize,
-                  data,
-                  fullData,
-                  layout,
-                  onUpdate,
-                  plotly,
-                  graphDiv,
-                  container,
-                  defaultContainer,
-                  fullContainer,
-                  getValObject,
-                  updateContainer,
-                  traceIndexes,
-                };
-                return <ContainerConnectedComponent {...newProps} />;
-              }}
-            </ConnectTraceToPlotContext.Consumer>
+          {({
+            localize,
+            data,
+            fullData,
+            layout,
+            onUpdate,
+            plotly,
+            graphDiv,
+            advancedTraceTypeSelector,
+            traceTypesConfig,
+            plotSchema,
+            config,
+            glByDefault,
+            mapBoxAccess,
+            chartHelp,
+            srcConverters,
+            dataSources,
+            dataSourceOptions,
+            dataSourceValueRenderer,
+            dataSourceOptionRenderer,
+          }) => (
+            <ModelProviderContext.Consumer>
+              {({openModal, handleClose}) => (
+                <ConnectTraceToPlotContext.Consumer>
+                  {({
+                    container,
+                    defaultContainer,
+                    fullContainer,
+                    getValObject,
+                    updateContainer,
+                    traceIndexes,
+                  }) => {
+                    const newProps = {
+                      ...this.props,
+                      localize,
+                      data,
+                      fullData,
+                      layout,
+                      onUpdate,
+                      plotly,
+                      graphDiv,
+                      container,
+                      defaultContainer,
+                      fullContainer,
+                      getValObject,
+                      updateContainer,
+                      traceIndexes,
+                      advancedTraceTypeSelector,
+                      traceTypesConfig,
+                      plotSchema,
+                      config,
+                      glByDefault,
+                      mapBoxAccess,
+                      openModal,
+                      handleClose,
+                      chartHelp,
+                      srcConverters,
+                      dataSources,
+                      dataSourceOptions,
+                      dataSourceValueRenderer,
+                      dataSourceOptionRenderer,
+                    };
+                    return <ContainerConnectedComponent {...newProps} />;
+                  }}
+                </ConnectTraceToPlotContext.Consumer>
+              )}
+            </ModelProviderContext.Consumer>
           )}
         </EditorControlsContext.Consumer>
       );
