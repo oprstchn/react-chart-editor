@@ -15,7 +15,7 @@ import {CogIcon} from 'plotly-icons';
 class TraceSelector extends Component {
   constructor(props) {
     super(props);
-
+    console.log({...this.props});
     this.updatePlot = this.updatePlot.bind(this);
     this.setGl = this.setGl.bind(this);
     this.glEnabled = this.glEnabled.bind(this);
@@ -177,5 +177,7 @@ TraceSelector.propTypes = {
   localize: PropTypes.func,
   glByDefault: PropTypes.bool,
 };
+
+TraceSelector.displayName = 'TraceSelector';
 
 export default connectToContainer(TraceSelector);

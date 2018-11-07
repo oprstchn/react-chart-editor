@@ -11,6 +11,7 @@ import Inspector from 'react-inspector';
 import dataSources from './dataSources';
 import 'brace/mode/json';
 import 'brace/theme/textmate';
+// import {traceTypes} from '../src/lib/traceTypes';
 
 // https://github.com/plotly/react-chart-editor#mapbox-access-tokens
 import ACCESS_TOKENS from '../accessTokens';
@@ -22,48 +23,51 @@ const dataSourceOptions = Object.keys(dataSources).map(name => ({
 
 const config = {mapboxAccessToken: ACCESS_TOKENS.MAPBOX, editable: true};
 
-const traceTypesConfig = {
-  traces: _ => [
-    {
-      value: 'scatter',
-      icon: 'scatter',
-      label: _('Scatter'),
-    },
-    {
-      value: 'line',
-      label: _('Line'),
-    },
-    {
-      value: 'area',
-      label: _('Area'),
-    },
-    {
-      value: 'bar',
-      label: _('Bar'),
-    },
-    {
-      value: 'histogram',
-      label: _('Histogram'),
-    },
-    {
-      value: 'table',
-      label: _('Table'),
-    },
-    {
-      value: 'pie',
-      label: _('Pie'),
-    },
-    {
-      value: 'box',
-      label: _('Box'),
-    },
-    {
-      value: 'histogram2d',
-      label: _('Histogram 2D'),
-    },
-  ],
-  complex: true,
-};
+// const traceTypesConfig = {
+//   traces: _ => traceTypes(_),
+// };
+// const traceTypesConfig = {
+//   traces: _ => [
+//     {
+//       value: 'scatter',
+//       icon: 'scatter',
+//       label: _('Scatter'),
+//     },
+//     {
+//       value: 'line',
+//       label: _('Line'),
+//     },
+//     {
+//       value: 'area',
+//       label: _('Area'),
+//     },
+//     {
+//       value: 'bar',
+//       label: _('Bar'),
+//     },
+//     {
+//       value: 'histogram',
+//       label: _('Histogram'),
+//     },
+//     {
+//       value: 'table',
+//       label: _('Table'),
+//     },
+//     {
+//       value: 'pie',
+//       label: _('Pie'),
+//     },
+//     {
+//       value: 'box',
+//       label: _('Box'),
+//     },
+//     {
+//       value: 'histogram2d',
+//       label: _('Histogram 2D'),
+//     },
+//   ],
+//   complex: true,
+// };
 
 const chartHelp = {
   area: {
@@ -181,7 +185,7 @@ class App extends Component {
           advancedTraceTypeSelector
           showFieldTooltips
           glByDefault
-          traceTypesConfig={traceTypesConfig}
+          // traceTypesConfig={traceTypesConfig}
           makeDefaultTrace={() => ({type: 'scattergl', mode: 'markers'})}
           fontOptions={[{label: 'Arial', value: 'arial'}]}
           chartHelp={chartHelp}

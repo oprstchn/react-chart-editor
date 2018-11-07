@@ -5,7 +5,7 @@ import {getDisplayName} from '../lib';
 import {EDITOR_ACTIONS} from './constants';
 import {EditorControlsContext} from '../EditorControls';
 
-export const connectLayoutToPlotContext = React.createContext({});
+export const ConnectLayoutToPlotContext = React.createContext({});
 
 export default function connectLayoutToPlot(WrappedComponent) {
   class LayoutConnectedComponentWrapper extends Component {
@@ -50,9 +50,9 @@ export default function connectLayoutToPlot(WrappedComponent) {
     render() {
       console.log('connectLayoutToPlot');
       return (
-        <connectLayoutToPlotContext.Provider value={this.getContext()}>
+        <ConnectLayoutToPlotContext.Provider value={this.getContext()}>
           <WrappedComponent {...this.props} />
-        </connectLayoutToPlotContext.Provider>
+        </ConnectLayoutToPlotContext.Provider>
       );
     }
   }
