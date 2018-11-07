@@ -48,6 +48,7 @@ export default function connectLayoutToPlot(WrappedComponent) {
     }
 
     render() {
+      console.log('connectLayoutToPlot');
       return (
         <connectLayoutToPlotContext.Provider value={this.getContext()}>
           <WrappedComponent {...this.props} />

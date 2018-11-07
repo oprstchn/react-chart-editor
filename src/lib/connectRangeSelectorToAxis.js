@@ -67,6 +67,7 @@ export default function connectRangeSelectorToAxis(WrappedComponent) {
     }
 
     render() {
+      console.log('connectRangeSelectorToAxis');
       return (
         <ConnectRangeSelectorToAxis.Provider value={this.getContext()}>
           <WrappedComponent {...this.props} />

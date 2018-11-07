@@ -64,6 +64,7 @@ export default function connectCartesianSubplotToLayout(WrappedComponent) {
     }
 
     render() {
+      console.log('connectCartesianSubplotToLayout');
       return (
         <ConnectCartesianSubplotToLayoutContext value={this.getContext()}>
           <WrappedComponent name={this.name} icon={this.icon} {...this.props} />

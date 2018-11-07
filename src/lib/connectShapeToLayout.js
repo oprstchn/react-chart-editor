@@ -60,6 +60,7 @@ export default function connectShapeToLayout(WrappedComponent) {
     }
 
     render() {
+      console.log('connectShapeToLayout');
       return (
         <ConnectShapeToLayoutContext.Provider value={this.getContext()}>
           <WrappedComponent {...this.props} />

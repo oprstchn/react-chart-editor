@@ -47,6 +47,7 @@ export default function connectUpdateMenuToLayout(WrappedComponent) {
     }
 
     render() {
+      console.log('connectUpdateMenuToLayout');
       return (
         <ConnectUpdateMenuToLayoutContext.Provider value={this.getContext()}>
           <WrappedComponent {...this.props} />

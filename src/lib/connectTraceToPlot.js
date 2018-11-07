@@ -196,6 +196,7 @@ export default function connectTraceToPlot(WrappedComponent) {
     }
 
     render() {
+      console.log('connectTraceToPlot');
       return (
         <ConnectTraceToPlotContext.Provider value={this.getContext()}>
           <WrappedComponent name={this.name} icon={this.icon} {...this.props} />

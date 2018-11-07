@@ -3,7 +3,8 @@ import PlotlyPanel from './PlotlyPanel';
 import PlotlySection from './PlotlySection';
 import PropTypes from 'prop-types';
 
-import {connectLayoutToPlot, containerConnectedContextTypes} from 'lib';
+// import {connectLayoutToPlot, containerConnectedContextTypes} from 'lib';
+import {connectLayoutToPlot} from 'lib';
 
 const LayoutPanel = connectLayoutToPlot(PlotlyPanel);
 const LayoutSection = connectLayoutToPlot(PlotlySection);
@@ -25,7 +26,7 @@ const TraceTypeSection = (props, context) => {
   return null;
 };
 
-TraceTypeSection.contextTypes = containerConnectedContextTypes;
+// TraceTypeSection.contextTypes = containerConnectedContextTypes;
 TraceTypeSection.propTypes = {
   children: PropTypes.node,
   name: PropTypes.string,

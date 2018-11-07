@@ -60,6 +60,7 @@ export default function connectImageToLayout(WrappedComponent) {
     }
 
     render() {
+      console.log('connectImageToLayout');
       return (
         <ConnectImageToLayoutContext.Provider value={this.getContext()}>
           <WrappedComponent {...this.props} />

@@ -32,6 +32,7 @@ export default function connectToContainer(WrappedComponent, config = {}) {
     }
 
     render() {
+      console.log('name', getDisplayName(WrappedComponent));
       return (
         <EditorControlsContext.Consumer>
           {({
@@ -167,8 +168,9 @@ export default function connectToContainer(WrappedComponent, config = {}) {
       // component can skip computation as it can see plotProps is already defined.
       const {plotProps = this.plotProps, ...props} = Object.assign({}, this.plotProps, this.props);
       if (props.isVisible) {
-        const newProps = {...this.props, ...this.getContext()};
-        return <WrappedComponent {...newProps} plotProps={plotProps} />;
+        return (
+          <WrappedComponent {...this.props} plotProps={plotProps} context={this.getContext()} />
+        );
       }
 
       return null;

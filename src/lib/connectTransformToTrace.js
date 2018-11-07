@@ -63,6 +63,7 @@ export default function connectTransformToTrace(WrappedComponent) {
     }
 
     render() {
+      console.log('connectTransformToTrace');
       return (
         <ConnectTransformToTraceContext.Provider value={this.getContext()}>
           <WrappedComponent {...this.props} />

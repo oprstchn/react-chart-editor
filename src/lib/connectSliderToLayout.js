@@ -47,6 +47,7 @@ export default function connectSliderToLayout(WrappedComponent) {
     }
 
     render() {
+      console.log('connectSliderToLayout');
       return (
         <ConnectSliderToLayoutContext.Provider value={this.getContext()}>
           <WrappedComponent {...this.props} />

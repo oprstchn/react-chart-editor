@@ -60,6 +60,7 @@ export default function connectAnnotationToLayout(WrappedComponent) {
     }
 
     render() {
+      console.log('connectAnnotationToLayout');
       return (
         <ConnectAnnotationToLayoutContext.Provider value={this.getContext()}>
           <WrappedComponent {...this.props} />

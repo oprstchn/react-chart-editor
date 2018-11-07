@@ -139,6 +139,7 @@ export default function connectAxesToLayout(WrappedComponent) {
     }
 
     render() {
+      console.log('connectAxesToLayout');
       return (
         <ConnectAxesToLayoutContext.Provider value={this.getContext()}>
           <WrappedComponent {...this.props} options={this.axesOptions} />

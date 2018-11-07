@@ -54,6 +54,7 @@ export default function connectNonCartesianSubplotToLayout(WrappedComponent) {
     }
 
     render() {
+      console.log('connectNonCartesianSubplotToLayout');
       return (
         <ConnectNonCartesianSubplotToLayout.Provider value={this.getContext()}>
           <WrappedComponent name={this.name} icon={this.icon} {...this.props} />

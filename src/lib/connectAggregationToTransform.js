@@ -49,6 +49,7 @@ export default function connectAggregationToTransform(WrappedComponent) {
     }
 
     render() {
+      console.log('connectAggregationToTransform');
       return (
         <ConnectAggregationToTransformContext.Provider value={this.getContext()}>
           <WrappedComponent {...this.props} />
