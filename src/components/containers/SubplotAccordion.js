@@ -1,7 +1,7 @@
 import PlotlyFold from './PlotlyFold';
 import TraceRequiredPanel from './TraceRequiredPanel';
 import PropTypes from 'prop-types';
-import React, {Component} from 'react';
+import React, {Component, cloneElement} from 'react';
 import {
   connectTraceToPlot,
   connectCartesianSubplotToLayout,
@@ -10,6 +10,9 @@ import {
 } from 'lib';
 import {TRACE_TO_AXIS, SUBPLOT_TO_ATTR} from 'lib/constants';
 import {EditorControlsContext} from '../../EditorControls';
+import {ConnectTraceToPlotContext} from '../../lib/connectTraceToPlot';
+import {ConnectNonCartesianSubplotToLayout} from '../../lib/connectNonCartesianSubplotToLayout';
+import {ConnectCartesianSubplotToLayoutContext} from '../../lib/connectCartesianSubplotToLayout';
 
 const TraceFold = connectTraceToPlot(PlotlyFold);
 const NonCartesianSubplotFold = connectNonCartesianSubplotToLayout(PlotlyFold);
@@ -21,6 +24,7 @@ class SubplotAccordionWrapper extends Component {
   }
 
   render() {
+    console.log('SubplotAccordionWrapper');
     return (
       <EditorControlsContext.Consumer>
         {({fullData, data, layout, localize}) => {
@@ -41,8 +45,8 @@ class SubplotAccordionWrapper extends Component {
 
 class SubplotAccordion extends Component {
   render() {
-    const {data = [], layout = {}, localize: _} = this.context;
-    const {children} = this.props;
+    // const {data = [], layout = {}, localize: _} = this.context;
+    const {children, data = [], layout = {}, localize: _} = this.props;
     const subplotFolds = [];
 
     const allCartesianAxisCombinations = data.reduce((acc, curVal, inx) => {
@@ -77,7 +81,13 @@ class SubplotAccordion extends Component {
             yaxis={d.yaxis}
             name={`${d.xaxisName} | ${d.yaxisName}`}
           >
-            {children}
+            {children.map((child, key) => {
+              return cloneElement(child, {
+                ...child.props,
+                key,
+                consumer: ConnectCartesianSubplotToLayoutContext.Consumer,
+              });
+            })}
           </CartesianSubplotFold>
         ))
     );
@@ -132,7 +142,13 @@ class SubplotAccordion extends Component {
             subplot={layoutKey}
             name={subplotName}
           >
-            {children}
+            {children.map((child, key) => {
+              return cloneElement(child, {
+                ...child.props,
+                key,
+                consumer: ConnectNonCartesianSubplotToLayout.Consumer,
+              });
+            })}
           </NonCartesianSubplotFold>
         );
       }
@@ -158,12 +174,18 @@ class SubplotAccordion extends Component {
                 : `${_('Table')} ${tableCounter > 1 ? tableCounter : ''}`
             }
           >
-            {children}
+            {children.map((child, key) => {
+              return cloneElement(child, {
+                ...child.props,
+                key,
+                consumer: ConnectTraceToPlotContext.Consumer,
+              });
+            })}
           </TraceFold>
         );
       }
     });
-
+    console.log({subplotFolds});
     return <TraceRequiredPanel>{subplotFolds}</TraceRequiredPanel>;
   }
 }

@@ -14,8 +14,8 @@ import {CogIcon} from 'plotly-icons';
 
 class TraceSelector extends Component {
   constructor(props) {
+    console.log('TraceSelector', props);
     super(props);
-    console.log({...this.props});
     this.updatePlot = this.updatePlot.bind(this);
     this.setGl = this.setGl.bind(this);
     this.glEnabled = this.glEnabled.bind(this);
@@ -61,10 +61,10 @@ class TraceSelector extends Component {
     }
   }
 
-  componentWillReceiveProps(nextProps, nextprops) {
+  componentWillReceiveProps(nextProps) {
     const {container, fullContainer, updateContainer} = nextProps;
     this.setTraceDefaults(container, fullContainer, updateContainer);
-    this.setLocals(nextProps, nextprops);
+    this.setLocals(nextProps);
   }
 
   updatePlot(value) {
@@ -123,7 +123,7 @@ class TraceSelector extends Component {
                     glByDefault: this.props.glByDefault,
                     handleClose: this.props.handleClose,
                     localize: this.props.localize,
-                    mapBoxAccess: this.props.localize,
+                    mapBoxAccess: this.props.mapBoxAccess,
                     chartHelp: this.props.chartHelp,
                   })
                 }

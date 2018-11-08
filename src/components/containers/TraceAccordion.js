@@ -2,13 +2,14 @@ import PlotlyFold from './PlotlyFold';
 import TraceRequiredPanel from './TraceRequiredPanel';
 import PlotlyPanel from './PlotlyPanel';
 import PropTypes from 'prop-types';
-import React, {Component} from 'react';
+import React, {Component, cloneElement} from 'react';
 import {EDITOR_ACTIONS} from 'lib/constants';
 import {connectTraceToPlot, plotlyTraceToCustomTrace} from 'lib';
 import {Tab, Tabs, TabList, TabPanel} from 'react-tabs';
 import {traceTypes} from 'lib/traceTypes';
 import {PanelMessage} from './PanelEmpty';
 import {EditorControlsContext} from '../../EditorControls';
+import {ConnectTraceToPlotContext} from '../../lib/connectTraceToPlot';
 
 const TraceFold = connectTraceToPlot(PlotlyFold);
 
@@ -63,6 +64,16 @@ class TraceAccordion extends Component {
     }
   }
 
+  consumerPassToChild() {
+    return this.props.children.map((child, key) => {
+      return cloneElement(child, {
+        ...child.props,
+        key,
+        consumer: ConnectTraceToPlotContext.Consumer,
+      });
+    });
+  }
+
   renderGroupedTraceFolds() {
     if (!this.filteredTraces.length || this.filteredTraces.length <= 1) {
       return null;
@@ -94,7 +105,7 @@ class TraceAccordion extends Component {
         name={traceTypes(_).find(t => t.value === type).label}
         fullDataArrayPosition={fullDataArrayPositionsByTraceType[type]}
       >
-        {this.props.children}
+        {this.consumerPassToChild()}
       </TraceFold>
     ));
   }
@@ -108,7 +119,7 @@ class TraceAccordion extends Component {
           canDelete={this.props.canAdd}
           fullDataArrayPosition={[d._expandedIndex]}
         >
-          {this.props.children}
+          {this.consumerPassToChild()}
         </TraceFold>
       ));
     }
@@ -123,7 +134,7 @@ class TraceAccordion extends Component {
           traceIndexes={[this.filteredTracesDataIndexes[i]]}
           canDelete={this.props.canAdd}
         >
-          {this.props.children}
+          {this.consumerPassToChild()}
         </TraceFold>
       ));
     }

@@ -21,13 +21,13 @@ export const containerConnectedContextTypes = {
 };
 
 import {EditorControlsContext} from '../EditorControls';
-import {ModelProviderContext} from '../components/containers/ModalProvider';
-import {ConnectLayoutToPlotContext} from './connectLayoutToPlot';
-import {ConnectTraceToPlotContext} from './connectTraceToPlot';
+import {ModalProviderContext} from '../components/containers/ModalProvider';
+// import {ConnectLayoutToPlotContext} from './connectLayoutToPlot';
+// import {ConnectTraceToPlotContext} from './connectTraceToPlot';
 
-// export const ConnectToContainerContext = React.createContext({});
+export const ConnectToContainerContext = React.createContext({});
 
-function getNeededContextValue(context) {
+export function getNeededContextValue(context) {
   const newContext = {};
   Object.keys(containerConnectedContextTypes).forEach(name => {
     // eslint-disable-next-line no-undefined
@@ -35,7 +35,6 @@ function getNeededContextValue(context) {
       newContext[name] = context[name];
     }
   });
-  console.log({newContext});
   return newContext;
 }
 
@@ -45,172 +44,43 @@ export default function connectToContainer(WrappedComponent, config = {}) {
       super(props);
     }
 
-    findContext(props) {
-      const WrappedComponentDisplayName = getDisplayName(WrappedComponent);
-      switch (WrappedComponentDisplayName) {
-        case 'TraceSelector':
-        case 'UnconnectedDataSelector':
-        case 'UnconnectedAxesCreator':
-        case 'UnconnectedSubplotCreator':
-          return (
-            <ConnectLayoutToPlotContext.Consumer>
-              {layoutToPlotValue => (
-                <ConnectTraceToPlotContext.Consumer>
-                  {TraceToPlotValue => {
-                    const newProps = {
-                      ...props,
-                      ...getNeededContextValue({...layoutToPlotValue, ...TraceToPlotValue}),
-                    };
-                    return <ContainerConnectedComponent {...newProps} />;
-                  }}
-                </ConnectTraceToPlotContext.Consumer>
-              )}
-            </ConnectLayoutToPlotContext.Consumer>
-          );
-        case 'Info':
-          return (
-            <ConnectTraceToPlotContext.Consumer>
-              {TraceToPlotValue => {
-                const newProps = {
-                  ...props,
-                  ...getNeededContextValue({...TraceToPlotValue}),
-                };
-                return <ContainerConnectedComponent {...newProps} />;
-              }}
-            </ConnectTraceToPlotContext.Consumer>
-          );
-        default:
-          return <ContainerConnectedComponent {...props} />;
+    findContext(props, context) {
+      const {consumer: Consumer, ...rest} = props;
+      // eslint-disable-next-line no-undefined
+      if (Consumer === null || Consumer === undefined) {
+        return <ContainerConnectedComponent {...rest} context={context} />;
       }
+
+      return (
+        <Consumer>
+          {value => {
+            const newContext = getNeededContextValue({...value, ...context});
+            return <ContainerConnectedComponent {...rest} context={newContext} />;
+          }}
+        </Consumer>
+      );
     }
 
     render() {
-      console.log({getDisplayName: getDisplayName(WrappedComponent)});
+      console.log({getDisplayName: getDisplayName(WrappedComponent), props: this.props});
       return (
         <EditorControlsContext.Consumer>
-          {({
-            localize,
-            data,
-            fullData,
-            fullLayout,
-            layout,
-            onUpdate,
-            plotly,
-            graphDiv,
-            advancedTraceTypeSelector,
-            traceTypesConfig,
-            plotSchema,
-            config,
-            glByDefault,
-            mapBoxAccess,
-            chartHelp,
-            srcConverters,
-            dataSources,
-            dataSourceOptions,
-            dataSourceValueRenderer,
-            dataSourceOptionRenderer,
-          }) => (
-            <ModelProviderContext.Consumer>
-              {({openModal, handleClose}) => {
-                const newProps = {
-                  ...this.props,
-                  localize,
-                  data,
-                  fullData,
-                  fullLayout,
-                  layout,
-                  onUpdate,
-                  plotly,
-                  graphDiv,
-                  advancedTraceTypeSelector,
-                  traceTypesConfig,
-                  plotSchema,
-                  config,
-                  glByDefault,
-                  mapBoxAccess,
-                  openModal,
-                  handleClose,
-                  chartHelp,
-                  srcConverters,
-                  dataSources,
-                  dataSourceOptions,
-                  dataSourceValueRenderer,
-                  dataSourceOptionRenderer,
+          {editorControlsValue => (
+            <ModalProviderContext.Consumer>
+              {modalValue => {
+                const context = {
+                  ...editorControlsValue,
+                  ...modalValue,
                 };
-                return this.findContext(newProps);
+                return this.findContext(this.props, context);
               }}
-            </ModelProviderContext.Consumer>
+            </ModalProviderContext.Consumer>
           )}
         </EditorControlsContext.Consumer>
       );
     }
   }
 
-  // class ContainerConnectedComponentWrapper extends Component {
-  //   constructor(props) {
-  //     super(props);
-  //   }
-  //
-  //   render() {
-  //     return (
-  //       <EditorControlsContext.Consumer>
-  //         {({
-  //           localize,
-  //           data,
-  //           fullData,
-  //           fullLayout,
-  //           layout,
-  //           onUpdate,
-  //           plotly,
-  //           graphDiv,
-  //           advancedTraceTypeSelector,
-  //           traceTypesConfig,
-  //           plotSchema,
-  //           config,
-  //           glByDefault,
-  //           mapBoxAccess,
-  //           chartHelp,
-  //           srcConverters,
-  //           dataSources,
-  //           dataSourceOptions,
-  //           dataSourceValueRenderer,
-  //           dataSourceOptionRenderer,
-  //         }) => (
-  //           <ModelProviderContext.Consumer>
-  //             {({openModal, handleClose}) => {
-  //               const newProps = {
-  //                 ...this.props,
-  //                 localize,
-  //                 data,
-  //                 fullData,
-  //                 fullLayout,
-  //                 layout,
-  //                 onUpdate,
-  //                 plotly,
-  //                 graphDiv,
-  //                 advancedTraceTypeSelector,
-  //                 traceTypesConfig,
-  //                 plotSchema,
-  //                 config,
-  //                 glByDefault,
-  //                 mapBoxAccess,
-  //                 openModal,
-  //                 handleClose,
-  //                 chartHelp,
-  //                 srcConverters,
-  //                 dataSources,
-  //                 dataSourceOptions,
-  //                 dataSourceValueRenderer,
-  //                 dataSourceOptionRenderer,
-  //               };
-  //               return <ContainerConnectedComponent {...newProps} />;
-  //             }}
-  //           </ModelProviderContext.Consumer>
-  //         )}
-  //       </EditorControlsContext.Consumer>
-  //     );
-  //   }
-  // }
   class ContainerConnectedComponent extends Component {
     // Run the inner modifications first and allow more recent modifyPlotProp
     // config function to modify last.
@@ -267,11 +137,10 @@ export default function connectToContainer(WrappedComponent, config = {}) {
     }
 
     setLocals(props) {
-      const context = this.getContextFromProps(props);
-      console.log({props, context});
-      this.plotProps = unpackPlotProps(props, context);
+      const {context, ...rest} = this.props;
+      this.plotProps = unpackPlotProps(rest, context);
       this.attr = props.attr;
-      ContainerConnectedComponent.modifyPlotProps(props, context, this.plotProps);
+      ContainerConnectedComponent.modifyPlotProps(rest, context, this.plotProps);
     }
 
     getContext() {
@@ -286,10 +155,18 @@ export default function connectToContainer(WrappedComponent, config = {}) {
       // props. However pass plotProps as a specific prop in case inner component
       // is also wrapped by a component that `unpackPlotProps`. That way inner
       // component can skip computation as it can see plotProps is already defined.
-      const {plotProps = this.plotProps, ...props} = Object.assign({}, this.plotProps, this.props);
+      const {plotProps = this.plotProps, context, ...props} = Object.assign(
+        {},
+        this.plotProps,
+        this.props
+      );
+      console.log('here');
       if (props.isVisible) {
-        const newProps = {...this.props, ...this.getContext()};
-        return <WrappedComponent {...newProps} plotProps={plotProps} />;
+        return (
+          <ConnectToContainerContext.Provider value={this.getContext()}>
+            <WrappedComponent {...props} context={context} plotProps={plotProps} />
+          </ConnectToContainerContext.Provider>
+        );
       }
 
       return null;

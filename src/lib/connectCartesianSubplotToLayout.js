@@ -1,25 +1,47 @@
 import React, {Component} from 'react';
 import PropTypes from 'prop-types';
 import {getDisplayName, plotlyTraceToCustomTrace, renderTraceIcon, getFullTrace} from '../lib';
+import {EditorControlsContext} from '../EditorControls';
+import {ConnectLayoutToPlotContext} from './connectLayoutToPlot';
 
 export const ConnectCartesianSubplotToLayoutContext = React.createContext({});
 
 export default function connectCartesianSubplotToLayout(WrappedComponent) {
-  class SubplotConnectedComponent extends Component {
-    constructor(props, context) {
-      super(props, context);
-
-      this.updateSubplot = this.updateSubplot.bind(this);
-      this.setLocals(props, context);
+  class SubplotConnectedComponentWrapper extends Component {
+    constructor(props) {
+      super(props);
     }
 
-    componentWillReceiveProps(nextProps, nextContext) {
-      this.setLocals(nextProps, nextContext);
+    render() {
+      return (
+        <EditorControlsContext.Consumer>
+          {editorControlsValue => (
+            <ConnectLayoutToPlotContext.Consumer>
+              {layoutToPlotValue => {
+                const newProps = {...this.props, ...editorControlsValue, ...layoutToPlotValue};
+                return <SubplotConnectedComponent {...newProps} />;
+              }}
+            </ConnectLayoutToPlotContext.Consumer>
+          )}
+        </EditorControlsContext.Consumer>
+      );
+    }
+  }
+  class SubplotConnectedComponent extends Component {
+    constructor(props) {
+      super(props);
+
+      this.updateSubplot = this.updateSubplot.bind(this);
+      this.setLocals(props);
+    }
+
+    componentWillReceiveProps(nextProps) {
+      this.setLocals(nextProps);
     }
 
     setLocals(props, context) {
-      const {xaxis, yaxis, traceIndexes} = props;
-      const {container, fullContainer, data} = context;
+      const {xaxis, yaxis, traceIndexes, container, fullContainer, data} = props;
+      // const {container, fullContainer, data} = context;
 
       this.container = {
         xaxis: container[xaxis],
@@ -42,9 +64,9 @@ export default function connectCartesianSubplotToLayout(WrappedComponent) {
     getContext() {
       return {
         getValObject: attr =>
-          !this.context.getValObject
+          !this.props.getValObject
             ? null
-            : this.context.getValObject(
+            : this.props.getValObject(
                 attr.replace('xaxis', this.props.xaxis).replace('yaxis', this.props.yaxis)
               ),
         updateContainer: this.updateSubplot,
@@ -60,15 +82,15 @@ export default function connectCartesianSubplotToLayout(WrappedComponent) {
         const newKey = key.replace('xaxis', this.props.xaxis).replace('yaxis', this.props.yaxis);
         newUpdate[newKey] = update[key];
       }
-      this.context.updateContainer(newUpdate);
+      this.props.updateContainer(newUpdate);
     }
 
     render() {
       console.log('connectCartesianSubplotToLayout');
       return (
-        <ConnectCartesianSubplotToLayoutContext value={this.getContext()}>
+        <ConnectCartesianSubplotToLayoutContext.Provider value={this.getContext()}>
           <WrappedComponent name={this.name} icon={this.icon} {...this.props} />
-        </ConnectCartesianSubplotToLayoutContext>
+        </ConnectCartesianSubplotToLayoutContext.Provider>
       );
     }
   }
@@ -78,9 +100,6 @@ export default function connectCartesianSubplotToLayout(WrappedComponent) {
   SubplotConnectedComponent.propTypes = {
     xaxis: PropTypes.string.isRequired,
     yaxis: PropTypes.string.isRequired,
-  };
-
-  SubplotConnectedComponent.contextTypes = {
     container: PropTypes.object,
     fullContainer: PropTypes.object,
     data: PropTypes.array,
@@ -89,6 +108,16 @@ export default function connectCartesianSubplotToLayout(WrappedComponent) {
     updateContainer: PropTypes.func,
     getValObject: PropTypes.func,
   };
+
+  // SubplotConnectedComponent.contextTypes = {
+  //   container: PropTypes.object,
+  //   fullContainer: PropTypes.object,
+  //   data: PropTypes.array,
+  //   fullData: PropTypes.array,
+  //   onUpdate: PropTypes.func,
+  //   updateContainer: PropTypes.func,
+  //   getValObject: PropTypes.func,
+  // };
 
   // SubplotConnectedComponent.childContextTypes = {
   //   updateContainer: PropTypes.func,
@@ -101,5 +130,5 @@ export default function connectCartesianSubplotToLayout(WrappedComponent) {
   const {plotly_editor_traits} = WrappedComponent;
   SubplotConnectedComponent.plotly_editor_traits = plotly_editor_traits;
 
-  return SubplotConnectedComponent;
+  return SubplotConnectedComponentWrapper;
 }

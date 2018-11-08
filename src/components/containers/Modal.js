@@ -1,6 +1,7 @@
 import React, {Component} from 'react';
 import PropTypes from 'prop-types';
 import {CloseIcon} from 'plotly-icons';
+import {ModalProviderContext} from './ModalProvider';
 
 const ModalHeader = ({title, handleClose}) => (
   <div className="modal__header">
@@ -15,6 +16,24 @@ const ModalHeader = ({title, handleClose}) => (
 
 const ModalContent = ({children}) => <div className="modal__content">{children}</div>;
 
+class ModalWrapper extends Component {
+  constructor(props) {
+    super(props);
+  }
+
+  render() {
+    return (
+      <ModalProviderContext.Consumer>
+        {({handleClose, isAnimatingOut}) => {
+          const {children, ...rest} = this.props;
+          const newProps = {...rest, handleClose, isAnimatingOut};
+          return <Modal {...newProps}>{children}</Modal>;
+        }}
+      </ModalProviderContext.Consumer>
+    );
+  }
+}
+
 class Modal extends Component {
   constructor(props) {
     super(props);
@@ -24,7 +43,7 @@ class Modal extends Component {
   escFunction(event) {
     const escKeyCode = 27;
     if (event.keyCode === escKeyCode) {
-      this.context.handleClose();
+      this.props.handleClose();
     }
   }
 
@@ -39,16 +58,16 @@ class Modal extends Component {
   render() {
     const {children, title} = this.props;
     let classes = 'modal';
-    if (this.context.isAnimatingOut) {
+    if (this.props.isAnimatingOut) {
       classes += ' modal--animate-out';
     }
     return (
       <div className={classes}>
         <div className="modal__card">
-          <ModalHeader title={title} handleClose={() => this.context.handleClose()} />
+          <ModalHeader title={title} handleClose={() => this.props.handleClose()} />
           <ModalContent>{children}</ModalContent>
         </div>
-        <div className="modal__backdrop" onClick={() => this.context.handleClose()} />
+        <div className="modal__backdrop" onClick={() => this.props.handleClose()} />
       </div>
     );
   }
@@ -66,13 +85,15 @@ ModalContent.propTypes = {
 Modal.propTypes = {
   children: PropTypes.node.isRequired,
   title: PropTypes.node,
-};
-
-Modal.contextTypes = {
   handleClose: PropTypes.func,
   isAnimatingOut: PropTypes.bool,
 };
 
-export default Modal;
+// Modal.contextTypes = {
+//   handleClose: PropTypes.func,
+//   isAnimatingOut: PropTypes.bool,
+// };
+
+export default ModalWrapper;
 
 export {ModalHeader, ModalContent};

@@ -2,7 +2,7 @@ import React, {Fragment} from 'react';
 import PropTypes from 'prop-types';
 import {EditorControlsContext} from '../../EditorControls';
 
-export const ModelProviderContext = React.createContext({});
+export const ModalProviderContext = React.createContext({});
 
 class ModalProviderWrapper extends React.Component {
   constructor(props) {
@@ -90,14 +90,14 @@ class ModalProvider extends React.Component {
   render() {
     const {component: Component, componentProps, isAnimatingOut} = this.state;
     return (
-      <ModelProviderContext.Provider value={this.getContext()}>
+      <ModalProviderContext.Provider value={this.getContext()}>
         <Fragment>
           {this.props.children}
           {this.state.open ? (
             <Component isAnimatingOut={isAnimatingOut} {...componentProps} />
           ) : null}
         </Fragment>
-      </ModelProviderContext.Provider>
+      </ModalProviderContext.Provider>
     );
   }
 }

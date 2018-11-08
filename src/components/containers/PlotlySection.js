@@ -33,14 +33,17 @@ Section.propTypes = {
   attr: PropTypes.string,
 };
 
-export default class PlotlySection extends Section {
-  constructor(props, context) {
-    super(props, context);
-    this.determineVisibility(props, context);
+class PlotlySectionElement extends Section {
+  constructor(props) {
+    super(props);
+    const {context, ...rest} = props;
+    this.determineVisibility(rest, context);
+    console.log('PlotlySectionElement', props, context);
   }
 
-  componentWillReceiveProps(nextProps, nextContext) {
-    this.determineVisibility(nextProps, nextContext);
+  componentWillReceiveProps(nextProps) {
+    const {context, ...rest} = nextProps;
+    this.determineVisibility(rest, context);
   }
 
   determineVisibility(nextProps, nextContext) {
@@ -67,6 +70,29 @@ export default class PlotlySection extends Section {
         return;
       }
     });
+  }
+}
+
+export default class PlotlySection extends Component {
+  constructor(props) {
+    super(props);
+  }
+
+  render() {
+    const Consumer = this.props.consumer;
+    const {context, ...rest} = this.props;
+    // eslint-disable-next-line no-undefined
+    if (Consumer === null || Consumer === undefined) {
+      return <PlotlySectionElement {...this.props} context={context} />;
+    }
+    return (
+      <Consumer>
+        {value => {
+          const newContext = {...context, ...value};
+          return <PlotlySectionElement {...rest} context={newContext} />;
+        }}
+      </Consumer>
+    );
   }
 }
 

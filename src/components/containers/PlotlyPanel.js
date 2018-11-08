@@ -82,6 +82,7 @@ class PanelElement extends Component {
     };
     this.toggleFolds = this.toggleFolds.bind(this);
     this.toggleFold = this.toggleFold.bind(this);
+    console.log('PanelElement');
   }
 
   // getContext() {

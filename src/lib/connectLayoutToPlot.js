@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-// import PropTypes from 'prop-types';
+import PropTypes from 'prop-types';
 import nestedProperty from 'plotly.js/src/lib/nested_property';
 import {getDisplayName} from '../lib';
 import {EDITOR_ACTIONS} from './constants';
@@ -12,8 +12,8 @@ export default function connectLayoutToPlot(WrappedComponent) {
     render() {
       return (
         <EditorControlsContext.Consumer>
-          {({fullData, _fullLayout, plotly, onUpdate}) => {
-            const newProps = {...this.props, fullData, _fullLayout, plotly, onUpdate};
+          {editorControlsValue => {
+            const newProps = {...this.props, ...editorControlsValue};
             return <LayoutConnectedComponent {...newProps} />;
           }}
         </EditorControlsContext.Consumer>
@@ -22,7 +22,7 @@ export default function connectLayoutToPlot(WrappedComponent) {
   }
   class LayoutConnectedComponent extends Component {
     getContext() {
-      const {layout, fullLayout, plotly, onUpdate} = this.context;
+      const {layout, fullLayout, plotly, onUpdate} = this.props;
 
       const updateContainer = update => {
         if (!onUpdate) {
@@ -58,6 +58,13 @@ export default function connectLayoutToPlot(WrappedComponent) {
   }
 
   LayoutConnectedComponent.displayName = `LayoutConnected${getDisplayName(WrappedComponent)}`;
+
+  LayoutConnectedComponent.propTypes = {
+    layout: PropTypes.object,
+    fullLayout: PropTypes.object,
+    plotly: PropTypes.object,
+    onUpdate: PropTypes.func,
+  };
 
   // LayoutConnectedComponent.contextTypes = {
   //   layout: PropTypes.object,

@@ -73,6 +73,7 @@ class TraceTypeSelector extends Component {
     this.renderCategories = this.renderCategories.bind(this);
     this.renderGrid = this.renderGrid.bind(this);
     this.renderSingleBlock = this.renderSingleBlock.bind(this);
+    console.log({...props});
   }
 
   selectAndClose(value) {
