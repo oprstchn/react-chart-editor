@@ -1,9 +1,9 @@
-import React, {Component} from 'react';
+import React, {Component, createContext} from 'react';
 import PropTypes from 'prop-types';
 import nestedProperty from 'plotly.js/src/lib/nested_property';
 import {getDisplayName} from '../lib';
 import {EDITOR_ACTIONS} from './constants';
-import {ConnectLayoutToPlotContext} from '../context';
+import {EditorControlsContext} from '../context';
 
 export default function connectLayoutToPlot(WrappedComponent) {
   class LayoutConnectedComponent extends Component {
@@ -61,21 +61,40 @@ export default function connectLayoutToPlot(WrappedComponent) {
 
     render() {
       return (
-        <ConnectLayoutToPlotContext.Provider value={this.provideValue()}>
-          <WrappedComponent {...this.props} />
-        </ConnectLayoutToPlotContext.Provider>
+        <EditorControlsContext.Consumer>
+          {({localize}) => {
+            // eslint-disable-next-line no-undefined
+            if (WrappedComponent.contextType) {
+              const {Consumer} = WrappedComponent.contextType;
+              return (
+                <Consumer>
+                  {value => {
+                    WrappedComponent.contextType = createContext({
+                      ...this.provideValue(),
+                      ...value,
+                      localize,
+                    });
+                    return <WrappedComponent {...this.props} />;
+                  }}
+                </Consumer>
+              );
+            }
+            WrappedComponent.contextType = createContext({...this.provideValue(), localize});
+            return <WrappedComponent {...this.props} />;
+          }}
+        </EditorControlsContext.Consumer>
       );
     }
   }
 
   LayoutConnectedComponent.displayName = `LayoutConnected${getDisplayName(WrappedComponent)}`;
-
-  LayoutConnectedComponent.contextTypes = {
-    layout: PropTypes.object,
-    fullLayout: PropTypes.object,
-    plotly: PropTypes.object,
-    onUpdate: PropTypes.func,
-  };
+  LayoutConnectedComponent.contextType = EditorControlsContext;
+  // LayoutConnectedComponent.contextTypes = {
+  //   layout: PropTypes.object,
+  //   fullLayout: PropTypes.object,
+  //   plotly: PropTypes.object,
+  //   onUpdate: PropTypes.func,
+  // };
 
   LayoutConnectedComponent.childContextTypes = {
     getValObject: PropTypes.func,

@@ -1,8 +1,7 @@
-import React, {Component} from 'react';
+import React, {Component, createContext} from 'react';
 import PropTypes from 'prop-types';
 import {getDisplayName} from '../lib';
 import {EDITOR_ACTIONS} from './constants';
-import {ConnectAnnotationToLayoutContext} from '../context';
 
 export default function connectAnnotationToLayout(WrappedComponent) {
   class AnnotationConnectedComponent extends Component {
@@ -70,11 +69,8 @@ export default function connectAnnotationToLayout(WrappedComponent) {
     }
 
     render() {
-      return (
-        <ConnectAnnotationToLayoutContext.Provider value={this.provideValue()}>
-          <WrappedComponent {...this.props} />
-        </ConnectAnnotationToLayoutContext.Provider>
-      );
+      WrappedComponent.contextType = createContext(this.provideValue());
+      return <WrappedComponent {...this.props} />;
     }
   }
 

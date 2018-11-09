@@ -1,7 +1,6 @@
-import React, {Component} from 'react';
+import React, {Component, createContext} from 'react';
 import PropTypes from 'prop-types';
 import {getDisplayName} from '../lib';
-import {ConnectUpdateMenuToLayoutContext} from '../context';
 
 export default function connectUpdateMenuToLayout(WrappedComponent) {
   class UpdateMenuConnectedComponent extends Component {
@@ -56,11 +55,8 @@ export default function connectUpdateMenuToLayout(WrappedComponent) {
     }
 
     render() {
-      return (
-        <ConnectUpdateMenuToLayoutContext.Provider value={this.provideValue()}>
-          <WrappedComponent {...this.props} />
-        </ConnectUpdateMenuToLayoutContext.Provider>
-      );
+      WrappedComponent.contextType = createContext(this.provideValue());
+      return <WrappedComponent {...this.props} />;
     }
   }
 

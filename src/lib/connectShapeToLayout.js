@@ -1,8 +1,7 @@
-import React, {Component} from 'react';
+import React, {Component, createContext} from 'react';
 import PropTypes from 'prop-types';
 import {getDisplayName} from '../lib';
 import {EDITOR_ACTIONS} from './constants';
-import {ConnectShapeToLayoutContext} from '../context';
 
 export default function connectShapeToLayout(WrappedComponent) {
   class ShapeConnectedComponent extends Component {
@@ -70,11 +69,8 @@ export default function connectShapeToLayout(WrappedComponent) {
     }
 
     render() {
-      return (
-        <ConnectShapeToLayoutContext.Provider value={this.provideValue()}>
-          <WrappedComponent {...this.props} />
-        </ConnectShapeToLayoutContext.Provider>
-      );
+      WrappedComponent.contextType = createContext(this.provideValue());
+      return <WrappedComponent {...this.props} />;
     }
   }
 

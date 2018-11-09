@@ -1,9 +1,8 @@
-import React, {Component} from 'react';
+import React, {Component, createContext} from 'react';
 import PropTypes from 'prop-types';
 import nestedProperty from 'plotly.js/src/lib/nested_property';
 import {deepCopyPublic, setMultiValuedContainer} from './multiValues';
 import {capitalize, getAllAxes, getDisplayName, getAxisTitle} from '../lib';
-import {ConnectAxesToLayoutContext} from '../context';
 
 function computeAxesOptions(axes, props, context) {
   const _ = context.localize;
@@ -36,6 +35,7 @@ export default function connectAxesToLayout(WrappedComponent) {
   class AxesConnectedComponent extends Component {
     constructor(props, context) {
       super(props, context);
+      console.log('connectAxesToLayout', {context});
 
       this.axes = getAllAxes(context.fullContainer);
       this.axesOptions = computeAxesOptions(this.axes, props, context);
@@ -154,11 +154,8 @@ export default function connectAxesToLayout(WrappedComponent) {
     }
 
     render() {
-      return (
-        <ConnectAxesToLayoutContext.Provider value={this.provideValue()}>
-          <WrappedComponent {...this.props} options={this.axesOptions} />
-        </ConnectAxesToLayoutContext.Provider>
-      );
+      WrappedComponent.contextType = createContext(this.provideValue());
+      return <WrappedComponent {...this.props} options={this.axesOptions} />;
     }
   }
 

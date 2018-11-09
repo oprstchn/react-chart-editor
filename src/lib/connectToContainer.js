@@ -1,8 +1,8 @@
-import React, {Component} from 'react';
+import React, {Component, createContext} from 'react';
 import PropTypes from 'prop-types';
 import unpackPlotProps from './unpackPlotProps';
 import {getDisplayName} from '../lib';
-import {ConnectToContainerContext} from '../context';
+import {EditorControlsContext, ModalProviderContext} from '../context';
 
 export const containerConnectedContextTypes = {
   localize: PropTypes.func,
@@ -22,6 +22,7 @@ export const containerConnectedContextTypes = {
 };
 
 export default function connectToContainer(WrappedComponent, config = {}) {
+  const connectToContainerContext = createContext({});
   class ContainerConnectedComponent extends Component {
     // Run the inner modifications first and allow more recent modifyPlotProp
     // config function to modify last.
@@ -72,9 +73,22 @@ export default function connectToContainer(WrappedComponent, config = {}) {
       const {plotProps = this.plotProps, ...props} = Object.assign({}, this.plotProps, this.props);
       if (props.isVisible) {
         return (
-          <ConnectToContainerContext.Provider value={this.provideValue()}>
-            <WrappedComponent {...props} plotProps={plotProps} />
-          </ConnectToContainerContext.Provider>
+          <EditorControlsContext.Consumer>
+            {editorControlsValue => (
+              <ModalProviderContext.Consumer>
+                {modalProviderValue => {
+                  WrappedComponent.contextType = createContext(this.provideValue());
+                  return (
+                    <connectToContainerContext.Provider
+                      value={{...editorControlsValue, ...modalProviderValue}}
+                    >
+                      <WrappedComponent {...props} plotProps={plotProps} />
+                    </connectToContainerContext.Provider>
+                  );
+                }}
+              </ModalProviderContext.Consumer>
+            )}
+          </EditorControlsContext.Consumer>
         );
       }
 
@@ -83,8 +97,8 @@ export default function connectToContainer(WrappedComponent, config = {}) {
   }
 
   ContainerConnectedComponent.displayName = `ContainerConnected${getDisplayName(WrappedComponent)}`;
-
-  ContainerConnectedComponent.contextTypes = containerConnectedContextTypes;
+  ContainerConnectedComponent.contextType = connectToContainerContext;
+  // ContainerConnectedComponent.contextTypes = containerConnectedContextTypes;
   ContainerConnectedComponent.childContextTypes = {
     description: PropTypes.string,
     attr: PropTypes.string,
