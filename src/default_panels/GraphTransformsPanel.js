@@ -12,6 +12,7 @@ import {
 } from '../components';
 import {connectAggregationToTransform} from '../lib';
 import {TRANSFORMABLE_TRACES} from 'lib/constants';
+import {EditorControlsContext} from '../context';
 
 const AggregationSection = connectAggregationToTransform(PlotlySection);
 
@@ -64,37 +65,37 @@ Aggregations.contextTypes = {
   localize: PropTypes.func,
 };
 
-const GraphTransformsPanel = (props, {localize: _}) => {
+const GraphTransformsPanel = () => {
   return (
-    <TraceAccordion traceFilterCondition={t => TRANSFORMABLE_TRACES.includes(t.type)}>
-      <TransformAccordion>
-        <Radio
-          attr="enabled"
-          options={[{label: _('Enabled'), value: true}, {label: _('Disabled'), value: false}]}
-        />
+    <EditorControlsContext.Consumer>
+      {({localize: _}) => (
+        <TraceAccordion traceFilterCondition={t => TRANSFORMABLE_TRACES.includes(t.type)}>
+          <TransformAccordion>
+            <Radio
+              attr="enabled"
+              options={[{label: _('Enabled'), value: true}, {label: _('Disabled'), value: false}]}
+            />
 
-        <DataSelector label={_('By')} attr="groups" />
+            <DataSelector label={_('By')} attr="groups" />
 
-        <DataSelector label={_('Target')} attr="target" />
-        <FilterOperation label={_('Operator')} attr="operation" />
-        <FilterValue label={_('Value')} attr="value" />
+            <DataSelector label={_('Target')} attr="target" />
+            <FilterOperation label={_('Operator')} attr="operation" />
+            <FilterValue label={_('Value')} attr="value" />
 
-        <Radio
-          attr="order"
-          options={[
-            {label: _('Ascending'), value: 'ascending'},
-            {label: _('Descending'), value: 'descending'},
-          ]}
-        />
+            <Radio
+              attr="order"
+              options={[
+                {label: _('Ascending'), value: 'ascending'},
+                {label: _('Descending'), value: 'descending'},
+              ]}
+            />
 
-        <Aggregations />
-      </TransformAccordion>
-    </TraceAccordion>
+            <Aggregations />
+          </TransformAccordion>
+        </TraceAccordion>
+      )}
+    </EditorControlsContext.Consumer>
   );
-};
-
-GraphTransformsPanel.contextTypes = {
-  localize: PropTypes.func,
 };
 
 export default GraphTransformsPanel;

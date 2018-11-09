@@ -183,11 +183,6 @@ class TraceAccordion extends Component {
 }
 
 TraceAccordion.contextType = EditorControlsContext;
-// TraceAccordion.contextTypes = {
-//   fullData: PropTypes.array,
-//   data: PropTypes.array,
-//   localize: PropTypes.func,
-// };
 
 TraceAccordion.propTypes = {
   canAdd: PropTypes.bool,

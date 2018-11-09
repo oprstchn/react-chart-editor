@@ -115,18 +115,6 @@ UnconnectedDataSelector.propTypes = {
 };
 UnconnectedDataSelector.contextType = EditorControlsContext;
 
-// UnconnectedDataSelector.contextTypes = {
-//   dataSources: PropTypes.object,
-//   dataSourceOptions: PropTypes.array,
-//   dataSourceValueRenderer: PropTypes.func,
-//   dataSourceOptionRenderer: PropTypes.func,
-//   srcConverters: PropTypes.shape({
-//     toSrc: PropTypes.func.isRequired,
-//     fromSrc: PropTypes.func.isRequired,
-//   }),
-//   container: PropTypes.object,
-// };
-
 function modifyPlotProps(props, context, plotProps) {
   if (
     attributeIsData(plotProps.attrMeta) &&

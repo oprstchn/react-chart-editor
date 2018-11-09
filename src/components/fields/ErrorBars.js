@@ -4,6 +4,7 @@ import {DataSelector, Radio, Numeric, MultiColorPicker} from '../index';
 import RadioBlocks from '../widgets/RadioBlocks';
 import Field from './Field';
 import {connectToContainer} from 'lib';
+import {EditorControlsContext} from '../../context';
 
 class ErrorBars extends Component {
   constructor(props, context) {
@@ -171,8 +172,6 @@ ErrorBars.propTypes = {
   updatePlot: PropTypes.func,
 };
 
-ErrorBars.contextTypes = {
-  localize: PropTypes.func,
-};
+ErrorBars.contextTypes = EditorControlsContext;
 
 export default connectToContainer(ErrorBars);

@@ -7,6 +7,7 @@ import Button from '../widgets/Button';
 import {PlusIcon} from 'plotly-icons';
 import {connectToContainer, traceTypeToAxisType, getSubplotTitle} from 'lib';
 import {PlotlySection} from 'components';
+import {EditorControlsContext} from '../../context';
 
 class UnconnectedSingleSubplotCreator extends Component {
   canAddSubplot() {
@@ -91,12 +92,7 @@ UnconnectedSingleSubplotCreator.propTypes = {
   updateContainer: PropTypes.func,
 };
 
-UnconnectedSingleSubplotCreator.contextTypes = {
-  fullLayout: PropTypes.object,
-  data: PropTypes.array,
-  fullData: PropTypes.array,
-  onUpdate: PropTypes.func,
-};
+UnconnectedSingleSubplotCreator.contextType = EditorControlsContext;
 
 const SingleSubplotCreator = connectToContainer(UnconnectedSingleSubplotCreator);
 

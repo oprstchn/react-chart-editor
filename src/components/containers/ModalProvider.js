@@ -1,6 +1,6 @@
 import React, {Fragment} from 'react';
 import PropTypes from 'prop-types';
-import {ModalProviderContext} from '../../context';
+import {EditorControlsContext, ModalProviderContext} from '../../context';
 
 class ModalProvider extends React.Component {
   constructor(props) {
@@ -98,9 +98,7 @@ class ModalProvider extends React.Component {
 ModalProvider.propTypes = {
   children: PropTypes.node,
 };
-ModalProvider.contextTypes = {
-  localize: PropTypes.func,
-};
+ModalProvider.contextType = EditorControlsContext;
 ModalProvider.childContextTypes = {
   openModal: PropTypes.func,
   closeModal: PropTypes.func,

@@ -4,6 +4,7 @@ import React, {Component} from 'react';
 import DropdownWidget from '../widgets/Dropdown';
 import TextInput from '../widgets/TextInput';
 import {connectToContainer} from 'lib';
+import {EditorControlsContext} from '../../context';
 
 const operations = _ => ({
   inequality: [
@@ -124,9 +125,7 @@ UnconnectedFilterOperation.propTypes = {
   updatePlot: PropTypes.func,
   ...Field.propTypes,
 };
-UnconnectedFilterOperation.contextTypes = {
-  localize: PropTypes.func,
-};
+UnconnectedFilterOperation.contextType = EditorControlsContext;
 
 class UnconnectedFilterValue extends Component {
   constructor(props, context) {

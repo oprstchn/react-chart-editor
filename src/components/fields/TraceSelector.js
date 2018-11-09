@@ -16,7 +16,6 @@ import {EditorControlsContext, ModalProviderContext} from '../../context';
 class TraceSelector extends Component {
   constructor(props, context) {
     super(props, context);
-    console.log({context});
     this.updatePlot = this.updatePlot.bind(this);
     this.setGl = this.setGl.bind(this);
     this.glEnabled = this.glEnabled.bind(this);
@@ -157,16 +156,6 @@ class TraceSelector extends Component {
 }
 
 TraceSelector.contextType = EditorControlsContext;
-
-// TraceSelector.contextTypes = {
-//   openModal: PropTypes.func,
-//   advancedTraceTypeSelector: PropTypes.bool,
-//   traceTypesConfig: PropTypes.object,
-//   plotSchema: PropTypes.object,
-//   config: PropTypes.object,
-//   localize: PropTypes.func,
-//   glByDefault: PropTypes.bool,
-// };
 
 TraceSelector.propTypes = {
   container: PropTypes.object.isRequired,

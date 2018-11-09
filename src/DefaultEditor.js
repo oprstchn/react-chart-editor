@@ -100,11 +100,4 @@ DefaultEditor.propTypes = {
 
 DefaultEditor.contextType = EditorControlsContext;
 
-// DefaultEditor.contextTypes = {
-//   localize: PropTypes.func,
-//   fullData: PropTypes.array,
-//   fullLayout: PropTypes.object,
-//   layout: PropTypes.object,
-// };
-
 export default DefaultEditor;
