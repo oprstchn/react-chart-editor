@@ -2,7 +2,6 @@ import React, {Component, createContext} from 'react';
 import PropTypes from 'prop-types';
 import unpackPlotProps from './unpackPlotProps';
 import {getDisplayName} from '../lib';
-import {EditorControlsContext, ModalProviderContext} from '../context';
 
 export const containerConnectedContextTypes = {
   localize: PropTypes.func,
@@ -22,7 +21,6 @@ export const containerConnectedContextTypes = {
 };
 
 export default function connectToContainer(WrappedComponent, config = {}) {
-  // const connectToContainerContext = createContext({});
   class ContainerConnectedComponent extends Component {
     // Run the inner modifications first and allow more recent modifyPlotProp
     // config function to modify last.
@@ -51,15 +49,9 @@ export default function connectToContainer(WrappedComponent, config = {}) {
       ContainerConnectedComponent.modifyPlotProps(props, context, this.plotProps);
     }
 
-    getChildContext() {
-      return {
-        description: this.plotProps.description,
-        attr: this.attr,
-      };
-    }
-
     provideValue() {
       return {
+        ...this.context,
         description: this.plotProps.description,
         attr: this.attr,
       };
@@ -70,37 +62,23 @@ export default function connectToContainer(WrappedComponent, config = {}) {
       // props. However pass plotProps as a specific prop in case inner component
       // is also wrapped by a component that `unpackPlotProps`. That way inner
       // component can skip computation as it can see plotProps is already defined.
+      if (!WrappedComponent.contextType) {
+        WrappedComponent.contextType = createContext(this.provideValue());
+      }
       const {plotProps = this.plotProps, ...props} = Object.assign({}, this.plotProps, this.props);
       if (props.isVisible) {
-        return (
-          <EditorControlsContext.Consumer>
-            {editorControlsValue => (
-              <ModalProviderContext.Consumer>
-                {modalProviderValue => {
-                  WrappedComponent.contextType = createContext(
-                    this.provideValue(),
-                    ...editorControlsValue,
-                    ...modalProviderValue
-                  );
-                  return <WrappedComponent {...props} plotProps={plotProps} />;
-                }}
-              </ModalProviderContext.Consumer>
-            )}
-          </EditorControlsContext.Consumer>
-        );
+        return <WrappedComponent {...props} plotProps={plotProps} />;
       }
-
       return null;
     }
   }
 
   ContainerConnectedComponent.displayName = `ContainerConnected${getDisplayName(WrappedComponent)}`;
-  // ContainerConnectedComponent.contextType = connectToContainerContext;
   ContainerConnectedComponent.contextTypes = containerConnectedContextTypes;
-  ContainerConnectedComponent.childContextTypes = {
-    description: PropTypes.string,
-    attr: PropTypes.string,
-  };
+  // ContainerConnectedComponent.childContextTypes = {
+  //   description: PropTypes.string,
+  //   attr: PropTypes.string,
+  // };
 
   const {plotly_editor_traits} = WrappedComponent;
   ContainerConnectedComponent.plotly_editor_traits = plotly_editor_traits;

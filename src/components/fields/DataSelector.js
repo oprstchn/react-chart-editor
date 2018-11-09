@@ -5,6 +5,7 @@ import Field from './Field';
 import nestedProperty from 'plotly.js/src/lib/nested_property';
 import {connectToContainer, maybeAdjustSrc, maybeTransposeData} from 'lib';
 import {TRANSFORMS_LIST} from 'lib/constants';
+import {EditorControlsContext} from '../../context';
 
 export function attributeIsData(meta = {}) {
   return meta.valType === 'data_array' || meta.arrayOk;
@@ -112,18 +113,19 @@ UnconnectedDataSelector.propTypes = {
   container: PropTypes.object,
   ...Field.propTypes,
 };
+UnconnectedDataSelector.contextType = EditorControlsContext;
 
-UnconnectedDataSelector.contextTypes = {
-  dataSources: PropTypes.object,
-  dataSourceOptions: PropTypes.array,
-  dataSourceValueRenderer: PropTypes.func,
-  dataSourceOptionRenderer: PropTypes.func,
-  srcConverters: PropTypes.shape({
-    toSrc: PropTypes.func.isRequired,
-    fromSrc: PropTypes.func.isRequired,
-  }),
-  container: PropTypes.object,
-};
+// UnconnectedDataSelector.contextTypes = {
+//   dataSources: PropTypes.object,
+//   dataSourceOptions: PropTypes.array,
+//   dataSourceValueRenderer: PropTypes.func,
+//   dataSourceOptionRenderer: PropTypes.func,
+//   srcConverters: PropTypes.shape({
+//     toSrc: PropTypes.func.isRequired,
+//     fromSrc: PropTypes.func.isRequired,
+//   }),
+//   container: PropTypes.object,
+// };
 
 function modifyPlotProps(props, context, plotProps) {
   if (

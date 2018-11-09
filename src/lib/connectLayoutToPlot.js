@@ -49,6 +49,7 @@ export default function connectLayoutToPlot(WrappedComponent) {
       };
 
       return {
+        ...this.context,
         getValObject: attr =>
           !plotly
             ? null
@@ -60,25 +61,24 @@ export default function connectLayoutToPlot(WrappedComponent) {
     }
 
     render() {
-      return (
-        <EditorControlsContext.Consumer>
-          {({localize}) => {
-            WrappedComponent.contextType = createContext({...this.provideValue(), localize});
-            return <WrappedComponent {...this.props} />;
-          }}
-        </EditorControlsContext.Consumer>
-      );
+      WrappedComponent.contextType = createContext({...this.provideValue()});
+      return <WrappedComponent {...this.props} />;
     }
   }
 
   LayoutConnectedComponent.displayName = `LayoutConnected${getDisplayName(WrappedComponent)}`;
 
-  LayoutConnectedComponent.contextTypes = {
-    layout: PropTypes.object,
-    fullLayout: PropTypes.object,
-    plotly: PropTypes.object,
-    onUpdate: PropTypes.func,
-  };
+  if (WrappedComponent.contextType) {
+    LayoutConnectedComponent.contextType = WrappedComponent.contextType;
+  } else {
+    LayoutConnectedComponent.contextType = EditorControlsContext;
+  }
+  // LayoutConnectedComponent.contextTypes = {
+  //   layout: PropTypes.object,
+  //   fullLayout: PropTypes.object,
+  //   plotly: PropTypes.object,
+  //   onUpdate: PropTypes.func,
+  // };
 
   LayoutConnectedComponent.childContextTypes = {
     getValObject: PropTypes.func,

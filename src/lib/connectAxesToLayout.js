@@ -35,7 +35,6 @@ export default function connectAxesToLayout(WrappedComponent) {
   class AxesConnectedComponent extends Component {
     constructor(props, context) {
       super(props, context);
-      console.log('connectAxesToLayout', {context});
 
       this.axes = getAllAxes(context.fullContainer);
       this.axesOptions = computeAxesOptions(this.axes, props, context);

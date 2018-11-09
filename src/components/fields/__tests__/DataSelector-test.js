@@ -11,6 +11,7 @@ function render(overrides = {}, children) {
   const editorProps = {...fixtures.scatter(), onUpdate: jest.fn(), ...props};
 
   // return the inner-most plot connected dropdown (last)
+  // console.log(editorProps);
   return mount(
     <TestEditor {...editorProps} plotly={plotly}>
       {children}
