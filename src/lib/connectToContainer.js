@@ -62,7 +62,7 @@ export default function connectToContainer(WrappedComponent, config = {}) {
       // props. However pass plotProps as a specific prop in case inner component
       // is also wrapped by a component that `unpackPlotProps`. That way inner
       // component can skip computation as it can see plotProps is already defined.
-      if (!WrappedComponent.contextType) {
+      if (!WrappedComponent.contextType && !WrappedComponent.contextTypes) {
         WrappedComponent.contextType = createContext(this.provideValue());
       }
       const {plotProps = this.plotProps, ...props} = Object.assign({}, this.plotProps, this.props);

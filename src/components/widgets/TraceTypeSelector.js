@@ -245,7 +245,6 @@ export class TraceTypeSelectorButton extends Component {
       container,
       traceTypesConfig: {traces},
     } = this.props;
-    console.log({traces});
 
     const {localize: _} = this.context;
 

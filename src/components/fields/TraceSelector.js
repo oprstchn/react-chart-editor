@@ -11,10 +11,12 @@ import {TRACES_WITH_GL} from 'lib/constants';
 import {TraceTypeSelector, TraceTypeSelectorButton, RadioBlocks} from 'components/widgets';
 import Field from './Field';
 import {CogIcon} from 'plotly-icons';
+import {EditorControlsContext, ModalProviderContext} from '../../context';
 
 class TraceSelector extends Component {
   constructor(props, context) {
     super(props, context);
+    console.log({context});
     this.updatePlot = this.updatePlot.bind(this);
     this.setGl = this.setGl.bind(this);
     this.glEnabled = this.glEnabled.bind(this);
@@ -102,45 +104,51 @@ class TraceSelector extends Component {
     // Check and see if the advanced selector prop is true
     if (advancedTraceTypeSelector) {
       return (
-        <div>
-          <Field {...props}>
-            <div
-              style={{
-                display: 'flex',
-                width: '100%',
-                alignItems: 'center',
-              }}
-            >
-              <TraceTypeSelectorButton
-                {...props}
-                traceTypesConfig={this.context.traceTypesConfig}
-                handleClick={() =>
-                  this.context.openModal(TraceTypeSelector, {
-                    ...props,
-                    traceTypesConfig: this.context.traceTypesConfig,
-                    glByDefault: this.context.glByDefault,
-                  })
-                }
-              />
-              {!TRACES_WITH_GL.includes(this.props.container.type) ? (
+        <ModalProviderContext.Consumer>
+          {({openModal}) => (
+            <div>
+              <Field {...props}>
+                <div
+                  style={{
+                    display: 'flex',
+                    width: '100%',
+                    alignItems: 'center',
+                  }}
+                >
+                  <TraceTypeSelectorButton
+                    {...props}
+                    traceTypesConfig={this.context.traceTypesConfig}
+                    handleClick={() =>
+                      openModal(TraceTypeSelector, {
+                        ...props,
+                        traceTypesConfig: this.context.traceTypesConfig,
+                        glByDefault: this.context.glByDefault,
+                      })
+                    }
+                  />
+                  {!TRACES_WITH_GL.includes(this.props.container.type) ? (
+                    ''
+                  ) : (
+                    <CogIcon className="menupanel__icon" onClick={this.toggleGlControls} />
+                  )}
+                </div>
+              </Field>
+              {!(
+                TRACES_WITH_GL.includes(this.props.container.type) && this.state.showGlControls
+              ) ? (
                 ''
               ) : (
-                <CogIcon className="menupanel__icon" onClick={this.toggleGlControls} />
+                <Field label={_('Rendering')}>
+                  <RadioBlocks
+                    options={options}
+                    activeOption={this.glEnabled()}
+                    onOptionChange={this.setGl}
+                  />
+                </Field>
               )}
             </div>
-          </Field>
-          {!(TRACES_WITH_GL.includes(this.props.container.type) && this.state.showGlControls) ? (
-            ''
-          ) : (
-            <Field label={_('Rendering')}>
-              <RadioBlocks
-                options={options}
-                activeOption={this.glEnabled()}
-                onOptionChange={this.setGl}
-              />
-            </Field>
           )}
-        </div>
+        </ModalProviderContext.Consumer>
       );
     }
 
@@ -148,15 +156,17 @@ class TraceSelector extends Component {
   }
 }
 
-TraceSelector.contextTypes = {
-  openModal: PropTypes.func,
-  advancedTraceTypeSelector: PropTypes.bool,
-  traceTypesConfig: PropTypes.object,
-  plotSchema: PropTypes.object,
-  config: PropTypes.object,
-  localize: PropTypes.func,
-  glByDefault: PropTypes.bool,
-};
+TraceSelector.contextType = EditorControlsContext;
+
+// TraceSelector.contextTypes = {
+//   openModal: PropTypes.func,
+//   advancedTraceTypeSelector: PropTypes.bool,
+//   traceTypesConfig: PropTypes.object,
+//   plotSchema: PropTypes.object,
+//   config: PropTypes.object,
+//   localize: PropTypes.func,
+//   glByDefault: PropTypes.bool,
+// };
 
 TraceSelector.propTypes = {
   container: PropTypes.object.isRequired,
