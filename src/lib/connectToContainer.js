@@ -22,7 +22,7 @@ export const containerConnectedContextTypes = {
 };
 
 export default function connectToContainer(WrappedComponent, config = {}) {
-  const connectToContainerContext = createContext({});
+  // const connectToContainerContext = createContext({});
   class ContainerConnectedComponent extends Component {
     // Run the inner modifications first and allow more recent modifyPlotProp
     // config function to modify last.
@@ -77,14 +77,12 @@ export default function connectToContainer(WrappedComponent, config = {}) {
             {editorControlsValue => (
               <ModalProviderContext.Consumer>
                 {modalProviderValue => {
-                  WrappedComponent.contextType = createContext(this.provideValue());
-                  return (
-                    <connectToContainerContext.Provider
-                      value={{...editorControlsValue, ...modalProviderValue}}
-                    >
-                      <WrappedComponent {...props} plotProps={plotProps} />
-                    </connectToContainerContext.Provider>
+                  WrappedComponent.contextType = createContext(
+                    this.provideValue(),
+                    ...editorControlsValue,
+                    ...modalProviderValue
                   );
+                  return <WrappedComponent {...props} plotProps={plotProps} />;
                 }}
               </ModalProviderContext.Consumer>
             )}
@@ -97,8 +95,8 @@ export default function connectToContainer(WrappedComponent, config = {}) {
   }
 
   ContainerConnectedComponent.displayName = `ContainerConnected${getDisplayName(WrappedComponent)}`;
-  ContainerConnectedComponent.contextType = connectToContainerContext;
-  // ContainerConnectedComponent.contextTypes = containerConnectedContextTypes;
+  // ContainerConnectedComponent.contextType = connectToContainerContext;
+  ContainerConnectedComponent.contextTypes = containerConnectedContextTypes;
   ContainerConnectedComponent.childContextTypes = {
     description: PropTypes.string,
     attr: PropTypes.string,

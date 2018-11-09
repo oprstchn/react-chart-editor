@@ -63,22 +63,6 @@ export default function connectLayoutToPlot(WrappedComponent) {
       return (
         <EditorControlsContext.Consumer>
           {({localize}) => {
-            // eslint-disable-next-line no-undefined
-            if (WrappedComponent.contextType) {
-              const {Consumer} = WrappedComponent.contextType;
-              return (
-                <Consumer>
-                  {value => {
-                    WrappedComponent.contextType = createContext({
-                      ...this.provideValue(),
-                      ...value,
-                      localize,
-                    });
-                    return <WrappedComponent {...this.props} />;
-                  }}
-                </Consumer>
-              );
-            }
             WrappedComponent.contextType = createContext({...this.provideValue(), localize});
             return <WrappedComponent {...this.props} />;
           }}
@@ -88,13 +72,13 @@ export default function connectLayoutToPlot(WrappedComponent) {
   }
 
   LayoutConnectedComponent.displayName = `LayoutConnected${getDisplayName(WrappedComponent)}`;
-  LayoutConnectedComponent.contextType = EditorControlsContext;
-  // LayoutConnectedComponent.contextTypes = {
-  //   layout: PropTypes.object,
-  //   fullLayout: PropTypes.object,
-  //   plotly: PropTypes.object,
-  //   onUpdate: PropTypes.func,
-  // };
+
+  LayoutConnectedComponent.contextTypes = {
+    layout: PropTypes.object,
+    fullLayout: PropTypes.object,
+    plotly: PropTypes.object,
+    onUpdate: PropTypes.func,
+  };
 
   LayoutConnectedComponent.childContextTypes = {
     getValObject: PropTypes.func,
