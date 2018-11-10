@@ -7,7 +7,7 @@ import {TestEditor, fixtures, plotly, mount} from 'lib/test-utils';
 import {connectTraceToPlot} from 'lib';
 
 describe('TraceSelector', () => {
-  const TraceSection = connectTraceToPlot(PlotlySection);
+  const {component: TraceSection} = connectTraceToPlot(PlotlySection);
 
   it('sets mode to markers if trace scatter, no data or mode provided', () => {
     const editorProps = {

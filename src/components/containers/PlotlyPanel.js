@@ -1,4 +1,4 @@
-import PanelHeader from './PanelHeader';
+import PanelHeader, {panelHeaderWrapper} from './PanelHeader';
 import PanelEmpty from './PanelEmpty';
 import PropTypes from 'prop-types';
 import React, {Component, cloneElement} from 'react';
@@ -113,14 +113,15 @@ export class Panel extends Component {
     });
 
     // Change ContextType which contains fullContainer and updateContainer
-    if (this.passContextType) {
-      PanelHeader.contextType = this.passContextType;
-    }
+    const PanelHeaderWrapper = panelHeaderWrapper(
+      this.passContextType ? this.passContextType : EditorControlsContext
+    );
 
+    console.log('passContext', this.passContextType);
     return (
       <PlotlyPanelContext.Provider value={this.provideValue()}>
         <div className={`panel${this.props.noPadding ? ' panel--no-padding' : ''}`}>
-          <PanelHeader
+          <PanelHeaderWrapper
             addAction={this.props.addAction}
             allowCollapse={this.props.showExpandCollapse && individualFoldStates.length > 1}
             toggleFolds={this.toggleFolds}

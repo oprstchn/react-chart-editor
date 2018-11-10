@@ -1,7 +1,7 @@
 import PlotlyFold from './PlotlyFold';
 import PlotlyPanel from './PlotlyPanel';
 import PropTypes from 'prop-types';
-import React, {Component} from 'react';
+import React, {Component, createContext} from 'react';
 import {connectTransformToTrace} from 'lib';
 import {PanelMessage} from './PanelEmpty';
 
@@ -24,6 +24,7 @@ class TransformAccordion extends Component {
       {label: _('Sort'), type: 'sort'},
     ];
 
+    console.log({transforms});
     const transformBy =
       container.transforms &&
       container.transforms.map(tr => {
@@ -95,6 +96,8 @@ class TransformAccordion extends Component {
       }),
     };
 
+    PlotlyPanel.contextType = createContext(this.context);
+    console.log('TransformAccordion', addAction);
     return (
       <PlotlyPanel addAction={addAction}>
         {content ? (
@@ -133,15 +136,20 @@ class TransformAccordion extends Component {
   }
 }
 
-TransformAccordion.contextTypes = {
-  fullContainer: PropTypes.object,
-  localize: PropTypes.func,
-  container: PropTypes.object,
-  dataSourceOptions: PropTypes.array,
-};
+// TransformAccordion.contextTypes = {
+//   fullContainer: PropTypes.object,
+//   localize: PropTypes.func,
+//   container: PropTypes.object,
+//   dataSourceOptions: PropTypes.array,
+// };
 
 TransformAccordion.propTypes = {
   children: PropTypes.node,
 };
+
+export function connectTransformAccordion(contextType) {
+  TransformAccordion.contextType = contextType;
+  return TransformAccordion;
+}
 
 export default TransformAccordion;

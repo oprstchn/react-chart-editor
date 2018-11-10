@@ -4,7 +4,8 @@ import React from 'react';
 import {TestEditor, fixtures, mount} from 'lib/test-utils';
 import {connectTraceToPlot} from 'lib';
 
-const TraceFold = connectTraceToPlot(PlotlyFold);
+const {component: TraceFold} = connectTraceToPlot(PlotlyFold);
+// const TraceFold = connectTraceToPlot(PlotlyFold);
 
 describe('<PlotlyFold>', () => {
   it('shows deleteContainer button when deleteContainer function present and canDelete is true', () => {

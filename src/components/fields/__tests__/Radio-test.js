@@ -6,7 +6,7 @@ import {TestEditor, fixtures, plotly} from 'lib/test-utils';
 import {connectTraceToPlot} from 'lib';
 import {mount} from 'enzyme';
 
-const Trace = connectTraceToPlot(PlotlySection);
+const {component: Trace} = connectTraceToPlot(PlotlySection);
 
 describe('<Radio>', () => {
   it('enables <Field> centering by default', () => {

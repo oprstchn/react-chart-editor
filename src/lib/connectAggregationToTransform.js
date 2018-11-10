@@ -70,12 +70,12 @@ export default function connectAggregationToTransform(WrappedComponent) {
   };
 
   AggregationConnectedComponent.contextTypes = {
-    container: PropTypes.object,
-    fullContainer: PropTypes.object,
     data: PropTypes.array,
     onUpdate: PropTypes.func,
-    updateContainer: PropTypes.func,
     getValObject: PropTypes.func,
+    container: PropTypes.object,
+    fullContainer: PropTypes.object,
+    updateContainer: PropTypes.func,
   };
 
   AggregationConnectedComponent.childContextTypes = {

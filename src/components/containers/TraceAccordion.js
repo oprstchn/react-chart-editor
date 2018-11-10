@@ -10,7 +10,8 @@ import {traceTypes} from 'lib/traceTypes';
 import {PanelMessage} from './PanelEmpty';
 import {EditorControlsContext} from '../../context';
 
-const TraceFold = connectTraceToPlot(PlotlyFold);
+const {component: TraceFold, context} = connectTraceToPlot(PlotlyFold);
+export const traceAccordionFoldContext = context;
 
 class TraceAccordion extends Component {
   constructor(props, context) {
@@ -183,7 +184,6 @@ class TraceAccordion extends Component {
 }
 
 TraceAccordion.contextType = EditorControlsContext;
-
 TraceAccordion.propTypes = {
   canAdd: PropTypes.bool,
   canGroup: PropTypes.bool,

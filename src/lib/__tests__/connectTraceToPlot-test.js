@@ -6,7 +6,10 @@ import {Numeric} from '../../components/fields';
 import {TestEditor, fixtures, plotly} from '../test-utils';
 import {mount} from 'enzyme';
 
-const Traces = [PlotlyPanel, PlotlyFold, PlotlySection].map(connectTraceToPlot);
+const Traces = [PlotlyPanel, PlotlyFold, PlotlySection].map(component => {
+  const {component: connectedComponent} = connectTraceToPlot(component);
+  return connectedComponent;
+});
 const Editor = props => <TestEditor {...{plotly, onUpdate: jest.fn(), ...props}} />;
 
 const defaultMarkerSize = 6;

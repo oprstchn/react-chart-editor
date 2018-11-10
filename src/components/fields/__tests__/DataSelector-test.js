@@ -60,7 +60,7 @@ describe('DataSelector', () => {
   });
 
   it('uses trace specific label', () => {
-    const TraceDataSelector = connectTraceToPlot(DataSelector);
+    const {component: TraceDataSelector} = connectTraceToPlot(DataSelector);
     const wrapper = render(
       {},
       <TraceDataSelector traceIndexes={[0]} label={{pie: 'hodor', '*': 'rodoh'}} attr="x" />

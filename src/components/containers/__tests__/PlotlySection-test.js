@@ -6,7 +6,8 @@ import {TestEditor, fixtures} from 'lib/test-utils';
 import {connectTraceToPlot} from 'lib';
 import {mount} from 'enzyme';
 
-const TraceSection = connectTraceToPlot(PlotlySection);
+const {component: TraceSection} = connectTraceToPlot(PlotlySection);
+// const TraceSection = connectTraceToPlot(PlotlySection);
 
 describe('PlotlySection', () => {
   it('is visible if it contains any visible children', () => {
@@ -54,7 +55,7 @@ describe('PlotlySection', () => {
   });
 
   it('will hide with Info children when attrs not defined', () => {
-    const TraceSection = connectTraceToPlot(PlotlySection);
+    const {component: TraceSection} = connectTraceToPlot(PlotlySection);
     const wrapper = mount(
       <TestEditor onUpdate={jest.fn()} {...fixtures.scatter()}>
         <TraceSection name="test-section" traceIndexes={[0]}>
@@ -70,7 +71,7 @@ describe('PlotlySection', () => {
 
 describe('TraceTypeSection', () => {
   it('will show when the type is right', () => {
-    const TraceSection = connectTraceToPlot(TraceTypeSection);
+    const {component: TraceSection} = connectTraceToPlot(TraceTypeSection);
     const wrapper = mount(
       <TestEditor onUpdate={jest.fn()} {...fixtures.scatter()}>
         <TraceSection name="test-section" traceIndexes={[0]} traceTypes={['scatter']}>
@@ -86,7 +87,7 @@ describe('TraceTypeSection', () => {
   });
 
   it('will hide when the type is wrong', () => {
-    const TraceSection = connectTraceToPlot(TraceTypeSection);
+    const {component: TraceSection} = connectTraceToPlot(TraceTypeSection);
     const wrapper = mount(
       <TestEditor onUpdate={jest.fn()} {...fixtures.scatter()}>
         <TraceSection name="test-section" traceIndexes={[0]} traceTypes={['heatmap']}>

@@ -29,7 +29,9 @@ describe('Plot Connection', () => {
   it('can connect to layout when connected within trace context', () => {
     const beforeUpdateLayout = jest.fn();
     const fixtureProps = fixtures.scatter({layout: {width: 10}});
-    const TraceLayoutNumeric = connectTraceToPlot(connectLayoutToPlot(connectToContainer(Numeric)));
+    const {component: TraceLayoutNumeric} = connectTraceToPlot(
+      connectLayoutToPlot(connectToContainer(Numeric))
+    );
     mount(
       <TestEditor {...{...fixtureProps, beforeUpdateLayout}}>
         <TraceLayoutNumeric traceIndexes={[0]} label="Width" attr="width" />
@@ -48,7 +50,7 @@ describe('Plot Connection', () => {
   // see https://github.com/plotly/react-chart-editor/issues/58#issuecomment-345492794
   it("can't find correct Container when PlotlySection divides Trace and Layout", () => {
     const fixtureProps = fixtures.scatter({layout: {width: 10}});
-    const DeeplyConnectedNumeric = connectTraceToPlot(
+    const {component: DeeplyConnectedNumeric} = connectTraceToPlot(
       connectLayoutToPlot(
         connectToContainer(Numeric, {
           modifyPlotProps: (props, context, plotProps) => {
@@ -76,7 +78,7 @@ describe('Plot Connection', () => {
 
   it('can modify plotProps with <Trace><PlotlySection><LayoutComp>', () => {
     const fixtureProps = fixtures.scatter({layout: {width: 10}});
-    const TracePanel = connectTraceToPlot(PlotlyPanel);
+    const {component: TracePanel} = connectTraceToPlot(PlotlyPanel);
 
     const MAXWIDTH = 1000;
     const LayoutSection = connectLayoutToPlot(PlotlySection);

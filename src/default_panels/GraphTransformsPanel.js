@@ -13,6 +13,8 @@ import {
 import {connectAggregationToTransform} from '../lib';
 import {TRANSFORMABLE_TRACES} from 'lib/constants';
 import {EditorControlsContext} from '../context';
+import {connectTransformAccordion} from '../components/containers/TransformAccordion';
+import {traceAccordionFoldContext} from '../components/containers/TraceAccordion';
 
 const AggregationSection = connectAggregationToTransform(PlotlySection);
 
@@ -66,11 +68,13 @@ Aggregations.contextTypes = {
 };
 
 const GraphTransformsPanel = () => {
+  const TransformAccordionWrapper = connectTransformAccordion(traceAccordionFoldContext);
+  console.log({traceAccordionFoldContext});
   return (
     <EditorControlsContext.Consumer>
       {({localize: _}) => (
         <TraceAccordion traceFilterCondition={t => TRANSFORMABLE_TRACES.includes(t.type)}>
-          <TransformAccordion>
+          <TransformAccordionWrapper>
             <Radio
               attr="enabled"
               options={[{label: _('Enabled'), value: true}, {label: _('Disabled'), value: false}]}
@@ -91,7 +95,7 @@ const GraphTransformsPanel = () => {
             />
 
             <Aggregations />
-          </TransformAccordion>
+          </TransformAccordionWrapper>
         </TraceAccordion>
       )}
     </EditorControlsContext.Consumer>

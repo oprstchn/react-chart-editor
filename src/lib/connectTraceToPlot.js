@@ -13,6 +13,7 @@ import {EDITOR_ACTIONS, SUBPLOT_TO_ATTR} from 'lib/constants';
 import {EditorControlsContext} from '../context';
 
 export default function connectTraceToPlot(WrappedComponent) {
+  const ConnectTraceToPlotContext = createContext({});
   class TraceConnectedComponent extends Component {
     constructor(props, context) {
       super(props, context);
@@ -183,8 +184,12 @@ export default function connectTraceToPlot(WrappedComponent) {
     }
 
     render() {
-      WrappedComponent.contextType = createContext(this.provideValue());
-      return <WrappedComponent name={this.name} icon={this.icon} {...this.props} />;
+      // WrappedComponent.contextType = createContext(this.provideValue());
+      return (
+        <ConnectTraceToPlotContext.Provider value={this.provideValue()}>
+          <WrappedComponent name={this.name} icon={this.icon} {...this.props} />
+        </ConnectTraceToPlotContext.Provider>
+      );
     }
   }
 
@@ -201,13 +206,6 @@ export default function connectTraceToPlot(WrappedComponent) {
     TraceConnectedComponent.contextType = EditorControlsContext;
   }
 
-  // TraceConnectedComponent.contextTypes = {
-  //   fullData: PropTypes.array,
-  //   data: PropTypes.array,
-  //   plotly: PropTypes.object,
-  //   onUpdate: PropTypes.func,
-  // };
-
   TraceConnectedComponent.childContextTypes = {
     getValObject: PropTypes.func,
     updateContainer: PropTypes.func,
@@ -221,5 +219,5 @@ export default function connectTraceToPlot(WrappedComponent) {
   const {plotly_editor_traits} = WrappedComponent;
   TraceConnectedComponent.plotly_editor_traits = plotly_editor_traits;
 
-  return TraceConnectedComponent;
+  return {component: TraceConnectedComponent, context: ConnectTraceToPlotContext};
 }

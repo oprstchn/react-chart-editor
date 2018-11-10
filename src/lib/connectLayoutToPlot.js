@@ -73,12 +73,6 @@ export default function connectLayoutToPlot(WrappedComponent) {
   } else {
     LayoutConnectedComponent.contextType = EditorControlsContext;
   }
-  // LayoutConnectedComponent.contextTypes = {
-  //   layout: PropTypes.object,
-  //   fullLayout: PropTypes.object,
-  //   plotly: PropTypes.object,
-  //   onUpdate: PropTypes.func,
-  // };
 
   LayoutConnectedComponent.childContextTypes = {
     getValObject: PropTypes.func,

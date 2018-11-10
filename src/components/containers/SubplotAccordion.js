@@ -11,7 +11,8 @@ import {
 import {TRACE_TO_AXIS, SUBPLOT_TO_ATTR} from 'lib/constants';
 import {EditorControlsContext} from '../../context';
 
-const TraceFold = connectTraceToPlot(PlotlyFold);
+// const TraceFold = connectTraceToPlot(PlotlyFold);
+const {component: TraceFold, context} = connectTraceToPlot(PlotlyFold);
 const NonCartesianSubplotFold = connectNonCartesianSubplotToLayout(PlotlyFold);
 const CartesianSubplotFold = connectCartesianSubplotToLayout(PlotlyFold);
 
