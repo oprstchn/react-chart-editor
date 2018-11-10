@@ -172,6 +172,6 @@ ErrorBars.propTypes = {
   updatePlot: PropTypes.func,
 };
 
-ErrorBars.contextTypes = EditorControlsContext;
+ErrorBars.contextType = EditorControlsContext;
 
 export default connectToContainer(ErrorBars);

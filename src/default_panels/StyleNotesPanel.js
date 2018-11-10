@@ -13,10 +13,12 @@ import {
   TextEditor,
   PlotlySection,
 } from '../components';
-import EditorControls from '../EditorControls';
+import {
+  EditorControlsContext
+} from "../context";
 
 const StyleNotesPanel = () => (
-  <EditorControls.Consumer>
+  <EditorControlsContext.Consumer>
     {({localize: _}) => (
       <AnnotationAccordion canAdd>
         <PlotlySection name={_('Note Text')} attr="text">
@@ -72,7 +74,7 @@ const StyleNotesPanel = () => (
         </PlotlySection>
       </AnnotationAccordion>
     )}
-  </EditorControls.Consumer>
+  </EditorControlsContext.Consumer>
 );
 
 export default StyleNotesPanel;

@@ -105,12 +105,7 @@ UnconnectedAxisCreator.propTypes = {
   updateContainer: PropTypes.func,
 };
 
-UnconnectedAxisCreator.contextTypes = {
-  fullLayout: PropTypes.object,
-  data: PropTypes.array,
-  fullData: PropTypes.array,
-  onUpdate: PropTypes.func,
-};
+UnconnectedAxisCreator.contextType = EditorControlsContext;
 
 const AxisCreator = connectToContainer(UnconnectedAxisCreator);
 

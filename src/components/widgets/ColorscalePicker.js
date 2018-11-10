@@ -82,6 +82,6 @@ Scale.propTypes = {
   initialCategory: PropTypes.string,
 };
 
-Scale.contextTypes = EditorControlsContext;
+Scale.contextType = EditorControlsContext;
 
 export default Scale;

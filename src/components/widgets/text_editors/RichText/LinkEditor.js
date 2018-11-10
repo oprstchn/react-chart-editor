@@ -129,6 +129,6 @@ LinkEditor.defaultProps = {
   },
 };
 
-LinkEditor.contextTypes = EditorControlsContext;
+LinkEditor.contextType = EditorControlsContext;
 
 export default LinkEditor;
