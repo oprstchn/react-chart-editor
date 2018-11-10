@@ -117,7 +117,6 @@ export class Panel extends Component {
       this.passContextType ? this.passContextType : EditorControlsContext
     );
 
-    console.log('passContext', this.passContextType);
     return (
       <PlotlyPanelContext.Provider value={this.provideValue()}>
         <div className={`panel${this.props.noPadding ? ' panel--no-padding' : ''}`}>

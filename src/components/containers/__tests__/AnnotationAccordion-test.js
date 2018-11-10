@@ -4,7 +4,7 @@ import {Numeric} from '../../fields';
 import {TestEditor, fixtures, mount} from 'lib/test-utils';
 import {connectLayoutToPlot} from 'lib';
 
-const LayoutPanel = connectLayoutToPlot(PlotlyPanel);
+const {component: LayoutPanel} = connectLayoutToPlot(PlotlyPanel);
 
 describe('<AnnotationAccordion>', () => {
   it('generates annotation PlotlyFolds with name == text', () => {

@@ -6,7 +6,10 @@ import {Numeric} from '../../components/fields';
 import {TestEditor, fixtures, plotly} from '../test-utils';
 import {mount} from 'enzyme';
 
-const Layouts = [PlotlyPanel, PlotlyFold, PlotlySection].map(connectLayoutToPlot);
+const Layouts = [PlotlyPanel, PlotlyFold, PlotlySection].map(compnent => {
+  const {component: connectedConponent} = connectLayoutToPlot(compnent);
+  return connectedConponent;
+});
 const Editor = props => <TestEditor {...{plotly, onUpdate: jest.fn(), ...props}} />;
 
 Layouts.forEach(Layout => {

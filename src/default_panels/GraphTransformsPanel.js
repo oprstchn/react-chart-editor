@@ -69,7 +69,6 @@ Aggregations.contextTypes = {
 
 const GraphTransformsPanel = () => {
   const TransformAccordionWrapper = connectTransformAccordion(traceAccordionFoldContext);
-  console.log({traceAccordionFoldContext});
   return (
     <EditorControlsContext.Consumer>
       {({localize: _}) => (

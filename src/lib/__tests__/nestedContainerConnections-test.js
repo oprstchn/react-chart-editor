@@ -8,7 +8,9 @@ describe('Plot Connection', () => {
   it('can connect Field directly with full connection pipeline', () => {
     const beforeUpdateLayout = jest.fn();
     const fixtureProps = fixtures.scatter({layout: {xaxis: {range: [0, 10]}}});
-    const LayoutAxesNumeric = connectLayoutToPlot(connectAxesToLayout(connectToContainer(Numeric)));
+    const {component: LayoutAxesNumeric} = connectLayoutToPlot(
+      connectAxesToLayout(connectToContainer(Numeric))
+    );
     mount(
       <TestEditor {...{...fixtureProps, beforeUpdateLayout}}>
         <LayoutAxesNumeric label="Min" attr="range[0]" />
@@ -29,9 +31,8 @@ describe('Plot Connection', () => {
   it('can connect to layout when connected within trace context', () => {
     const beforeUpdateLayout = jest.fn();
     const fixtureProps = fixtures.scatter({layout: {width: 10}});
-    const {component: TraceLayoutNumeric} = connectTraceToPlot(
-      connectLayoutToPlot(connectToContainer(Numeric))
-    );
+    const {component: connectedNumeric} = connectLayoutToPlot(connectToContainer(Numeric));
+    const {component: TraceLayoutNumeric} = connectTraceToPlot(connectedNumeric);
     mount(
       <TestEditor {...{...fixtureProps, beforeUpdateLayout}}>
         <TraceLayoutNumeric traceIndexes={[0]} label="Width" attr="width" />
@@ -50,15 +51,14 @@ describe('Plot Connection', () => {
   // see https://github.com/plotly/react-chart-editor/issues/58#issuecomment-345492794
   it("can't find correct Container when PlotlySection divides Trace and Layout", () => {
     const fixtureProps = fixtures.scatter({layout: {width: 10}});
-    const {component: DeeplyConnectedNumeric} = connectTraceToPlot(
-      connectLayoutToPlot(
-        connectToContainer(Numeric, {
-          modifyPlotProps: (props, context, plotProps) => {
-            plotProps.connectToContainerModifiedPlotProp = true;
-          },
-        })
-      )
+    const {component: connectedNumeric} = connectLayoutToPlot(
+      connectToContainer(Numeric, {
+        modifyPlotProps: (props, context, plotProps) => {
+          plotProps.connectToContainerModifiedPlotProp = true;
+        },
+      })
     );
+    const {component: DeeplyConnectedNumeric} = connectTraceToPlot(connectedNumeric);
 
     const wrapper = mount(
       <TestEditor {...{...fixtureProps}}>
@@ -81,7 +81,7 @@ describe('Plot Connection', () => {
     const {component: TracePanel} = connectTraceToPlot(PlotlyPanel);
 
     const MAXWIDTH = 1000;
-    const LayoutSection = connectLayoutToPlot(PlotlySection);
+    const {component: LayoutSection} = connectLayoutToPlot(PlotlySection);
     const ModifiedNumeric = connectToContainer(Numeric, {
       modifyPlotProps: (props, context, plotProps) => {
         plotProps.max = MAXWIDTH;

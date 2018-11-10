@@ -11,7 +11,7 @@ describe('multiValued Numeric', () => {
     const fixtureProps = fixtures.scatter({
       layout: {xaxis: {range: [xaxisLowerRange, 3]}, yaxis: {range: [0, 3]}},
     });
-    const AxesNumeric = connectLayoutToPlot(connectAxesToLayout(Numeric));
+    const {component: AxesNumeric} = connectLayoutToPlot(connectAxesToLayout(Numeric));
 
     mount(
       <TestEditor {...{...fixtureProps, beforeUpdateLayout, plotly}}>

@@ -6,6 +6,7 @@ import {EDITOR_ACTIONS} from './constants';
 import {EditorControlsContext} from '../context';
 
 export default function connectLayoutToPlot(WrappedComponent) {
+  const ConnectLayoutToPlotContext = createContext({});
   class LayoutConnectedComponent extends Component {
     getChildContext() {
       const {layout, fullLayout, plotly, onUpdate} = this.context;
@@ -62,7 +63,11 @@ export default function connectLayoutToPlot(WrappedComponent) {
 
     render() {
       WrappedComponent.contextType = createContext(this.provideValue());
-      return <WrappedComponent {...this.props} />;
+      return (
+        <ConnectLayoutToPlotContext.Provider value={this.provideValue()}>
+          <WrappedComponent {...this.props} />
+        </ConnectLayoutToPlotContext.Provider>
+      );
     }
   }
 
@@ -84,5 +89,5 @@ export default function connectLayoutToPlot(WrappedComponent) {
   const {plotly_editor_traits} = WrappedComponent;
   LayoutConnectedComponent.plotly_editor_traits = plotly_editor_traits;
 
-  return LayoutConnectedComponent;
+  return {component: LayoutConnectedComponent, context: ConnectLayoutToPlotContext};
 }

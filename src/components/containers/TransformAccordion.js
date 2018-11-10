@@ -24,7 +24,6 @@ class TransformAccordion extends Component {
       {label: _('Sort'), type: 'sort'},
     ];
 
-    console.log({transforms});
     const transformBy =
       container.transforms &&
       container.transforms.map(tr => {
@@ -97,7 +96,6 @@ class TransformAccordion extends Component {
     };
 
     PlotlyPanel.contextType = createContext(this.context);
-    console.log('TransformAccordion', addAction);
     return (
       <PlotlyPanel addAction={addAction}>
         {content ? (

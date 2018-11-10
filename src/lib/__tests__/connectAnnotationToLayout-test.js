@@ -10,7 +10,7 @@ describe('connectAnnotationToLayout', () => {
     const fixture = fixtures.scatter({
       layout: {annotations: [{text: 'hodor'}]},
     });
-    const ConnectedNumeric = connectLayoutToPlot(connectAnnotationToLayout(Numeric));
+    const {component: ConnectedNumeric} = connectLayoutToPlot(connectAnnotationToLayout(Numeric));
 
     mount(
       <TestEditor {...{...fixture, beforeUpdateLayout}}>

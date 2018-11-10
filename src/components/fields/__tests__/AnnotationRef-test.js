@@ -5,7 +5,7 @@ import {PlotlyPanel} from '../../';
 import {TestEditor, fixtures, plotly, mount} from 'lib/test-utils';
 import {connectAnnotationToLayout, connectLayoutToPlot} from 'lib';
 
-const LayoutAnnoPanel = connectLayoutToPlot(connectAnnotationToLayout(PlotlyPanel));
+const {component: LayoutAnnoPanel} = connectLayoutToPlot(connectAnnotationToLayout(PlotlyPanel));
 
 describe('<AnnotationRef>', () => {
   function render(props) {

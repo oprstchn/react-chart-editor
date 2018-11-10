@@ -21,7 +21,6 @@ class PanelHeader extends Component {
     const {children, addAction, allowCollapse, toggleFolds, hasOpen} = this.props;
 
     // dropdown is styled with same styles as react-select component - see _dropdown.scss
-    console.log("PanelHeader", this.context);
     const icon = <PlusIcon />;
     return !children && !addAction && !allowCollapse ? null : (
       <div className="panel__header">
@@ -97,7 +96,7 @@ PanelHeader.propTypes = {
 };
 
 export function panelHeaderWrapper(contextType) {
-    PanelHeader.contextType = contextType
-    return PanelHeader;
+  PanelHeader.contextType = contextType;
+  return PanelHeader;
 }
 export default PanelHeader;

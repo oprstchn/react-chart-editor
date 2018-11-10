@@ -13,9 +13,7 @@ import {
   TextEditor,
   PlotlySection,
 } from '../components';
-import {
-  EditorControlsContext
-} from "../context";
+import {EditorControlsContext} from '../context';
 
 const StyleNotesPanel = () => (
   <EditorControlsContext.Consumer>

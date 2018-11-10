@@ -5,8 +5,10 @@ import PropTypes from 'prop-types';
 
 import {connectLayoutToPlot, containerConnectedContextTypes} from 'lib';
 
-const LayoutPanel = connectLayoutToPlot(PlotlyPanel);
-const LayoutSection = connectLayoutToPlot(PlotlySection);
+const {component: LayoutPanel, context: LayoutPanelContext} = connectLayoutToPlot(PlotlyPanel);
+const {component: LayoutSection, context: LayoutSectionContext} = connectLayoutToPlot(
+  PlotlySection
+);
 
 const TraceTypeSection = (props, context) => {
   const {fullContainer, fullData} = context;
