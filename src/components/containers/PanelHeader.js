@@ -86,7 +86,7 @@ class PanelHeader extends Component {
   }
 }
 
-PanelHeader.contextType = EditorControlsContext;
+// PanelHeader.contextType = EditorControlsContext;
 
 PanelHeader.propTypes = {
   addAction: PropTypes.object,
