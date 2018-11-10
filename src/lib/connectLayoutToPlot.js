@@ -61,7 +61,7 @@ export default function connectLayoutToPlot(WrappedComponent) {
     }
 
     render() {
-      WrappedComponent.contextType = createContext({...this.provideValue()});
+      WrappedComponent.contextType = createContext(this.provideValue());
       return <WrappedComponent {...this.props} />;
     }
   }

@@ -2,6 +2,7 @@ import Button from 'components/widgets/Button';
 import PropTypes from 'prop-types';
 import React, {Component} from 'react';
 import {PlusIcon, ResizeUpIcon, ResizeDownIcon} from 'plotly-icons';
+import {EditorControlsContext} from '../../context';
 
 class PanelHeader extends Component {
   constructor() {
@@ -84,13 +85,14 @@ class PanelHeader extends Component {
   }
 }
 
-PanelHeader.contextTypes = {
-  layout: PropTypes.object,
-  fullContainer: PropTypes.object,
-  onUpdate: PropTypes.func,
-  updateContainer: PropTypes.func,
-  localize: PropTypes.func,
-};
+PanelHeader.contextType = EditorControlsContext;
+// PanelHeader.contextTypes = {
+//   layout: PropTypes.object,
+//   localize: PropTypes.func,
+//   onUpdate: PropTypes.func,
+//   fullContainer: PropTypes.object,
+//   updateContainer: PropTypes.func,
+// };
 
 PanelHeader.propTypes = {
   addAction: PropTypes.object,

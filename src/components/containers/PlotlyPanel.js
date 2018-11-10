@@ -24,7 +24,7 @@ PanelErrorImpl.contextType = EditorControlsContext;
 const PanelError = PanelErrorImpl;
 
 export class Panel extends Component {
-  constructor(props) {
+  constructor(props, contextType) {
     super(props);
     this.state = {
       individualFoldStates: [],
@@ -32,6 +32,7 @@ export class Panel extends Component {
     };
     this.toggleFolds = this.toggleFolds.bind(this);
     this.toggleFold = this.toggleFold.bind(this);
+    this.passContextType = contextType && Object.keys(contextType).length > 0 ? contextType : null;
   }
 
   getChildContext() {
@@ -111,6 +112,11 @@ export class Panel extends Component {
       return child;
     });
 
+    // Change ContextType which contains fullContainer and updateContainer
+    if (this.passContextType) {
+      PanelHeader.contextType = this.passContextType;
+    }
+
     return (
       <PlotlyPanelContext.Provider value={this.provideValue()}>
         <div className={`panel${this.props.noPadding ? ' panel--no-padding' : ''}`}>
@@ -139,13 +145,17 @@ Panel.defaultProps = {
   showExpandCollapse: true,
 };
 
-Panel.contextType = EditorControlsContext;
+// Panel.contextType = EditorControlsContext;
 
 Panel.childContextTypes = {
   deleteContainer: PropTypes.func,
 };
 
-class PlotlyPanel extends Panel {}
+class PlotlyPanel extends Panel {
+  constructor(props) {
+    super(props, PlotlyPanel.contextType);
+  }
+}
 
 PlotlyPanel.plotly_editor_traits = {
   no_visibility_forcing: true,
