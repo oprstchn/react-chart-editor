@@ -3,7 +3,8 @@ import PropTypes from 'prop-types';
 import {getDisplayName} from '../lib';
 import {EDITOR_ACTIONS} from './constants';
 
-export default function connectAnnotationToLayout(WrappedComponent) {
+export default function connectAnnotationToLayout(WrappedComponent, contextType) {
+  console.log('connectAnnotationToLayout', getDisplayName(WrappedComponent));
   class AnnotationConnectedComponent extends Component {
     constructor(props, context) {
       super(props, context);
@@ -27,16 +28,16 @@ export default function connectAnnotationToLayout(WrappedComponent) {
       this.fullContainer = fullAnnotations[annotationIndex];
     }
 
-    getChildContext() {
-      return {
-        getValObject: attr =>
-          !this.context.getValObject ? null : this.context.getValObject(`annotations[].${attr}`),
-        updateContainer: this.updateAnnotation,
-        deleteContainer: this.deleteAnnotation,
-        container: this.container,
-        fullContainer: this.fullContainer,
-      };
-    }
+    // getChildContext() {
+    //   return {
+    //     getValObject: attr =>
+    //       !this.context.getValObject ? null : this.context.getValObject(`annotations[].${attr}`),
+    //     updateContainer: this.updateAnnotation,
+    //     deleteContainer: this.deleteAnnotation,
+    //     container: this.container,
+    //     fullContainer: this.fullContainer,
+    //   };
+    // }
 
     provideValue() {
       return {
@@ -82,22 +83,27 @@ export default function connectAnnotationToLayout(WrappedComponent) {
     annotationIndex: PropTypes.number.isRequired,
   };
 
-  AnnotationConnectedComponent.contextTypes = {
-    container: PropTypes.object,
-    fullContainer: PropTypes.object,
-    data: PropTypes.array,
-    onUpdate: PropTypes.func,
-    updateContainer: PropTypes.func,
-    getValObject: PropTypes.func,
-  };
+  if (contextType) {
+    AnnotationConnectedComponent.contextType = contextType;
+  } else {
+    AnnotationConnectedComponent.contextType = WrappedComponent.contextType;
+  }
+  // AnnotationConnectedComponent.contextTypes = {
+  //   container: PropTypes.object,
+  //   fullContainer: PropTypes.object,
+  //   data: PropTypes.array,
+  //   onUpdate: PropTypes.func,
+  //   updateContainer: PropTypes.func,
+  //   getValObject: PropTypes.func,
+  // };
 
-  AnnotationConnectedComponent.childContextTypes = {
-    updateContainer: PropTypes.func,
-    deleteContainer: PropTypes.func,
-    container: PropTypes.object,
-    fullContainer: PropTypes.object,
-    getValObject: PropTypes.func,
-  };
+  // AnnotationConnectedComponent.childContextTypes = {
+  //   updateContainer: PropTypes.func,
+  //   deleteContainer: PropTypes.func,
+  //   container: PropTypes.object,
+  //   fullContainer: PropTypes.object,
+  //   getValObject: PropTypes.func,
+  // };
 
   const {plotly_editor_traits} = WrappedComponent;
   AnnotationConnectedComponent.plotly_editor_traits = plotly_editor_traits;

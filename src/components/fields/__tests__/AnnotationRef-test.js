@@ -4,8 +4,11 @@ import React from 'react';
 import {PlotlyPanel} from '../../';
 import {TestEditor, fixtures, plotly, mount} from 'lib/test-utils';
 import {connectAnnotationToLayout, connectLayoutToPlot} from 'lib';
+// import {EditorControlsContext} from '../../../context';
 
 const {component: LayoutAnnoPanel} = connectLayoutToPlot(connectAnnotationToLayout(PlotlyPanel));
+// const {component: connectedComponent, context} = connectLayoutToPlot(PlotlyPanel);
+// const LayoutAnnoPanel = connectAnnotationToLayout(connectedComponent, context);
 
 describe('<AnnotationRef>', () => {
   function render(props) {

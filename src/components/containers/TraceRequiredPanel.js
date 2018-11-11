@@ -1,9 +1,12 @@
 import PanelEmpty from './PanelEmpty';
 import PropTypes from 'prop-types';
 import React, {Component} from 'react';
-import {LayoutPanel} from './derived';
+// import {LayoutPanel} from './derived';
+import PlotlyPanel from './PlotlyPanel';
 import {PanelMenuWrapperContext, EditorControlsContext} from '../../context';
+import {connectLayoutToPlot} from 'lib';
 
+const {component: LayoutPanel, context: LayoutPanelContext} = connectLayoutToPlot(PlotlyPanel);
 class TraceRequiredPanel extends Component {
   hasTrace() {
     return this.context.fullData.filter(trace => trace.visible).length > 0;
@@ -45,5 +48,6 @@ TraceRequiredPanel.defaultProps = {
 };
 
 TraceRequiredPanel.contextType = EditorControlsContext;
+TraceRequiredPanel.layoutPanelContextType = LayoutPanelContext;
 
 export default TraceRequiredPanel;

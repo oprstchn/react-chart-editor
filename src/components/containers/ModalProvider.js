@@ -62,15 +62,6 @@ class ModalProvider extends React.Component {
     }, animationDuration);
   }
 
-  getChildContext() {
-    return {
-      openModal: (c, p) => this.openModal(c, p),
-      closeModal: () => this.closeModal(),
-      handleClose: () => this.handleClose(),
-      isAnimatingOut: this.state.isAnimatingOut,
-    };
-  }
-
   provideValue() {
     return {
       openModal: (c, p) => this.openModal(c, p),
@@ -99,11 +90,5 @@ ModalProvider.propTypes = {
   children: PropTypes.node,
 };
 ModalProvider.contextType = EditorControlsContext;
-ModalProvider.childContextTypes = {
-  openModal: PropTypes.func,
-  closeModal: PropTypes.func,
-  handleClose: PropTypes.func,
-  isAnimatingOut: PropTypes.bool,
-};
 
 export default ModalProvider;

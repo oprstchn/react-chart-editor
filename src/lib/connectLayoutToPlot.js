@@ -6,6 +6,7 @@ import {EDITOR_ACTIONS} from './constants';
 import {EditorControlsContext} from '../context';
 
 export default function connectLayoutToPlot(WrappedComponent) {
+  console.log('connectLayoutToPlot', getDisplayName(WrappedComponent));
   const ConnectLayoutToPlotContext = createContext({});
   class LayoutConnectedComponent extends Component {
     getChildContext() {

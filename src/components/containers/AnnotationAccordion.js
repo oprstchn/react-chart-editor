@@ -6,8 +6,6 @@ import React, {Component} from 'react';
 import {connectAnnotationToLayout} from 'lib';
 import {EditorControlsContext} from '../../context';
 
-const AnnotationFold = connectAnnotationToLayout(PlotlyFold);
-
 class AnnotationAccordion extends Component {
   render() {
     const {
@@ -16,6 +14,10 @@ class AnnotationAccordion extends Component {
     } = this.context;
     const {canAdd, children} = this.props;
 
+    const AnnotationFold = connectAnnotationToLayout(
+      PlotlyFold,
+      TraceRequiredPanel.layoutPanelContextType
+    );
     const content =
       annotations.length &&
       annotations.map((ann, i) => (
