@@ -60,7 +60,7 @@ const StyleNotesPanel = () => (
           <Dropdown
             label={_('Anchor Point')}
             clearable={false}
-            attr="yanchor"
+            attr="yanchornpm run "
             options={[
               {label: _('Auto'), value: 'auto'},
               {label: _('Top'), value: 'top'},

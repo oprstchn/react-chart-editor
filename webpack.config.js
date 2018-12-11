@@ -1,8 +1,9 @@
 const webpack = require('webpack');
+const HtmlWebpackPlugin = require('html-webpack-plugin');
 
 module.exports = {
   mode: 'development',
-  entry: ['babel-polyfill', 'react-hot-loader/patch', './dev/index.js'],
+  entry: ['react-hot-loader/patch', './dev/index.js'],
   output: {
     filename: 'bundle.js',
   },
@@ -13,10 +14,22 @@ module.exports = {
         use: {
           loader: 'babel-loader',
           options: {
-            presets: ['react', 'es2015'],
+            babelrc: false,
+            presets: [
+              [
+                '@babel/env',
+                {
+                  targets: {
+                    esmodules: true,
+                  },
+                  modules: false,
+                },
+              ],
+              '@babel/react',
+            ],
             plugins: [
               'react-hot-loader/babel',
-              'transform-object-rest-spread',
+              '@babel/plugin-proposal-object-rest-spread',
               [
                 'module-resolver',
                 {
@@ -40,7 +53,12 @@ module.exports = {
     ],
   },
 
-  plugins: [new webpack.IgnorePlugin(/vertx/)],
+  plugins: [
+    new webpack.IgnorePlugin(/vertx/),
+    new HtmlWebpackPlugin({
+      template: './dev/index.html',
+    }),
+  ],
   devServer: {
     open: true,
     contentBase: './dev',
