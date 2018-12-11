@@ -1,0 +1,26 @@
+{
+  "presets": [
+    "@babel/react",
+    ["@babel/env", { "targets": { "esmodules": true }, "modules": false }]
+  ],
+  "env": {
+    "test": {
+      "presets": [["@babel/env"], "@babel/react"]
+    }
+  },
+  "plugins": [
+    "@babel/plugin-proposal-object-rest-spread",
+    ["@babel/proposal-class-properties", { "loose": true }],
+    [
+      "module-resolver",
+      {
+        "root": ["./"],
+        "alias": {
+          "components": "./src/components",
+          "lib": "./src/lib",
+          "styles": "./src/styles"
+        }
+      }
+    ]
+  ]
+}
