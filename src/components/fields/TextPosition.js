@@ -30,7 +30,7 @@ export class UnconnectedTextPosition extends Component {
               'This will position all text values on the plot according to the selected position.'
             )}
           </Info>
-          <Dropdown options={this.props.options} attr="textposition" />
+          <Dropdown options={this.props.options} attr="textposition" context={this.props.context} />
         </Fragment>
       ) : (
         <Fragment>
@@ -49,7 +49,7 @@ export class UnconnectedTextPosition extends Component {
       );
 
     return (
-      <Field {...this.props}>
+      <Field {...this.props} context={this.props.context}>
         <RadioBlocks
           options={radioOptions}
           activeOption={this.state.posType}
@@ -75,6 +75,12 @@ UnconnectedTextPosition.propTypes = {
 };
 
 UnconnectedTextPosition.contextType = EditorControlsContext;
+UnconnectedTextPosition.requireContext = {
+  container: PropTypes.object,
+  defaultContainer: PropTypes.object,
+  fullContainer: PropTypes.object,
+  updateContainer: PropTypes.func,
+};
 
 export default connectToContainer(UnconnectedTextPosition, {
   modifyPlotProps: (props, context, plotProps) => {
