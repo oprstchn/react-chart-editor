@@ -72,11 +72,6 @@ RangeSelectorAccordion.requireContext = {
   fullContainer: PropTypes.object,
   layout: PropTypes.object,
 };
-// >>>>>>> upstream/master
-// <<<<<<< HEAD
-// updateContainer: PropTypes.func,
-// getValObject: PropTypes.func,
-// *=======*
 
 RangeSelectorAccordion.propTypes = {
   children: PropTypes.node,
