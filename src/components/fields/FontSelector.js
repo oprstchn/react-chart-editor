@@ -13,7 +13,7 @@ class FontSelector extends Component {
     return (
       <Dropdown
         {...this.props}
-        options={this.props.context.fontOptions.map(({value, label}) => ({
+        options={this.context.fontOptions.map(({value, label}) => ({
           label: <span style={{fontFamily: value}}>{label}</span>,
           value,
         }))}
