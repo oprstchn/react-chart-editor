@@ -32,7 +32,7 @@ import {capitalize, lowerCase, upperCase, removeNonWord, camelCase, pascalCase} 
 import {getColorscale} from 'react-colorscales';
 import {templateString} from 'plotly.js/src/lib';
 import {EDITOR_ACTIONS} from './constants';
-import recursiveMap from './recursiveMap';
+import {recursiveMap} from './recursiveMap';
 
 const TOO_LIGHT_FACTOR = 0.8;
 

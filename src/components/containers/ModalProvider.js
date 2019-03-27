@@ -1,4 +1,4 @@
-import React, {Fragment} from 'react';
+import React from 'react';
 import PropTypes from 'prop-types';
 import {EditorControlsContext, ModalProviderContext} from '../../context';
 
@@ -75,12 +75,12 @@ class ModalProvider extends React.Component {
     const {component: Component, componentProps, isAnimatingOut} = this.state;
     return (
       <ModalProviderContext.Provider value={this.provideValue()}>
-        <Fragment>
+        <>
           {this.props.children}
           {this.state.open ? (
             <Component isAnimatingOut={isAnimatingOut} {...componentProps} />
           ) : null}
-        </Fragment>
+        </>
       </ModalProviderContext.Provider>
     );
   }

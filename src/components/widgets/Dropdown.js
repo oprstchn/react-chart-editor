@@ -16,16 +16,13 @@ class Dropdown extends Component {
 
     if (!selection) {
       return onChange(null);
-    } else if (multi) {
-      return onChange(selection.map(s => s[valueKey]));
     }
 
-    return onChange(selection[valueKey]);
+    return multi ? onChange(selection.map(s => s[valueKey])) : onChange(selection[valueKey]);
   }
 
   render() {
     const {
-      backspaceToRemoveMessage,
       minWidth,
       placeholder,
       clearable,
@@ -33,8 +30,6 @@ class Dropdown extends Component {
       options,
       searchable,
       multi,
-      optionRenderer,
-      valueRenderer,
       noResultsText,
       valueKey,
       disabled,
@@ -49,35 +44,34 @@ class Dropdown extends Component {
       dropdownStyle.width = width;
     }
 
-    const opts = options.slice();
-    for (let i = 0; i < opts.length; i++) {
-      if (typeof opts[i] === 'string') {
-        opts[i] = {label: opts[i], [valueKey]: opts[i]};
-      }
-    }
+    const opts = options.map(opt =>
+      typeof opt === 'string' ? {label: opt, [valueKey]: opt} : opt
+    );
 
     const dropdownContainerClass = classnames('dropdown-container', {
       'dropdown--dark': this.props.backgroundDark,
-      [this.props.className]: this.props.className,
+      [className]: className,
     });
 
     return (
       <div className={dropdownContainerClass} style={dropdownStyle}>
         <Select
-          backspaceToRemoveMessage={backspaceToRemoveMessage}
           placeholder={placeholder || _('Select an Option')}
-          clearable={clearable}
-          value={value}
+          isClearable={clearable}
+          value={opts.filter(o =>
+            Array.isArray(value) ? value.includes(o[valueKey]) : value === o[valueKey]
+          )}
           options={opts}
-          searchable={searchable}
+          isSearchable={searchable}
           onChange={this.onChange}
-          multi={multi}
-          optionRenderer={optionRenderer}
-          valueRenderer={valueRenderer}
-          noResultsText={noResultsText || _('No Results')}
-          valueKey={valueKey}
-          disabled={disabled}
-          className={className}
+          isMulti={multi}
+          noOptionsMessage={() => noResultsText || _('No Results')}
+          getOptionValue={o => o[valueKey]}
+          getOptionLabel={o => o.label}
+          isDisabled={disabled}
+          className={dropdownContainerClass}
+          classNamePrefix="Select"
+          components={this.props.components}
         />
       </div>
     );
@@ -94,7 +88,6 @@ Dropdown.defaultProps = {
 };
 
 Dropdown.propTypes = {
-  backspaceToRemoveMessage: PropTypes.string,
   backgroundDark: PropTypes.bool,
   clearable: PropTypes.bool,
   onChange: PropTypes.func.isRequired,
@@ -105,8 +98,7 @@ Dropdown.propTypes = {
   valueKey: PropTypes.string,
   value: PropTypes.any,
   multi: PropTypes.bool,
-  optionRenderer: PropTypes.func,
-  valueRenderer: PropTypes.func,
+  components: PropTypes.object,
   noResultsText: PropTypes.string,
   disabled: PropTypes.bool,
   className: PropTypes.string,

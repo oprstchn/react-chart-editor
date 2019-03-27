@@ -38,7 +38,6 @@ const GraphSubplotsPanel = () => (
           <AxisAnchorDropdown label={_('Anchor to')} attr="yaxis.anchor" clearable={false} />
           <AxisSide label={_('Side')} attr="yaxis.side" />
         </TraceTypeSection>
-
         <PlotlySection name={_('Aspect Ratio')}>
           <VisibilitySelect
             attr="aspectmode"
@@ -58,11 +57,20 @@ const GraphSubplotsPanel = () => (
             <Numeric label={_('Z')} attr="aspectratio.z" step={0.1} />
           </VisibilitySelect>
         </PlotlySection>
-
+        <PlotlySection name={_('Projection')}>
+          <Dropdown
+            label={_('Type')}
+            attr="camera.projection.type"
+            options={[
+              {label: _('Perspective'), value: 'perspective'},
+              {label: _('Orthographic'), value: 'orthographic'},
+            ]}
+            clearable={false}
+          />
+        </PlotlySection>
         <PlotlySection name={_('Canvas')}>
           <ColorPicker label={_('Plot Background')} attr="bgcolor" />
         </PlotlySection>
-
         <PlotlySection name={_('Bar Options')}>
           <Radio
             label={_('Bar Mode')}

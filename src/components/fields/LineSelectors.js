@@ -5,18 +5,6 @@ import nestedProperty from 'plotly.js/src/lib/nested_property';
 import {tooLight} from 'lib';
 import {COLORS, MULTI_VALUED} from 'lib/constants';
 
-/* eslint-disable react/prop-types */
-const styledRenderer = ({label}) => {
-  return (
-    <div>
-      <svg width="100" height="16">
-        <g>{label}</g>
-      </svg>
-    </div>
-  );
-};
-/* eslint-enable react/prop-types */
-
 const strokeDashes = [
   {value: 'solid', strokeDasharray: ''},
   {value: 'dot', strokeDasharray: '3px, 3px'},
@@ -35,19 +23,22 @@ const strokeShapes = [
   {d: 'M2,14V8H14V2', value: 'vhv'},
 ];
 
-const strokeStyle = {fill: 'none', strokeWidth: '4px'};
-
 const computeOptions = (strokeData, stroke) =>
   strokeData.map(({value, strokeDasharray, d = 'M0,8h100'}) => ({
     label: (
-      <path
-        d={d}
-        style={{
-          ...strokeStyle,
-          stroke: !stroke || stroke === MULTI_VALUED ? COLORS.mutedBlue : stroke,
-          strokeDasharray,
-        }}
-      />
+      <svg width="100" height="16">
+        <g>
+          <path
+            d={d}
+            style={{
+              fill: 'none',
+              strokeWidth: '4px',
+              stroke: !stroke || stroke === MULTI_VALUED ? COLORS.mutedBlue : stroke,
+              strokeDasharray,
+            }}
+          />
+        </g>
+      </svg>
     ),
     value,
   }));
@@ -107,13 +98,7 @@ class LineSelector extends Component {
 
   render() {
     return (
-      <Dropdown
-        {...this.props}
-        options={this.options}
-        valueRenderer={styledRenderer}
-        optionRenderer={styledRenderer}
-        backgroundDark={tooLight(this.lineColor)}
-      />
+      <Dropdown {...this.props} options={this.options} backgroundDark={tooLight(this.lineColor)} />
     );
   }
 }

@@ -1,5 +1,5 @@
 import PropTypes from 'prop-types';
-import React, {Component, Fragment} from 'react';
+import React, {Component} from 'react';
 import {DataSelector, Radio, Numeric, MultiColorPicker} from '../index';
 import RadioBlocks from '../widgets/RadioBlocks';
 import Field from './Field';
@@ -144,10 +144,10 @@ class ErrorBars extends Component {
           <Numeric label={_('Value')} attr={`${this.props.attr}.value`} />
           <Numeric label={_('Value (-)')} attr={`${this.props.attr}.valueminus`} />
           {showCustomDataControl ? (
-            <Fragment>
+            <>
               <DataSelector label={_('Error (+)')} attr={`${this.props.attr}.array`} />
               <DataSelector label={_('Error (-)')} attr={`${this.props.attr}.arrayminus`} />
-            </Fragment>
+            </>
           ) : null}
           {styleAttrs}
         </RecursiveComponent>
@@ -159,10 +159,10 @@ class ErrorBars extends Component {
 
   render() {
     return (
-      <Fragment>
+      <>
         {this.renderModeSelector()}
         {this.renderErrorBarControls()}
-      </Fragment>
+      </>
     );
   }
 }
