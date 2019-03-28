@@ -72,6 +72,7 @@ class Dropdown extends Component {
           className={dropdownContainerClass}
           classNamePrefix="Select"
           components={this.props.components}
+          styles={this.props.styles}
         />
       </div>
     );
@@ -99,6 +100,7 @@ Dropdown.propTypes = {
   value: PropTypes.any,
   multi: PropTypes.bool,
   components: PropTypes.object,
+  styles: PropTypes.object,
   noResultsText: PropTypes.string,
   disabled: PropTypes.bool,
   className: PropTypes.string,
