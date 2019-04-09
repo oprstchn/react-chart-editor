@@ -27,6 +27,7 @@ class PlotlyEditor extends Component {
             graphDiv={this.state.graphDiv}
             dataSources={this.props.dataSources}
             dataSourceOptions={this.props.dataSourceOptions}
+            dataSourceStyles={this.props.dataSourceStyles}
             plotly={this.props.plotly}
             onUpdate={this.props.onUpdate}
             advancedTraceTypeSelector={this.props.advancedTraceTypeSelector}
@@ -71,6 +72,7 @@ PlotlyEditor.propTypes = {
   data: PropTypes.array,
   config: PropTypes.object,
   dataSourceOptions: PropTypes.array,
+  dataSourceStyles: PropTypes.object,
   dataSources: PropTypes.object,
   frames: PropTypes.array,
   onUpdate: PropTypes.func,

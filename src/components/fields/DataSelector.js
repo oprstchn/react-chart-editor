@@ -109,6 +109,7 @@ export class UnconnectedDataSelector extends Component {
           placeholder={this.hasData ? 'Data inlined in figure' : 'Choose data...'}
           disabled={this.dataSourceOptions.length === 0}
           components={this.props.dataSourceComponents}
+          styles={this.context.dataSourceStyles}
         />
       </Field>
     );
