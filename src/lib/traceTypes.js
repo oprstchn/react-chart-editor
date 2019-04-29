@@ -11,6 +11,7 @@ export const chartCategory = _ => {
     FINANCIAL: {
       value: 'FINANCIAL',
       label: _('Finance'),
+      maxColumns: 1,
     },
     DISTRIBUTIONS: {
       value: 'DISTRIBUTIONS',
@@ -19,10 +20,12 @@ export const chartCategory = _ => {
     MAPS: {
       value: 'MAPS',
       label: _('Maps'),
+      maxColumns: 1,
     },
     SPECIALIZED: {
       value: 'SPECIALIZED',
       label: _('Specialized'),
+      maxColumns: 1,
     },
     THREE_D: {
       value: '3D',
@@ -173,6 +176,16 @@ export const traceTypes = _ => [
     category: chartCategory(_).SPECIALIZED,
   },
   {
+    value: 'sunburst',
+    label: _('Sunburst'),
+    category: chartCategory(_).SPECIALIZED,
+  },
+  {
+    value: 'sankey',
+    label: _('Sankey'),
+    category: chartCategory(_).SPECIALIZED,
+  },
+  {
     value: 'candlestick',
     label: _('Candlestick'),
     category: chartCategory(_).FINANCIAL,
@@ -180,6 +193,11 @@ export const traceTypes = _ => [
   {
     value: 'ohlc',
     label: _('OHLC'),
+    category: chartCategory(_).FINANCIAL,
+  },
+  {
+    value: 'waterfall',
+    label: _('Waterfall'),
     category: chartCategory(_).FINANCIAL,
   },
   {
@@ -218,11 +236,6 @@ export const traceTypes = _ => [
   {
     value: 'splom',
     label: _('Scatterplot Matrix'),
-    category: chartCategory(_).HIDDEN,
-  },
-  {
-    value: 'sankey',
-    label: _('Sankey'),
     category: chartCategory(_).HIDDEN,
   },
   {

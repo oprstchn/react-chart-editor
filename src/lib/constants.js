@@ -38,6 +38,7 @@ export const EDITOR_ACTIONS = {
   DELETE_IMAGE: 'plotly-editor-delete-image',
   DELETE_RANGESELECTOR: 'plotly-editor-delete-rangeselector',
   DELETE_TRANSFORM: 'plotly-editor-delete-transform',
+  MOVE_TO: 'plotly-editor-move-to',
 };
 
 export const DEFAULT_FONTS = [
@@ -71,6 +72,7 @@ export const TRACE_TO_AXIS = {
     'carpet',
     'scattercarpet',
     'contourcarpet',
+    'waterfall',
   ],
   ternary: ['scatterternary'],
   gl3d: ['scatter3d', 'surface', 'mesh3d', 'cone', 'streamtube'],
@@ -118,6 +120,7 @@ export const TRANSFORMABLE_TRACES = [
   'candlestick',
   'histogram',
   'histogram2d',
+  'waterfall',
 ];
 
 export const TRACES_WITH_GL = ['scatter', 'scatterpolar', 'scattergl', 'scatterpolargl'];
@@ -139,17 +142,4 @@ export const COLORS = {
   black: '#000000',
 };
 
-export const DEFAULT_COLORS = [
-  COLORS.charcoal,
-  COLORS.white,
-  COLORS.mutedBlue,
-  COLORS.safetyOrange,
-  COLORS.cookedAsparagusGreen,
-  COLORS.brickRed,
-  COLORS.mutedPurple,
-  COLORS.chestnutBrown,
-  COLORS.raspberryYogurtPink,
-  COLORS.middleGray,
-  COLORS.curryYellowGreen,
-  COLORS.blueTeal,
-];
+export const DEFAULT_COLORS = Object.values(COLORS);

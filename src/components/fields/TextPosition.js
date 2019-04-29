@@ -30,8 +30,7 @@ export class UnconnectedTextPosition extends Component {
               'This will position all text values on the plot according to the selected position.'
             )}
           </Info>
-
-          <Dropdown options={this.props.options} attr="textposition" context={this.props.context} />
+          <Dropdown options={this.props.options} attr="textposition" clearable={false} context={this.props.context} />
         </>
       ) : (
         <>
@@ -97,7 +96,7 @@ export default connectToContainer(UnconnectedTextPosition, {
       {label: _('Bottom Center'), value: 'bottom center'},
       {label: _('Bottom Right'), value: 'bottom right'},
     ];
-    if (context.container.type === 'pie' || context.container.type === 'bar') {
+    if (['pie', 'bar', 'waterfall'].includes(context.container.type)) {
       options = [
         {label: _('Inside'), value: 'inside'},
         {label: _('Outside'), value: 'outside'},

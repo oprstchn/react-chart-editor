@@ -12,7 +12,8 @@ export default function connectAnnotationToLayout(WrappedComponent) {
 
       this.deleteAnnotation = this.deleteAnnotation.bind(this);
       this.updateAnnotation = this.updateAnnotation.bind(this);
-      this.setLocals(props);
+      this.moveAnnotation = this.moveAnnotation.bind(this);
+      this.setLocals(props, context);
     }
 
     componentWillReceiveProps(nextProps) {
@@ -40,6 +41,7 @@ export default function connectAnnotationToLayout(WrappedComponent) {
         deleteContainer: this.deleteAnnotation,
         container: this.container,
         fullContainer: this.fullContainer,
+        moveContainer: this.moveAnnotation,
       };
     }
 
@@ -58,6 +60,21 @@ export default function connectAnnotationToLayout(WrappedComponent) {
         this.context.onUpdate({
           type: EDITOR_ACTIONS.DELETE_ANNOTATION,
           payload: {annotationIndex: this.props.annotationIndex},
+        });
+      }
+    }
+
+    moveAnnotation(direction) {
+      if (this.context.onUpdate) {
+        const annotationIndex = this.props.annotationIndex;
+        const desiredIndex = direction === 'up' ? annotationIndex - 1 : annotationIndex + 1;
+        this.context.onUpdate({
+          type: EDITOR_ACTIONS.MOVE_TO,
+          payload: {
+            fromIndex: annotationIndex,
+            toIndex: desiredIndex,
+            path: 'layout.annotations',
+          },
         });
       }
     }
@@ -92,10 +109,12 @@ export default function connectAnnotationToLayout(WrappedComponent) {
   AnnotationConnectedComponent.contextType = EditorControlsContext;
 
   AnnotationConnectedComponent.requireContext = {
+    updateContainer: PropTypes.func,
+    deleteContainer: PropTypes.func,
     container: PropTypes.object,
     fullContainer: PropTypes.object,
-    updateContainer: PropTypes.func,
     getValObject: PropTypes.func,
+    moveContainer: PropTypes.func,
   };
 
   AnnotationConnectedComponent.propTypes = {

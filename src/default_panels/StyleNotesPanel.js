@@ -19,7 +19,7 @@ import {EditorControlsContext} from '../context';
 const StyleNotesPanel = () => (
   <EditorControlsContext.Consumer>
     {({localize: _}) => (
-      <AnnotationAccordion canAdd>
+      <AnnotationAccordion canAdd canReorder>
         <PlotlySection name={_('Note Text')} attr="text">
           <TextEditor attr="text" />
           <FontSelector label={_('Typeface')} attr="font.family" />
@@ -47,7 +47,6 @@ const StyleNotesPanel = () => (
             ]}
           />
         </PlotlySection>
-
         <PlotlySection name={_('Arrow')}>
           <Radio
             attr="showarrow"

@@ -12,7 +12,8 @@ export default function connectImageToLayout(WrappedComponent) {
 
       this.deleteImage = this.deleteImage.bind(this);
       this.updateImage = this.updateImage.bind(this);
-      this.setLocals(props);
+      this.moveImage = this.moveImage.bind(this);
+      this.setLocals(props, context);
     }
 
     componentWillReceiveProps(nextProps) {
@@ -39,6 +40,7 @@ export default function connectImageToLayout(WrappedComponent) {
         deleteContainer: this.deleteImage,
         container: this.container,
         fullContainer: this.fullContainer,
+        moveContainer: this.moveImage,
       };
     }
 
@@ -57,6 +59,21 @@ export default function connectImageToLayout(WrappedComponent) {
         this.context.onUpdate({
           type: EDITOR_ACTIONS.DELETE_IMAGE,
           payload: {imageIndex: this.props.imageIndex},
+        });
+      }
+    }
+
+    moveImage(direction) {
+      if (this.context.onUpdate) {
+        const imageIndex = this.props.imageIndex;
+        const desiredIndex = direction === 'up' ? imageIndex - 1 : imageIndex + 1;
+        this.context.onUpdate({
+          type: EDITOR_ACTIONS.MOVE_TO,
+          payload: {
+            fromIndex: imageIndex,
+            toIndex: desiredIndex,
+            path: 'layout.images',
+          },
         });
       }
     }
@@ -85,10 +102,12 @@ export default function connectImageToLayout(WrappedComponent) {
   ImageConnectedComponent.contextType = EditorControlsContext;
 
   ImageConnectedComponent.requireContext = {
+    updateContainer: PropTypes.func,
+    deleteContainer: PropTypes.func,
     container: PropTypes.object,
     fullContainer: PropTypes.object,
-    updateContainer: PropTypes.func,
     getValObject: PropTypes.func,
+    moveContainer: PropTypes.func,
   };
 
   ImageConnectedComponent.propTypes = {

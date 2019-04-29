@@ -33,12 +33,30 @@ const GraphCreatePanel = () => {
                   t.transforms.some(tr => ['fit', 'moving-average'].includes(tr.type))
                 )
               }
+              canReorder
             >
               <TraceSelector label={_('Type')} attr="type" show />
-              <LocationSelector attr="type" />
 
+              <LocationSelector attr="type" />
               <DataSelector label={_('Values')} attr="values" />
               <DataSelector label={_('Labels')} attr="labels" />
+              <DataSelector label={_('Parents')} attr="parents" />
+
+              <TraceTypeSection traceTypes={['sunburst']} mode="trace">
+                <DataSelector label={_('IDs')} attr="ids" />
+              </TraceTypeSection>
+              <Dropdown
+                label={_('Parent Value Mode')}
+                attr="branchvalues"
+                options={[
+                  {label: _('Total'), value: 'total'},
+                  {
+                    label: _('Remainder'),
+                    value: 'remainder',
+                  },
+                ]}
+                clearable={false}
+              />
 
               <DataSelector
                 label={{
@@ -64,6 +82,20 @@ const GraphCreatePanel = () => {
                 }}
                 attr="z"
               />
+              <DataSelector label={_('Measure')} attr="measure" />
+
+              <PlotlySection name={_('Nodes')}>
+                <DataSelector label={_('Labels')} attr="node.label" />
+                <DataSelector label={_('Groups')} attr="node.groups" />
+                <DataSelector label={_('X')} attr="node.x" />
+                <DataSelector label={_('Y')} attr="node.y" />
+              </PlotlySection>
+              <PlotlySection name={_('Links')}>
+                <DataSelector label={_('Sources')} attr="link.source" />
+                <DataSelector label={_('Targets')} attr="link.target" />
+                <DataSelector label={_('Values')} attr="link.value" />
+                <DataSelector label={_('Labels')} attr="link.label" />
+              </PlotlySection>
               <Radio
                 label={_('Orientation')}
                 attr="orientation"
@@ -105,6 +137,7 @@ const GraphCreatePanel = () => {
               <DataSelector label={_('Close')} attr="close" />
               <DataSelector label={_('A')} attr="a" />
               <DataSelector label={_('B')} attr="b" />
+
               <DataSelector label={_('C')} attr="c" />
               <DataSelector label={_('U')} attr="u" />
               <DataSelector label={_('V')} attr="v" />
@@ -114,24 +147,6 @@ const GraphCreatePanel = () => {
               <DataSelector label={_('Z start')} attr="starts.z" />
               <DataSelector label={_('Headers')} attr="header.values" />
               <DataSelector label={_('Columns')} attr="cells.values" />
-
-              <TraceTypeSection
-                traceTypes={['scatterpolar', 'scatterpolargl', 'barpolar']}
-                mode="trace"
-              >
-                <DataSelector label={_('Radius')} attr="r" />
-                <DataSelector label={_('Theta')} attr="theta" />
-                <Dropdown
-                  label={_('Theta Unit')}
-                  options={[
-                    {label: _('Radians'), value: 'radians'},
-                    {label: _('Degrees'), value: 'degrees'},
-                    {label: _('Gradians'), value: 'gradians'},
-                  ]}
-                  attr="thetaunit"
-                  clearable={false}
-                />
-              </TraceTypeSection>
 
               <AxesCreator attr="fake_attr" />
               <SubplotCreator attr="fake_attr" />

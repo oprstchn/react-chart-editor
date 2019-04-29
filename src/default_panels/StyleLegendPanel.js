@@ -75,14 +75,23 @@ const StyleLegendPanel = () => (
               options={[{label: _('Vertical'), value: 'v'}, {label: _('Horizontal'), value: 'h'}]}
             />
           </PlotlySection>
-          <PlotlySection name={_('Trace Order')}>
+          <PlotlySection name={_('Traces')}>
             <Dropdown
+              label={_('Trace Order')}
               attr="legend.traceorder"
               options={[
                 {label: _('Normal'), value: 'normal'},
                 {label: _('Reversed'), value: 'reversed'},
                 {label: _('Grouped'), value: 'grouped'},
                 {label: _('Reversed and Grouped'), value: 'reversed+grouped'},
+              ]}
+            />
+            <Dropdown
+              label={_('Item Sizing')}
+              attr="legend.itemsizing"
+              options={[
+                {label: _('Trace'), value: 'trace'},
+                {label: _('Constant'), value: 'constant'},
               ]}
             />
             <Numeric label={_('Gap Between Groups')} attr="legend.tracegroupgap" units="px" />

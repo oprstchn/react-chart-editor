@@ -16,7 +16,7 @@ import {EditorControlsContext} from '../context';
 const StyleShapesPanel = () => (
   <EditorControlsContext.Consumer>
     {({localize: _}) => (
-      <ShapeAccordion canAdd>
+      <ShapeAccordion canAdd canReorder>
         <Radio
           attr="visible"
           options={[{label: _('Show'), value: true}, {label: _('Hide'), value: false}]}
@@ -29,7 +29,6 @@ const StyleShapesPanel = () => (
             {label: _('Ellipse'), value: 'circle'},
           ]}
         />
-
         <PlotlySection name={_('Horizontal Boundaries')}>
           <PositioningRef label={_('Relative to')} attr="xref" />
           <PositioningNumeric label={_('Start Point')} attr="x0" />

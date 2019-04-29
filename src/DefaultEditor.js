@@ -7,6 +7,7 @@ import {
   GraphSubplotsPanel,
   StyleLayoutPanel,
   StyleAxesPanel,
+  StyleMapsPanel,
   StyleLegendPanel,
   StyleNotesPanel,
   StyleShapesPanel,
@@ -18,8 +19,8 @@ import {
 } from './default_panels';
 import {traceHasColorbar} from './default_panels/StyleColorbarsPanel';
 import Logo from './components/widgets/Logo';
-import {TRANSFORMABLE_TRACES} from './lib/constants';
 import {EditorControlsContext} from './context';
+import {TRANSFORMABLE_TRACES, TRACE_TO_AXIS} from './lib/constants';
 
 class DefaultEditor extends Component {
   constructor(props) {
@@ -29,6 +30,7 @@ class DefaultEditor extends Component {
     this.hasMenus = this.hasMenus.bind(this);
     this.hasSliders = this.hasSliders.bind(this);
     this.hasColorbars = this.hasColorbars.bind(this);
+    this.hasLegend = this.hasLegend.bind(this);
   }
 
   hasTransforms() {
@@ -60,6 +62,16 @@ class DefaultEditor extends Component {
     return this.context.fullData.some(d => traceHasColorbar({}, d));
   }
 
+  hasLegend() {
+    return this.context.fullData.some(t => t.showlegend !== undefined); // eslint-disable-line no-undefined
+  }
+
+  hasMaps() {
+    return this.context.fullData.some(d =>
+      [...TRACE_TO_AXIS.geo, ...TRACE_TO_AXIS.mapbox].includes(d.type)
+    );
+  }
+
   render() {
     const logo = this.props.logoSrc && <Logo src={this.props.logoSrc} />;
     const _ = this.context.localize;
@@ -74,7 +86,8 @@ class DefaultEditor extends Component {
         <StyleLayoutPanel group={_('Style')} name={_('General')} />
         <StyleTracesPanel group={_('Style')} name={_('Traces')} />
         {this.hasAxes() && <StyleAxesPanel group={_('Style')} name={_('Axes')} />}
-        <StyleLegendPanel group={_('Style')} name={_('Legend')} />
+        {this.hasMaps() && <StyleMapsPanel group={_('Style')} name={_('Maps')} />}
+        {this.hasLegend() && <StyleLegendPanel group={_('Style')} name={_('Legend')} />}
         {this.hasColorbars() && <StyleColorbarsPanel group={_('Style')} name={_('Color Bars')} />}
         <StyleNotesPanel group={_('Style')} name={_('Annotation')} />
         <StyleShapesPanel group={_('Style')} name={_('Shapes')} />
