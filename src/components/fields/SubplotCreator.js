@@ -77,6 +77,7 @@ class UnconnectedSingleSubplotCreator extends Component {
         options={this.props.options}
         updatePlot={u => this.updateSubplot(u)}
         extraComponent={extraComponent}
+        context={this.props.context}
       />
     );
   }
@@ -90,6 +91,7 @@ UnconnectedSingleSubplotCreator.propTypes = {
   container: PropTypes.object,
   fullContainer: PropTypes.object,
   updateContainer: PropTypes.func,
+  context: PropTypes.object,
 };
 
 UnconnectedSingleSubplotCreator.contextType = EditorControlsContext;
@@ -118,9 +120,8 @@ class UnconnectedSubplotCreator extends Component {
       }));
     }
 
-    console.log('subplotCreator');
     return (
-      <PlotlySection name={_('Subplots to Use')} context={this.context}>
+      <PlotlySection name={_('Subplots to Use')} context={this.props.context}>
         <SingleSubplotCreator
           attr={SUBPLOT_TO_ATTR[subplotType].data}
           layoutAttr={subplotType}
@@ -144,6 +145,7 @@ class UnconnectedSubplotCreator extends Component {
 UnconnectedSubplotCreator.propTypes = {
   container: PropTypes.object,
   fullContainer: PropTypes.object,
+  context: PropTypes.object,
 };
 
 UnconnectedSubplotCreator.contextType = EditorControlsContext;

@@ -110,8 +110,8 @@ class UnconnectedLocationSelector extends Component {
             </Field>
             {mode === 'latlon' ? (
               <>
-                <DataSelector label={_('Latitude')} attr="lat" />
-                <DataSelector label={_('Longitude')} attr="lon" />
+                <DataSelector label={_('Latitude')} attr="lat" context={context} />
+                <DataSelector label={_('Longitude')} attr="lon" context={context} />
               </>
             ) : (
               <Location attr="type" />
@@ -125,8 +125,8 @@ class UnconnectedLocationSelector extends Component {
       <EditorControlsContext.Consumer>
         {({localize: _}) => (
           <>
-            <DataSelector label={_('Latitude')} attr="lat" />
-            <DataSelector label={_('Longitude')} attr="lon" />
+            <DataSelector label={_('Latitude')} attr="lat" context={context} />
+            <DataSelector label={_('Longitude')} attr="lon" context={context} />
           </>
         )}
       </EditorControlsContext.Consumer>

@@ -15,7 +15,6 @@ export class Section extends Component {
     }
 
     const {context = {}} = this.props;
-    console.log(recursiveMap(this.props.children, context));
     return (
       <div className="section">
         {this.props.name ? (
