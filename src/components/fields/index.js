@@ -4,6 +4,7 @@ import ColorPicker from './ColorPicker';
 import ColorscalePicker from './ColorscalePicker';
 import PieColorscalePicker from './PieColorscalePicker';
 import ColorwayPicker from './ColorwayPicker';
+import ColorArrayPicker from './ColorArrayPicker';
 import Dropdown from './Dropdown';
 import Dropzone from './Dropzone';
 import FontSelector from './FontSelector';
@@ -35,85 +36,38 @@ import LocationSelector from './LocationSelector';
 import AxisInterval from './AxisInterval';
 import DateTimePicker from './DateTimePicker';
 import TextPosition from './TextPosition';
+import HoverLabelNameLength from './HoverLabelNameLength';
 
-import {
-  AnnotationArrowRef,
-  AnnotationRef,
-  PositioningRef,
-  AxesRange,
-  NTicks,
-  DTicks,
-  DTicksInterval,
-  AxisAnchorDropdown,
-  ContourNumeric,
-  FillDropdown,
-  HoverInfo,
-  HoverTemplateText,
-  HoverTemplateSwitch,
-  NumericFraction,
-  NumericFractionDomain,
-  PositioningNumeric,
-  NumericFractionInverse,
-  RangesliderVisible,
-  AxisOverlayDropdown,
-  AxisSide,
-  ShowInLegend,
-  HoveronDropdown,
-  HovermodeDropdown,
-  TickFormat,
-} from './derived';
-import {LineDashSelector, LineShapeSelector} from './LineSelectors';
+export * from './derived';
+export * from './LineSelectors';
 
 export {
-  ShowInLegend,
-  AnnotationArrowRef,
-  AnnotationRef,
-  AxisAnchorDropdown,
-  PositioningRef,
   ArrowSelector,
-  AxesRange,
-  NTicks,
-  DTicks,
-  DTicksInterval,
   AxesSelector,
   ColorPicker,
   ColorscalePicker,
   ColorwayPicker,
-  ContourNumeric,
+  ColorArrayPicker,
   DataSelector,
   Dropdown,
   ErrorBars,
-  FillDropdown,
   PieColorscalePicker,
   FilterOperation,
   FilterValue,
   Flaglist,
   FontSelector,
-  HoverInfo,
-  HoverTemplateText,
-  HoverTemplateSwitch,
   Info,
-  NumericFraction,
-  NumericFractionDomain,
-  NumericFractionInverse,
-  PositioningNumeric,
-  LineDashSelector,
-  LineShapeSelector,
   Numeric,
   DualNumeric,
   AxisRangeValue,
   Text,
-  TickFormat,
   Radio,
   SymbolSelector,
-  RangesliderVisible,
   TextEditor,
   TraceSelector,
   AxesCreator,
   SubplotCreator,
   GroupCreator,
-  AxisOverlayDropdown,
-  AxisSide,
   UpdateMenuButtons,
   Dropzone,
   TextPosition,
@@ -124,9 +78,8 @@ export {
   DropdownCustom,
   RectanglePositioner,
   LocationSelector,
-  HoveronDropdown,
-  HovermodeDropdown,
   AxisInterval,
   NumericOrDate,
   DateTimePicker,
+  HoverLabelNameLength,
 };

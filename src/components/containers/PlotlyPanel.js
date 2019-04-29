@@ -87,6 +87,7 @@ export class Panel extends Component {
 
   render() {
     const {individualFoldStates, hasError} = this.state;
+    const {canReorder} = this.props;
 
     if (hasError) {
       return <PanelError />;
@@ -98,6 +99,11 @@ export class Panel extends Component {
           key: index,
           folded: individualFoldStates[index] || false,
           toggleFold: () => this.toggleFold(index),
+          canMoveUp: canReorder && individualFoldStates.length > 1 && index > 0,
+          canMoveDown:
+            canReorder &&
+            individualFoldStates.length > 1 &&
+            index !== individualFoldStates.length - 1,
         });
       }
       return child;
@@ -131,6 +137,7 @@ Panel.propTypes = {
   noPadding: PropTypes.bool,
   showExpandCollapse: PropTypes.bool,
   context: PropTypes.any,
+  canReorder: PropTypes.bool,
 };
 
 Panel.defaultProps = {

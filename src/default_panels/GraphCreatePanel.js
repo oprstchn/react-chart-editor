@@ -33,12 +33,27 @@ const GraphCreatePanel = () => {
                   t.transforms.some(tr => ['fit', 'moving-average'].includes(tr.type))
                 )
               }
+              canReorder
             >
               <TraceSelector label={_('Type')} attr="type" show />
-              <LocationSelector attr="type" />
 
+              <LocationSelector attr="type" />
               <DataSelector label={_('Values')} attr="values" />
               <DataSelector label={_('Labels')} attr="labels" />
+              <DataSelector label={_('Parents')} attr="parents" />
+
+              <TraceTypeSection traceTypes={['sunburst']} mode="trace">
+                <DataSelector label={_('IDs')} attr="ids" />
+              </TraceTypeSection>
+              <Dropdown
+                label={_('Parent Value Mode')}
+                attr="branchvalues"
+                options={[
+                  {label: _('Total'), value: 'total'},
+                  {label: _('Remainder'), value: 'remainder'},
+                ]}
+                clearable={false}
+              />
 
               <DataSelector
                 label={{
@@ -64,6 +79,20 @@ const GraphCreatePanel = () => {
                 }}
                 attr="z"
               />
+              <DataSelector label={_('Measure')} attr="measure" />
+
+              <PlotlySection name={_('Nodes')}>
+                <DataSelector label={_('Labels')} attr="node.label" />
+                <DataSelector label={_('Groups')} attr="node.groups" />
+                <DataSelector label={_('X')} attr="node.x" />
+                <DataSelector label={_('Y')} attr="node.y" />
+              </PlotlySection>
+              <PlotlySection name={_('Links')}>
+                <DataSelector label={_('Sources')} attr="link.source" />
+                <DataSelector label={_('Targets')} attr="link.target" />
+                <DataSelector label={_('Values')} attr="link.value" />
+                <DataSelector label={_('Labels')} attr="link.label" />
+              </PlotlySection>
               <Radio
                 label={_('Orientation')}
                 attr="orientation"

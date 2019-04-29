@@ -118,8 +118,9 @@ class UnconnectedSubplotCreator extends Component {
       }));
     }
 
+    console.log('subplotCreator');
     return (
-      <PlotlySection name={_('Subplots to Use')}>
+      <PlotlySection name={_('Subplots to Use')} context={this.context}>
         <SingleSubplotCreator
           attr={SUBPLOT_TO_ATTR[subplotType].data}
           layoutAttr={subplotType}

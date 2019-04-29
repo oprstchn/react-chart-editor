@@ -1,9 +1,11 @@
-import panelTest from './panelTest.json';
-import histogram from './histogram.json';
-import histogram2d from './histogram2d.json';
-import pie from './pie.json';
-import violin from './violin.json';
-import bar from './bar.json';
-import box from './box.json';
-
-export {panelTest, histogram, histogram2d, pie, violin, bar, box};
+export {default as panelTest} from './panelTest.json';
+export {default as histogram} from './histogram.json';
+export {default as histogram2d} from './histogram2d.json';
+export {default as pie} from './pie.json';
+export {default as violin} from './violin.json';
+export {default as bar} from './bar.json';
+export {default as box} from './box.json';
+export {default as waterfall} from './waterfall.json';
+export {default as sunburst} from './sunburst.json';
+export {default as sankey} from './sankey.json';
+export {default as geoTest} from './geoTest.json';

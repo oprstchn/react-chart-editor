@@ -22,7 +22,7 @@ export class Fold extends Component {
     if (!this.foldVisible && !this.props.messageIfEmpty) {
       return null;
     }
-    // const {deleteContainer} = this.context;
+    // const {deleteContainer, moveContainer} = this.context;
     const {
       canDelete,
       children,
@@ -34,7 +34,9 @@ export class Fold extends Component {
       icon: Icon,
       messageIfEmpty,
       name,
-      context: {deleteContainer},
+      context: {deleteContainer, moveContainer},
+      canMoveUp,
+      canMoveDown,
     } = this.props;
 
     const contentClass = classnames('fold__content', {
@@ -49,7 +51,7 @@ export class Fold extends Component {
       'fold__top__arrow--open': !folded,
     });
 
-    const arrowIcon = (
+    const arrowDownIcon = (
       <div className={arrowClass}>
         <div className="fold__top__arrow__wrapper">
           <AngleDownIcon />
@@ -72,13 +74,50 @@ export class Fold extends Component {
         </div>
       ) : null;
 
+    const movingControls = (canMoveDown || canMoveUp) && (
+      <div className="fold__top__moving-controls">
+        <span
+          className={`fold__top__moving-controls--up${canMoveUp ? '' : '--disabled'}`}
+          onClick={e => {
+            // prevents fold toggle to happen when clicking on moving arrow controls
+            e.stopPropagation();
+
+            if (canMoveUp) {
+              if (!moveContainer || typeof moveContainer !== 'function') {
+                throw new Error('moveContainer must be a function');
+              }
+              moveContainer('up');
+            }
+          }}
+        >
+          <AngleDownIcon />
+        </span>
+        <span
+          className={`fold__top__moving-controls--down${canMoveDown ? '' : '--disabled'}`}
+          onClick={e => {
+            // prevents fold toggle to happen when clicking on moving arrow controls
+            e.stopPropagation();
+            if (canMoveDown) {
+              if (!moveContainer || typeof moveContainer !== 'function') {
+                throw new Error('moveContainer must be a function');
+              }
+              moveContainer('down');
+            }
+          }}
+        >
+          <AngleDownIcon />
+        </span>
+      </div>
+    );
+
     const foldHeader = !hideHeader && (
       <div className={headerClass} onClick={toggleFold}>
         <div className="fold__top__arrow-title">
-          {arrowIcon}
+          {arrowDownIcon}
           {icon}
           <div className="fold__top__title">{striptags(name)}</div>
         </div>
+        {movingControls}
         {deleteButton}
       </div>
     );
@@ -125,6 +164,8 @@ Fold.propTypes = {
   messageIfEmpty: PropTypes.string,
   name: PropTypes.string,
   context: PropTypes.any,
+  canMoveUp: PropTypes.bool,
+  canMoveDown: PropTypes.bool,
 };
 
 Fold.requireContext = {
@@ -188,6 +229,7 @@ PlotlyFold.propTypes = {
 PlotlyFold.requireContext = Object.assign(
   {
     deleteContainer: PropTypes.func,
+    moveContainer: PropTypes.func,
   },
   containerConnectedContextTypes
 );

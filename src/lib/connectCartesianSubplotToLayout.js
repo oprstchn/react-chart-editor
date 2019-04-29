@@ -54,6 +54,7 @@ export default function connectCartesianSubplotToLayout(WrappedComponent) {
         container: this.container,
         fullContainer: this.fullContainer,
         fullLayout: this.context.fullLayout,
+        localize: this.context.localize,
       };
     }
 

@@ -12,6 +12,7 @@ export default function connectShapeToLayout(WrappedComponent) {
 
       this.deleteShape = this.deleteShape.bind(this);
       this.updateShape = this.updateShape.bind(this);
+      this.moveShape = this.moveShape.bind(this);
       this.setLocals(props);
     }
 
@@ -39,6 +40,7 @@ export default function connectShapeToLayout(WrappedComponent) {
         deleteContainer: this.deleteShape,
         container: this.container,
         fullContainer: this.fullContainer,
+        moveContainer: this.moveShape,
       };
     }
 
@@ -57,6 +59,21 @@ export default function connectShapeToLayout(WrappedComponent) {
         this.context.onUpdate({
           type: EDITOR_ACTIONS.DELETE_SHAPE,
           payload: {shapeIndex: this.props.shapeIndex},
+        });
+      }
+    }
+
+    moveShape(direction) {
+      if (this.context.onUpdate) {
+        const shapeIndex = this.props.shapeIndex;
+        const desiredIndex = direction === 'up' ? shapeIndex - 1 : shapeIndex + 1;
+        this.context.onUpdate({
+          type: EDITOR_ACTIONS.MOVE_TO,
+          payload: {
+            fromIndex: shapeIndex,
+            toIndex: desiredIndex,
+            path: 'layout.shapes',
+          },
         });
       }
     }
@@ -84,12 +101,13 @@ export default function connectShapeToLayout(WrappedComponent) {
 
   ShapeConnectedComponent.contextType = EditorControlsContext;
   ShapeConnectedComponent.requireContext = {
+    updateContainer: PropTypes.func,
+    deleteContainer: PropTypes.func,
     container: PropTypes.object,
     fullContainer: PropTypes.object,
-    updateContainer: PropTypes.func,
     getValObject: PropTypes.func,
+    moveContainer: PropTypes.func,
   };
-
   ShapeConnectedComponent.propTypes = {
     shapeIndex: PropTypes.number.isRequired,
     children: PropTypes.node,

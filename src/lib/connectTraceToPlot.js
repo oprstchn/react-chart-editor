@@ -21,6 +21,7 @@ export default function connectTraceToPlot(WrappedComponent) {
 
       this.deleteTrace = this.deleteTrace.bind(this);
       this.updateTrace = this.updateTrace.bind(this);
+      this.moveTrace = this.moveTrace.bind(this);
       this.setLocals(props, context);
     }
 
@@ -51,6 +52,7 @@ export default function connectTraceToPlot(WrappedComponent) {
             : plotly.PlotSchema.getTraceValObject(fullTrace, nestedProperty({}, attr).parts),
         updateContainer: this.updateTrace,
         deleteContainer: this.deleteTrace,
+        moveContainer: this.moveTrace,
         container: trace,
         fullContainer: fullTrace,
         traceIndexes: this.props.traceIndexes,
@@ -189,6 +191,19 @@ export default function connectTraceToPlot(WrappedComponent) {
       }
     }
 
+    moveTrace(direction) {
+      const traceIndex = this.props.traceIndexes[0];
+      const desiredIndex = direction === 'up' ? traceIndex - 1 : traceIndex + 1;
+      this.context.onUpdate({
+        type: EDITOR_ACTIONS.MOVE_TO,
+        payload: {
+          fromIndex: traceIndex,
+          toIndex: desiredIndex,
+          path: 'data',
+        },
+      });
+    }
+
     render() {
       const newProps = {...this.props, ...{context: this.provideValue()}};
       if (this.props.children) {
@@ -212,6 +227,14 @@ export default function connectTraceToPlot(WrappedComponent) {
 
   TraceConnectedComponent.contextType = EditorControlsContext;
 
+  // TraceConnectedComponent.contextTypes = {
+  //   fullData: PropTypes.array,
+  //   data: PropTypes.array,
+  //   plotly: PropTypes.object,
+  //   onUpdate: PropTypes.func,
+  //   layout: PropTypes.object,
+  // };
+
   // TraceConnectedComponent.childContextTypes = {
   //   getValObject: PropTypes.func,
   //   updateContainer: PropTypes.func,
@@ -220,8 +243,8 @@ export default function connectTraceToPlot(WrappedComponent) {
   //   container: PropTypes.object,
   //   fullContainer: PropTypes.object,
   //   traceIndexes: PropTypes.array,
+  //   moveContainer: PropTypes.func,
   // };
-  // >>>>>>> upstream/master
 
   const {plotly_editor_traits} = WrappedComponent;
   TraceConnectedComponent.plotly_editor_traits = plotly_editor_traits;
