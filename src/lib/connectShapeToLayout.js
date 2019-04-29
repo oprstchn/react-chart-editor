@@ -13,7 +13,7 @@ export default function connectShapeToLayout(WrappedComponent) {
       this.deleteShape = this.deleteShape.bind(this);
       this.updateShape = this.updateShape.bind(this);
       this.moveShape = this.moveShape.bind(this);
-      this.setLocals(props, context);
+      this.setLocals(props);
     }
 
     componentWillReceiveProps(nextProps) {

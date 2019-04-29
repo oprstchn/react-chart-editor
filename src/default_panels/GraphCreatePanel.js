@@ -50,10 +50,7 @@ const GraphCreatePanel = () => {
                 attr="branchvalues"
                 options={[
                   {label: _('Total'), value: 'total'},
-                  {
-                    label: _('Remainder'),
-                    value: 'remainder',
-                  },
+                  {label: _('Remainder'), value: 'remainder'},
                 ]}
                 clearable={false}
               />
@@ -137,7 +134,6 @@ const GraphCreatePanel = () => {
               <DataSelector label={_('Close')} attr="close" />
               <DataSelector label={_('A')} attr="a" />
               <DataSelector label={_('B')} attr="b" />
-
               <DataSelector label={_('C')} attr="c" />
               <DataSelector label={_('U')} attr="u" />
               <DataSelector label={_('V')} attr="v" />
@@ -147,6 +143,24 @@ const GraphCreatePanel = () => {
               <DataSelector label={_('Z start')} attr="starts.z" />
               <DataSelector label={_('Headers')} attr="header.values" />
               <DataSelector label={_('Columns')} attr="cells.values" />
+
+              <TraceTypeSection
+                traceTypes={['scatterpolar', 'scatterpolargl', 'barpolar']}
+                mode="trace"
+              >
+                <DataSelector label={_('Radius')} attr="r" />
+                <DataSelector label={_('Theta')} attr="theta" />
+                <Dropdown
+                  label={_('Theta Unit')}
+                  options={[
+                    {label: _('Radians'), value: 'radians'},
+                    {label: _('Degrees'), value: 'degrees'},
+                    {label: _('Gradians'), value: 'gradians'},
+                  ]}
+                  attr="thetaunit"
+                  clearable={false}
+                />
+              </TraceTypeSection>
 
               <AxesCreator attr="fake_attr" />
               <SubplotCreator attr="fake_attr" />

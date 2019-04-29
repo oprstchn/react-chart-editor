@@ -13,7 +13,7 @@ export default function connectImageToLayout(WrappedComponent) {
       this.deleteImage = this.deleteImage.bind(this);
       this.updateImage = this.updateImage.bind(this);
       this.moveImage = this.moveImage.bind(this);
-      this.setLocals(props, context);
+      this.setLocals(props);
     }
 
     componentWillReceiveProps(nextProps) {

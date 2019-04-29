@@ -13,7 +13,7 @@ export default function connectAnnotationToLayout(WrappedComponent) {
       this.deleteAnnotation = this.deleteAnnotation.bind(this);
       this.updateAnnotation = this.updateAnnotation.bind(this);
       this.moveAnnotation = this.moveAnnotation.bind(this);
-      this.setLocals(props, context);
+      this.setLocals(props);
     }
 
     componentWillReceiveProps(nextProps) {

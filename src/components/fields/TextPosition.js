@@ -30,7 +30,12 @@ export class UnconnectedTextPosition extends Component {
               'This will position all text values on the plot according to the selected position.'
             )}
           </Info>
-          <Dropdown options={this.props.options} attr="textposition" clearable={false} context={this.props.context} />
+          <Dropdown
+            options={this.props.options}
+            attr="textposition"
+            clearable={false}
+            context={this.props.context}
+          />
         </>
       ) : (
         <>
