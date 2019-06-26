@@ -205,11 +205,11 @@ function getFullTrace(props, context) {
   return fullTrace;
 }
 
-function getParsedTemplateString(originalString, meta) {
+function getParsedTemplateString(originalString, context) {
   let text = originalString;
 
-  if (originalString && meta && meta.length) {
-    text = templateString(originalString, {meta});
+  if (originalString && context) {
+    text = templateString(originalString, context);
   }
 
   return text === '' && originalString ? originalString : text;

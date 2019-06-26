@@ -32,7 +32,6 @@ export default function connectTraceToPlot(WrappedComponent) {
     setLocals(props, context) {
       const {traceIndexes} = props;
       const {data, layout, fullLayout, plotly, onUpdate, localize, fullData, graphDiv} = context;
-      const meta = layout;
 
       const trace = data[traceIndexes[0]];
       const fullTrace = getFullTrace(props, context);
@@ -82,7 +81,7 @@ export default function connectTraceToPlot(WrappedComponent) {
 
       if (trace && fullTrace) {
         this.icon = renderTraceIcon(plotlyTraceToCustomTrace(trace));
-        this.name = getParsedTemplateString(fullTrace.name, meta);
+        this.name = getParsedTemplateString(fullTrace.name, {meta: fullTrace.meta});
       }
     }
 
