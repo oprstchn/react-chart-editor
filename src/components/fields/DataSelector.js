@@ -6,6 +6,7 @@ import nestedProperty from 'plotly.js/src/lib/nested_property';
 import {connectToContainer, maybeAdjustSrc, maybeTransposeData, adjustValue, adjustData} from 'lib';
 import {TRANSFORMS_LIST} from 'lib/constants';
 import {EditorControlsContext} from '../../context';
+import {getColumnNames} from 'lib/dereference';
 
 export function attributeIsData(meta = {}) {
   return meta.valType === 'data_array' || meta.arrayOk;
@@ -41,6 +42,7 @@ export class UnconnectedDataSelector extends Component {
             'scatter',
             'scattergl',
             'bar',
+            'funnel',
             'heatmap',
             'heatmapgl',
             'violin',
@@ -81,7 +83,15 @@ export class UnconnectedDataSelector extends Component {
       fromSrc: this.context.srcConverters ? this.context.srcConverters.fromSrc : null,
     });
 
-    this.props.context.updateContainer(update);
+    if (this.props.container.type) {
+      // this means we're at the top level of the trace
+      update['meta.columnNames.' + this.props.attr] = getColumnNames(
+        Array.isArray(adjustedValue) ? adjustedValue : [adjustedValue],
+        this.dataSourceOptions
+      );
+    }
+
+    this.props.updateContainer(update);
   }
 
   render() {

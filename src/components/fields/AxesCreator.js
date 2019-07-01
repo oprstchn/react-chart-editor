@@ -132,10 +132,9 @@ class UnconnectedAxesCreator extends Component {
 
     function getOptions(axisType) {
       return fullLayout._subplots[axisType].map(axisId => ({
-        label: getParsedTemplateString(
-          getAxisTitle(fullLayout[axisIdToAxisName(axisId)]),
-          fullLayout.meta
-        ),
+        label: getParsedTemplateString(getAxisTitle(fullLayout[axisIdToAxisName(axisId)]), {
+          meta: fullLayout.meta,
+        }),
         value: axisId,
       }));
     }
