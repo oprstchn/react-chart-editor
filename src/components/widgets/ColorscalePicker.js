@@ -5,6 +5,7 @@ import PropTypes from 'prop-types';
 import React, {Component} from 'react';
 // CAREFUL: needs to be the same value as $colorscalepicker-width in _colorscalepicker.scss
 const colorscalepickerContainerWidth = 240;
+import {EditorControlsContext} from '../../context';
 
 class Scale extends Component {
   constructor(props) {
@@ -88,8 +89,6 @@ Scale.propTypes = {
   disableCategorySwitch: PropTypes.bool,
 };
 
-Scale.contextTypes = {
-  localize: PropTypes.func,
-};
+Scale.contextType = EditorControlsContext;
 
 export default Scale;

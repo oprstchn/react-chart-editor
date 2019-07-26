@@ -4,6 +4,7 @@ import {connectToContainer} from 'lib';
 import Field from './Field';
 import RadioBlocks from '../widgets/RadioBlocks';
 import NumericInput from '../widgets/NumericInput';
+import {EditorControlsContext} from '../../context';
 
 export class UnconnectedHoverLabelNameLength extends Component {
   constructor(props) {
@@ -77,9 +78,7 @@ UnconnectedHoverLabelNameLength.propTypes = {
   ...Field.propTypes,
 };
 
-UnconnectedHoverLabelNameLength.contextTypes = {
-  localize: PropTypes.func,
-};
+UnconnectedHoverLabelNameLength.contextType = EditorControlsContext;
 
 export default connectToContainer(UnconnectedHoverLabelNameLength, {
   modifyPlotProps: (props, context, plotProps) => {

@@ -31,6 +31,8 @@ import striptags from './striptags';
 import {capitalize, lowerCase, upperCase, removeNonWord, camelCase, pascalCase} from './strings';
 import {getColorscale} from 'react-colorscales';
 import {templateString} from 'plotly.js/src/lib';
+import {EDITOR_ACTIONS} from './constants';
+import {recursiveMap} from './recursiveMap';
 
 const TOO_LIGHT_FACTOR = 0.8;
 
@@ -213,8 +215,26 @@ function getParsedTemplateString(originalString, context) {
   return text === '' && originalString ? originalString : text;
 }
 
+function adjustValue(value, attr) {
+  return Array.isArray(value) && value.length === 1 && (attr === 'x' || attr === 'y')
+    ? value[0]
+    : value;
+}
+
+function adjustData(dataSources, adjustedValue) {
+  let data;
+  if (Array.isArray(adjustedValue)) {
+    data = adjustedValue.filter(v => Array.isArray(dataSources[v])).map(v => dataSources[v]);
+  } else {
+    data = dataSources[adjustedValue] || null;
+  }
+  return data;
+}
+
 export {
   adjustColorscale,
+  adjustValue,
+  adjustData,
   axisIdToAxisName,
   bem,
   camelCase,
@@ -261,4 +281,6 @@ export {
   unpackPlotProps,
   upperCase,
   walkObject,
+  EDITOR_ACTIONS,
+  recursiveMap,
 };

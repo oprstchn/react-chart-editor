@@ -4,6 +4,7 @@ import {PanelMessage} from './PanelEmpty';
 import PropTypes from 'prop-types';
 import React, {Component} from 'react';
 import {connectAnnotationToLayout, getParsedTemplateString} from 'lib';
+import {EditorControlsContext} from '../../context';
 
 const AnnotationFold = connectAnnotationToLayout(PlotlyFold);
 
@@ -68,10 +69,7 @@ class AnnotationAccordion extends Component {
   }
 }
 
-AnnotationAccordion.contextTypes = {
-  layout: PropTypes.object,
-  localize: PropTypes.func,
-};
+AnnotationAccordion.contextType = EditorControlsContext;
 
 AnnotationAccordion.propTypes = {
   children: PropTypes.node,

@@ -19,6 +19,8 @@ import nestedProperty from 'plotly.js/src/lib/nested_property';
 import {categoryLayout, traceTypes} from 'lib/traceTypes';
 import {ModalProvider} from 'components/containers';
 import {DEFAULT_FONTS} from 'lib/constants';
+import {EditorControlsContext} from './context';
+import {recursiveMap} from './lib/recursiveMap';
 
 class EditorControls extends Component {
   constructor(props, context) {
@@ -32,7 +34,14 @@ class EditorControls extends Component {
     }
   }
 
-  getChildContext() {
+  componentWillReceiveProps(nextProps) {
+    const {updatePayload} = nextProps;
+    if (updatePayload && updatePayload.length > 0) {
+      this.handleUpdateActions(updatePayload);
+    }
+  }
+
+  provideValue() {
     const gd = this.props.graphDiv || {};
     return {
       advancedTraceTypeSelector: this.props.advancedTraceTypeSelector,
@@ -40,19 +49,20 @@ class EditorControls extends Component {
       srcConverters: this.props.srcConverters,
       data: gd.data,
       dataSourceComponents: this.props.dataSourceComponents,
+      dataSourceStyles: this.props.dataSourceStyles,
       dataSourceOptions: this.props.dataSourceOptions,
       dataSources: this.props.dataSources,
       dictionaries: this.props.dictionaries || {},
-      localize: this.localize,
       frames: gd._transitionData ? gd._transitionData._frames : [],
       fullData: gd._fullData,
       fullLayout: gd._fullLayout,
       graphDiv: gd,
       layout: gd.layout,
       locale: this.props.locale,
+      localize: this.localize,
       onUpdate: this.handleUpdate.bind(this),
-      plotSchema: this.plotSchema,
       plotly: this.props.plotly,
+      plotSchema: this.plotSchema,
       traceTypesConfig: this.props.traceTypesConfig,
       showFieldTooltips: this.props.showFieldTooltips,
       glByDefault: this.props.glByDefault,
@@ -60,6 +70,14 @@ class EditorControls extends Component {
       fontOptions: this.props.fontOptions,
       chartHelp: this.props.chartHelp,
     };
+  }
+
+  handleUpdateActions(updatePayload) {
+    if (updatePayload && updatePayload.length !== 0) {
+      updatePayload.forEach(actions => {
+        this.handleUpdate(actions);
+      });
+    }
   }
 
   handleUpdate({type, payload}) {
@@ -337,19 +355,25 @@ class EditorControls extends Component {
 
   render() {
     return (
-      <div
-        className={
-          bem('editor_controls') +
-          ' plotly-editor--theme-provider' +
-          `${this.props.className ? ` ${this.props.className}` : ''}`
-        }
-      >
-        <ModalProvider>
-          {this.props.graphDiv &&
-            this.props.graphDiv._fullLayout &&
-            (this.props.children ? this.props.children : <DefaultEditor />)}
-        </ModalProvider>
-      </div>
+      <EditorControlsContext.Provider value={this.provideValue()}>
+        <div
+          className={
+            bem('editor_controls') +
+            ' plotly-editor--theme-provider' +
+            `${this.props.className ? ` ${this.props.className}` : ''}`
+          }
+        >
+          <ModalProvider>
+            {this.props.graphDiv &&
+              this.props.graphDiv._fullLayout &&
+              (this.props.children ? (
+                recursiveMap(this.props.children, this.provideValue())
+              ) : (
+                <DefaultEditor />
+              ))}
+          </ModalProvider>
+        </div>
+      </EditorControlsContext.Provider>
     );
   }
 }
@@ -377,6 +401,7 @@ EditorControls.propTypes = {
     fromSrc: PropTypes.func.isRequired,
   }),
   dataSourceComponents: PropTypes.object,
+  dataSourceStyles: PropTypes.object,
   dataSourceOptions: PropTypes.array,
   dataSources: PropTypes.object,
   dictionaries: PropTypes.object,
@@ -391,6 +416,7 @@ EditorControls.propTypes = {
   mapBoxAccess: PropTypes.bool,
   fontOptions: PropTypes.array,
   chartHelp: PropTypes.object,
+  updatePayload: PropTypes.array,
 };
 
 EditorControls.defaultProps = {
@@ -402,36 +428,6 @@ EditorControls.defaultProps = {
     complex: true,
   },
   fontOptions: DEFAULT_FONTS,
-};
-
-EditorControls.childContextTypes = {
-  advancedTraceTypeSelector: PropTypes.bool,
-  config: PropTypes.object,
-  srcConverters: PropTypes.shape({
-    toSrc: PropTypes.func.isRequired,
-    fromSrc: PropTypes.func.isRequired,
-  }),
-  data: PropTypes.array,
-  dataSourceComponents: PropTypes.object,
-  dataSourceOptions: PropTypes.array,
-  dataSources: PropTypes.object,
-  dictionaries: PropTypes.object,
-  frames: PropTypes.array,
-  fullData: PropTypes.array,
-  fullLayout: PropTypes.object,
-  graphDiv: PropTypes.any,
-  layout: PropTypes.object,
-  locale: PropTypes.string,
-  localize: PropTypes.func,
-  onUpdate: PropTypes.func,
-  plotly: PropTypes.object,
-  plotSchema: PropTypes.object,
-  traceTypesConfig: PropTypes.object,
-  showFieldTooltips: PropTypes.bool,
-  glByDefault: PropTypes.bool,
-  mapBoxAccess: PropTypes.bool,
-  fontOptions: PropTypes.array,
-  chartHelp: PropTypes.object,
 };
 
 export default EditorControls;

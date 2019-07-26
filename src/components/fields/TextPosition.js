@@ -6,6 +6,7 @@ import React, {Component} from 'react';
 import {connectToContainer} from 'lib';
 import Info from './Info';
 import DataSelector from './DataSelector';
+import {EditorControlsContext} from '../../context';
 
 export class UnconnectedTextPosition extends Component {
   constructor(props) {
@@ -29,7 +30,12 @@ export class UnconnectedTextPosition extends Component {
               'This will position all text values on the plot according to the selected position.'
             )}
           </Info>
-          <Dropdown options={this.props.options} attr="textposition" clearable={false} />
+          <Dropdown
+            options={this.props.options}
+            attr="textposition"
+            clearable={false}
+            context={this.props.context}
+          />
         </>
       ) : (
         <>
@@ -48,7 +54,7 @@ export class UnconnectedTextPosition extends Component {
       );
 
     return (
-      <Field {...this.props}>
+      <Field {...this.props} context={this.props.context}>
         <RadioBlocks
           options={radioOptions}
           activeOption={this.state.posType}
@@ -73,8 +79,12 @@ UnconnectedTextPosition.propTypes = {
   fullValue: PropTypes.oneOfType([PropTypes.array, PropTypes.string]),
 };
 
-UnconnectedTextPosition.contextTypes = {
-  localize: PropTypes.func,
+UnconnectedTextPosition.contextType = EditorControlsContext;
+UnconnectedTextPosition.requireContext = {
+  container: PropTypes.object,
+  defaultContainer: PropTypes.object,
+  fullContainer: PropTypes.object,
+  updateContainer: PropTypes.func,
 };
 
 export default connectToContainer(UnconnectedTextPosition, {

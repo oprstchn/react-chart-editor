@@ -10,6 +10,7 @@ import {
   capitalize,
 } from 'lib';
 import {TRACE_TO_AXIS, SUBPLOT_TO_ATTR} from 'lib/constants';
+import {EditorControlsContext} from '../../context';
 
 const TraceFold = connectTraceToPlot(PlotlyFold);
 const NonCartesianSubplotFold = connectNonCartesianSubplotToLayout(PlotlyFold);
@@ -145,17 +146,11 @@ class SubplotAccordion extends Component {
         );
       }
     });
-
     return <TraceRequiredPanel>{subplotFolds}</TraceRequiredPanel>;
   }
 }
 
-SubplotAccordion.contextTypes = {
-  fullData: PropTypes.array,
-  data: PropTypes.array,
-  layout: PropTypes.object,
-  localize: PropTypes.func,
-};
+SubplotAccordion.contextType = EditorControlsContext;
 
 SubplotAccordion.propTypes = {
   children: PropTypes.node,

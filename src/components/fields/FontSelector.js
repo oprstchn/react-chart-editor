@@ -1,16 +1,26 @@
 import Dropdown from './Dropdown';
-import React from 'react';
-import PropTypes from 'prop-types';
+import React, {Component} from 'react';
+import {EditorControlsContext} from '../../context';
+import {containerConnectedContextTypes} from '../../lib';
+// import PropTypes from 'prop-types';
 
-const FontSelector = (props, context) => (
-  <Dropdown
-    {...props}
-    options={context.fontOptions.map(({value, label}) => ({
-      label: <span style={{fontFamily: value}}>{label}</span>,
-      value,
-    }))}
-  />
-);
+class FontSelector extends Component {
+  constructor(props) {
+    super(props);
+  }
+
+  render() {
+    return (
+      <Dropdown
+        {...this.props}
+        options={this.context.fontOptions.map(({value, label}) => ({
+          label: <span style={{fontFamily: value}}>{label}</span>,
+          value,
+        }))}
+      />
+    );
+  }
+}
 
 FontSelector.propTypes = {
   ...Dropdown.propTypes,
@@ -18,8 +28,7 @@ FontSelector.propTypes = {
 
 FontSelector.defaultProps = {clearable: false};
 
-FontSelector.contextTypes = {
-  fontOptions: PropTypes.array,
-};
+FontSelector.contextType = EditorControlsContext;
+FontSelector.requireContext = containerConnectedContextTypes;
 
 export default FontSelector;

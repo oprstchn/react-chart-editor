@@ -1,6 +1,7 @@
 import React, {Component} from 'react';
 import PropTypes from 'prop-types';
 import Drop from 'react-dropzone';
+import {EditorControlsContext} from '../../context';
 
 class Dropzone extends Component {
   constructor(props, context) {
@@ -158,8 +159,6 @@ Dropzone.propTypes = {
   value: PropTypes.any,
 };
 
-Dropzone.contextTypes = {
-  localize: PropTypes.func,
-};
+Dropzone.contextType = EditorControlsContext;
 
 export default Dropzone;

@@ -6,6 +6,7 @@ import PropTypes from 'prop-types';
 import {connectToContainer} from 'lib';
 import {isDateTime} from 'plotly.js/src/lib';
 import {isJSDate} from 'plotly.js/src/lib/dates';
+import {EditorControlsContext} from '../../context';
 
 const MILLISECONDS_IN_SECOND = 1000;
 const MILLISECONDS_IN_MINUTE = MILLISECONDS_IN_SECOND * 60; // eslint-disable-line
@@ -188,9 +189,7 @@ export class UnconnectedAxisInterval extends Component {
   }
 }
 
-UnconnectedAxisInterval.contextTypes = {
-  localize: PropTypes.func,
-};
+UnconnectedAxisInterval.contextType = EditorControlsContext;
 
 UnconnectedAxisInterval.propTypes = {
   fullValue: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),

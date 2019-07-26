@@ -7,6 +7,7 @@ import Button from '../widgets/Button';
 import {PlusIcon} from 'plotly-icons';
 import {connectToContainer, traceTypeToAxisType, getSubplotTitle} from 'lib';
 import {PlotlySection} from 'components';
+import {EditorControlsContext, PanelMenuWrapperContext} from '../../context';
 
 class UnconnectedSingleSubplotCreator extends Component {
   canAddSubplot() {
@@ -76,6 +77,7 @@ class UnconnectedSingleSubplotCreator extends Component {
         options={this.props.options}
         updatePlot={u => this.updateSubplot(u)}
         extraComponent={extraComponent}
+        context={this.props.context}
       />
     );
   }
@@ -89,14 +91,10 @@ UnconnectedSingleSubplotCreator.propTypes = {
   container: PropTypes.object,
   fullContainer: PropTypes.object,
   updateContainer: PropTypes.func,
+  context: PropTypes.object,
 };
 
-UnconnectedSingleSubplotCreator.contextTypes = {
-  fullLayout: PropTypes.object,
-  data: PropTypes.array,
-  fullData: PropTypes.array,
-  onUpdate: PropTypes.func,
-};
+UnconnectedSingleSubplotCreator.contextType = EditorControlsContext;
 
 const SingleSubplotCreator = connectToContainer(UnconnectedSingleSubplotCreator);
 
@@ -123,18 +121,22 @@ class UnconnectedSubplotCreator extends Component {
     }
 
     return (
-      <PlotlySection name={_('Subplots to Use')}>
+      <PlotlySection name={_('Subplots to Use')} context={this.props.context}>
         <SingleSubplotCreator
           attr={SUBPLOT_TO_ATTR[subplotType].data}
           layoutAttr={subplotType}
           label={SUBPLOT_TO_ATTR[subplotType].layout}
           options={getOptions(subplotType)}
         />
-        <Info>
-          {_('You can style and position your subplots in the ')}
-          <a onClick={() => this.context.setPanel('Structure', 'Subplots')}>{_('Subplots')}</a>
-          {_(' panel.')}
-        </Info>
+        <PanelMenuWrapperContext.Consumer>
+          {({setPanel}) => (
+            <Info>
+              {_('You can style and position your subplots in the ')}
+              <a onClick={() => setPanel('Structure', 'Subplots')}>{_('Subplots')}</a>
+              {_(' panel.')}
+            </Info>
+          )}
+        </PanelMenuWrapperContext.Consumer>
       </PlotlySection>
     );
   }
@@ -143,15 +145,10 @@ class UnconnectedSubplotCreator extends Component {
 UnconnectedSubplotCreator.propTypes = {
   container: PropTypes.object,
   fullContainer: PropTypes.object,
+  context: PropTypes.object,
 };
 
-UnconnectedSubplotCreator.contextTypes = {
-  data: PropTypes.array,
-  fullData: PropTypes.array,
-  fullLayout: PropTypes.object,
-  localize: PropTypes.func,
-  setPanel: PropTypes.func,
-};
+UnconnectedSubplotCreator.contextType = EditorControlsContext;
 
 export default connectToContainer(UnconnectedSubplotCreator, {
   modifyPlotProps: (props, context, plotProps) => {

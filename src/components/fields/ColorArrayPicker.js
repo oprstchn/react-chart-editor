@@ -6,10 +6,11 @@ import RadioBlocks from '../widgets/RadioBlocks';
 import DataSelector from './DataSelector';
 import MultiColorPicker from './MultiColorPicker';
 import {MULTI_VALUED, COLORS} from 'lib/constants';
+import {EditorControlsContext} from '../../context';
 
 class UnconnectedColorArrayPicker extends Component {
-  constructor(props, context) {
-    super(props, context);
+  constructor(props) {
+    super(props);
 
     const {fullContainer} = props;
     this.rootAttr = props.attr.split('.')[0];
@@ -124,9 +125,8 @@ UnconnectedColorArrayPicker.propTypes = {
   updatePlot: PropTypes.func,
   ...Field.propTypes,
 };
-
-UnconnectedColorArrayPicker.contextTypes = {
-  localize: PropTypes.func,
+UnconnectedColorArrayPicker.contextType = EditorControlsContext;
+UnconnectedColorArrayPicker.requireContext = {
   updateContainer: PropTypes.func,
 };
 

@@ -7,6 +7,7 @@ import LaTeX from '../widgets/text_editors/LaTeX';
 import RichText from '../widgets/text_editors/RichText';
 import MultiFormat from '../widgets/text_editors/MultiFormat';
 import HTML from '../widgets/text_editors/HTML';
+import {EditorControlsContext} from '../../context';
 
 // TODO: import plotly.js regex directly: https://github.com/plotly/plotly.js/issues/3520
 const TEMPLATE_STRING_REGEX = /%{([^\s%{}:]*)(:[^}]*)?}/g;
@@ -122,10 +123,7 @@ UnconnectedTextEditor.propTypes = {
   placeholder: PropTypes.string,
 };
 
-UnconnectedTextEditor.contextTypes = {
-  localize: PropTypes.func,
-  fullLayout: PropTypes.object,
-};
+UnconnectedTextEditor.contextType = EditorControlsContext;
 
 export default connectToContainer(UnconnectedTextEditor, {
   modifyPlotProps: (props, context, plotProps) => {

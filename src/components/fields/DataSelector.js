@@ -3,8 +3,9 @@ import PropTypes from 'prop-types';
 import React, {Component} from 'react';
 import Field from './Field';
 import nestedProperty from 'plotly.js/src/lib/nested_property';
-import {connectToContainer, maybeAdjustSrc, maybeTransposeData} from 'lib';
+import {connectToContainer, maybeAdjustSrc, maybeTransposeData, adjustValue, adjustData} from 'lib';
 import {TRANSFORMS_LIST} from 'lib/constants';
+import {EditorControlsContext} from '../../context';
 import {getColumnNames} from 'lib/dereference';
 
 export function attributeIsData(meta = {}) {
@@ -68,27 +69,14 @@ export class UnconnectedDataSelector extends Component {
   }
 
   updatePlot(value) {
-    if (!this.props.updateContainer) {
+    if (!this.props.context.updateContainer) {
       return;
     }
 
     const update = {};
-    let data;
 
-    const adjustedValue =
-      Array.isArray(value) &&
-      value.length === 1 &&
-      (this.props.attr === 'x' || this.props.attr === 'y')
-        ? value[0]
-        : value;
-
-    if (Array.isArray(adjustedValue)) {
-      data = adjustedValue
-        .filter(v => Array.isArray(this.dataSources[v]))
-        .map(v => this.dataSources[v]);
-    } else {
-      data = this.dataSources[adjustedValue] || null;
-    }
+    const adjustedValue = adjustValue(value, this.props.attr);
+    const data = adjustData(this.dataSources, adjustedValue);
 
     update[this.props.attr] = maybeTransposeData(data, this.srcAttr, this.props.container.type);
     update[this.srcAttr] = maybeAdjustSrc(adjustedValue, this.srcAttr, this.props.container.type, {
@@ -132,6 +120,7 @@ export class UnconnectedDataSelector extends Component {
           placeholder={this.hasData ? 'Data inlined in figure' : 'Choose data...'}
           disabled={this.dataSourceOptions.length === 0}
           components={this.props.dataSourceComponents}
+          styles={this.context.dataSourceStyles}
         />
       </Field>
     );
@@ -142,10 +131,11 @@ UnconnectedDataSelector.propTypes = {
   fullValue: PropTypes.any,
   updatePlot: PropTypes.func,
   container: PropTypes.object,
+  context: PropTypes.any,
   ...Field.propTypes,
 };
 
-UnconnectedDataSelector.contextTypes = {
+UnconnectedDataSelector.requireContext = {
   dataSources: PropTypes.object,
   dataSourceComponents: PropTypes.object,
   dataSourceOptions: PropTypes.array,
@@ -155,6 +145,8 @@ UnconnectedDataSelector.contextTypes = {
   }),
   container: PropTypes.object,
 };
+
+UnconnectedDataSelector.contextType = EditorControlsContext;
 
 function modifyPlotProps(props, context, plotProps) {
   if (

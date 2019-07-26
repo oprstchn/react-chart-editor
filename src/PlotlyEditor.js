@@ -27,6 +27,7 @@ class PlotlyEditor extends Component {
             graphDiv={this.state.graphDiv}
             dataSources={this.props.dataSources}
             dataSourceOptions={this.props.dataSourceOptions}
+            dataSourceStyles={this.props.dataSourceStyles}
             plotly={this.props.plotly}
             onUpdate={this.props.onUpdate}
             advancedTraceTypeSelector={this.props.advancedTraceTypeSelector}
@@ -40,6 +41,8 @@ class PlotlyEditor extends Component {
             mapBoxAccess={Boolean(this.props.config && this.props.config.mapboxAccessToken)}
             fontOptions={this.props.fontOptions}
             chartHelp={this.props.chartHelp}
+            menuPanelOrder={this.props.menuPanelOrder}
+            updatePayload={this.props.updatePayload}
           >
             {this.props.children}
           </EditorControls>
@@ -69,6 +72,7 @@ PlotlyEditor.propTypes = {
   data: PropTypes.array,
   config: PropTypes.object,
   dataSourceOptions: PropTypes.array,
+  dataSourceStyles: PropTypes.object,
   dataSources: PropTypes.object,
   frames: PropTypes.array,
   onUpdate: PropTypes.func,
@@ -91,6 +95,8 @@ PlotlyEditor.propTypes = {
   glByDefault: PropTypes.bool,
   fontOptions: PropTypes.array,
   chartHelp: PropTypes.object,
+  menuPanelOrder: PropTypes.array,
+  updatePayload: PropTypes.array,
 };
 
 PlotlyEditor.defaultProps = {

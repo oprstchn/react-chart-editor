@@ -4,6 +4,7 @@ import React, {Component} from 'react';
 import DropdownWidget from '../widgets/Dropdown';
 import TextInput from '../widgets/TextInput';
 import {connectToContainer} from 'lib';
+import {EditorControlsContext} from '../../context';
 
 const operations = _ => ({
   inequality: [
@@ -120,9 +121,8 @@ UnconnectedFilterOperation.propTypes = {
   updatePlot: PropTypes.func,
   ...Field.propTypes,
 };
-UnconnectedFilterOperation.contextTypes = {
-  localize: PropTypes.func,
-};
+
+UnconnectedFilterOperation.contextType = EditorControlsContext;
 
 class UnconnectedFilterValue extends Component {
   constructor(props, context) {
@@ -135,7 +135,8 @@ class UnconnectedFilterValue extends Component {
   }
 
   setValue(v) {
-    const {localize: _, container} = this.context;
+    const {localize: _} = this.context;
+    const {container} = this.props.context;
     const op = findOperation(container.operation, _);
     this.setState({value: v});
     let val;
@@ -153,7 +154,8 @@ class UnconnectedFilterValue extends Component {
   }
 
   render() {
-    const {localize: _, container} = this.context;
+    const {localize: _} = this.context;
+    const {container} = this.props.context;
 
     const operation = container && container.operation ? container.operation : '=';
 
@@ -197,10 +199,11 @@ UnconnectedFilterValue.propTypes = {
   defaultValue: PropTypes.string,
   fullValue: PropTypes.any,
   updatePlot: PropTypes.func,
+  context: PropTypes.any,
   ...Field.propTypes,
 };
-UnconnectedFilterValue.contextTypes = {
-  localize: PropTypes.func,
+UnconnectedFilterValue.contextType = EditorControlsContext;
+UnconnectedFilterValue.requireContext = {
   container: PropTypes.object,
 };
 

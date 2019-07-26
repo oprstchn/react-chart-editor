@@ -7,8 +7,8 @@ import DropdownWidget from '../widgets/Dropdown';
 import Text from './Text';
 
 export class UnconnectedDropdownCustom extends Component {
-  constructor(props, context) {
-    super(props, context);
+  constructor(props) {
+    super(props);
 
     this.setValue = this.setValue.bind(this);
     this.setLocals = this.setLocals.bind(this);
@@ -93,7 +93,7 @@ UnconnectedDropdownCustom.propTypes = {
   ...Field.propTypes,
 };
 
-UnconnectedDropdownCustom.contextTypes = {
+UnconnectedDropdownCustom.requireContext = {
   updateContainer: PropTypes.func,
 };
 

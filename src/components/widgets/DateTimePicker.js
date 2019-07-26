@@ -7,6 +7,7 @@ import React, {Component} from 'react';
 import TextInput from './TextInput';
 import Dropdown from './Dropdown';
 import {MULTI_VALUED_PLACEHOLDER} from 'lib/constants';
+import {EditorControlsContext} from '../../context';
 
 const testDate = '2000-01-01';
 const testTime = '00:00';
@@ -301,6 +302,4 @@ DateTimePicker.propTypes = {
   onChange: PropTypes.func.isRequired,
 };
 
-DateTimePicker.contextTypes = {
-  localize: PropTypes.func,
-};
+DateTimePicker.contextType = EditorControlsContext;
